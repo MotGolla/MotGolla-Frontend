@@ -1,4 +1,4 @@
-package com.example.myapplication.domain.example.view.adapter
+package com.motgolla.domain.example.view.adapter
 
 class ExampleAdapter {
 }

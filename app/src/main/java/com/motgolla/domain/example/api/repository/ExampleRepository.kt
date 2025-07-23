@@ -1,8 +1,8 @@
-package com.example.myapplication.domain.example.api.repository
+package com.motgolla.domain.example.api.repository
 
-import com.example.myapplication.common.RetrofitClient
-import com.example.myapplication.domain.example.api.service.ExampleService
-import com.example.myapplication.domain.example.data.ExampleResponse
+import com.motgolla.common.RetrofitClient
+import com.motgolla.domain.example.api.service.ExampleService
+import com.motgolla.domain.example.data.ExampleResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

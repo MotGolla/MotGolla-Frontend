@@ -1,7 +1,7 @@
-package com.example.myapplication.common
+package com.motgolla.common
 
-import com.example.myapplication.BuildConfig
 import com.google.gson.GsonBuilder
+import com.motgolla.BuildConfig
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

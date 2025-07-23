@@ -1,6 +1,6 @@
-package com.example.myapplication.domain.example.api.service
+package com.motgolla.domain.example.api.service
 
-import com.example.myapplication.domain.example.data.ExampleResponse
+import com.motgolla.domain.example.data.ExampleResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

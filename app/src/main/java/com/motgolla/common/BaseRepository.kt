@@ -1,7 +1,7 @@
-package com.example.myapplication.common
+package com.motgolla.common
 
-import com.example.myapplication.common.data.ErrorResponse
 import com.google.gson.Gson
+import com.motgolla.common.data.ErrorResponse
 import retrofit2.Response
 
 open class BaseRepository {

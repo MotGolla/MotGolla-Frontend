@@ -1,4 +1,4 @@
-package com.example.myapplication.domain.example.data
+package com.motgolla.domain.example.data
 
 import com.google.gson.annotations.SerializedName
 

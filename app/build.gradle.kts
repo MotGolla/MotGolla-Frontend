@@ -18,6 +18,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
+        buildConfigField("String", "BASE_URL", "\"${localProperties["BASE_URL"]}\"")
         applicationId = "com.motgolla"
         minSdk = 24
         targetSdk = 36

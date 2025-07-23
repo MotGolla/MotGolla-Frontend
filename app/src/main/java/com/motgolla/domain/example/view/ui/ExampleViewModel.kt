@@ -1,10 +1,10 @@
-package com.example.myapplication.domain.example.view.ui
+package com.motgolla.domain.example.view.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.myapplication.domain.example.api.repository.ExampleRepository
-import com.example.myapplication.domain.example.data.ExampleResponse
+import com.motgolla.domain.example.api.repository.ExampleRepository
+import com.motgolla.domain.example.data.ExampleResponse
 
 class ExampleViewModel : ViewModel() {
 
