@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+//    implementation(libs.androidx.navigation.compose.jvmstubs)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -84,4 +85,12 @@ dependencies {
     // Debug 전용 - Compose Preview용
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    //스플래시 화면 - Lottie
+    implementation("com.airbnb.android:lottie-compose:6.4.0")
+    implementation("androidx.core:core-splashscreen:1.0.0-beta01") //기본 스플래시 삭제
+//    implementation("io.coil-kt:coil-compose:2.4.0")
+//    implementation("io.coil-kt:coil-gif:2.4.0")
+
+
 }
