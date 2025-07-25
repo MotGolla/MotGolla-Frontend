@@ -79,6 +79,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.activity:activity-compose")
+    implementation("androidx.navigation:navigation-compose:2.7.5")
 
     // Debug 전용 - Compose Preview용
     debugImplementation("androidx.compose.ui:ui-tooling")
