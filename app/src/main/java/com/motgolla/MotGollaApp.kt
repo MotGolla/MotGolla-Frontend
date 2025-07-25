@@ -21,7 +21,7 @@ fun MotGollaApp() {
 
     Scaffold(
         topBar = {
-            if (currentRoute != "splash") {
+            if (currentRoute != "splash" && currentRoute != "home") {
                 MotGollaTopBar(
                     title = getTitleForRoute(currentRoute),
                     showBackButton = true,
@@ -45,7 +45,6 @@ fun MotGollaApp() {
 //타이틀
 fun getTitleForRoute(route: String?): String {
     return when (route) {
-        "home" -> "홈"
         "record" -> "기록"
         "vote" -> "투표"
         "my" -> "내 정보"
