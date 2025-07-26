@@ -18,10 +18,11 @@ fun MotGollaApp() {
         .value
         ?.destination
         ?.route
+    val hideBarsRoutes = listOf("splash", "login", "welcome", "signup/{idToken}/{oauthId}/{nickname}")
 
     Scaffold(
         topBar = {
-            if (currentRoute != "splash") {
+            if (!hideBarsRoutes.contains(currentRoute)) {
                 MotGollaTopBar(
                     title = getTitleForRoute(currentRoute),
                     showBackButton = true,
@@ -30,7 +31,7 @@ fun MotGollaApp() {
             }
         },
         bottomBar = {
-            if (currentRoute != "splash") {
+            if (!hideBarsRoutes.contains(currentRoute)) {
                 MotgollaNavBar(navController)
             }
         }
