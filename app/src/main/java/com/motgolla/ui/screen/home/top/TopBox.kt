@@ -8,9 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.motgolla.viewmodel.LocationViewModel
 
 @Composable
-fun TopBox() {
+fun TopBox(viewModel: LocationViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -18,7 +19,7 @@ fun TopBox() {
     ) {
         Spacer(modifier = Modifier.height(20.dp))
 
-        LocationSection()
+        LocationSection(viewModel = viewModel)
         Spacer(modifier = Modifier.height(10.dp))
         UserInfoSection()
     }
