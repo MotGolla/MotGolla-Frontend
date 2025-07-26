@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.play.services.location)
 //    implementation(libs.androidx.navigation.compose.jvmstubs)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -101,6 +102,10 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.0-beta01") //기본 스플래시 삭제
 //    implementation("io.coil-kt:coil-compose:2.4.0")
 //    implementation("io.coil-kt:coil-gif:2.4.0")
+
+    //아이콘
+    implementation("androidx.compose.material:material-icons-extended")
+
 
 
 }

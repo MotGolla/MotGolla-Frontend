@@ -18,7 +18,7 @@ fun MotGollaApp() {
         .value
         ?.destination
         ?.route
-    val hideBarsRoutes = listOf("splash", "login", "welcome", "signup/{idToken}/{oauthId}/{nickname}")
+    val hideBarsRoutes = listOf("splash", "login", "welcome", "signup/{idToken}/{oauthId}/{nickname}", "home")
 
     Scaffold(
         topBar = {
@@ -46,7 +46,6 @@ fun MotGollaApp() {
 //타이틀
 fun getTitleForRoute(route: String?): String {
     return when (route) {
-        "home" -> "홈"
         "record" -> "기록"
         "vote" -> "투표"
         "my" -> "내 정보"
