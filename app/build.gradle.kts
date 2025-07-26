@@ -20,6 +20,8 @@ android {
 
     defaultConfig {
         buildConfigField("String", "BASE_URL", "\"${localProperties["BASE_URL"]}\"")
+        buildConfigField("String", "KAKAO_APP_KEY", "\"${localProperties["KAKAO_APP_KEY"]}\"")
+        manifestPlaceholders["kakaoScheme"] = "kakao${localProperties["KAKAO_APP_KEY"]}"
         applicationId = "com.motgolla"
         minSdk = 24
         targetSdk = 36
@@ -81,6 +83,14 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.activity:activity-compose")
     implementation("androidx.navigation:navigation-compose:2.7.5")
+    implementation("io.coil-kt:coil-compose:2.5.0") // 최신 버전 확인
+    implementation("io.coil-kt:coil-gif:2.5.0")
+
+    // Kakao
+    implementation("com.kakao.sdk:v2-all:2.15.0") // 전체 모듈 설치, 2.11.0 버전부터 지원
+
+    //OkHttp (optional)
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
 
     // Debug 전용 - Compose Preview용
     debugImplementation("androidx.compose.ui:ui-tooling")
