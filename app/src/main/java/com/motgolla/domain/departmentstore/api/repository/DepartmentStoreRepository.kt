@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class DepartmentStoreRepository {
 
-    private val token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImlkIjoxNCwiaWF0IjoxNzUzNTMyMzcxLCJleHAiOjE3NTM1MzU5NzF9.8558OzZr0gms2Rbb2M5AXGLFCxR87FzVD4r3jH1xus3A_8Kq2oWm0YsKhzVcIxEwY2Lm3QYF-ZIG12q12sffTA"  // 임시 고정 토큰(이후 프론트 로그인 적용 후 수정할 예정)
+    private val token = "..토큰"  // 임시 고정 토큰(이후 프론트 로그인 적용 후 수정할 예정)
 
     // 인터셉터로 모든 요청에 Authorization 헤더 추가
     private val authInterceptor = object : Interceptor {
