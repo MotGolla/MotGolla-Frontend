@@ -1,5 +1,6 @@
 package com.motgolla.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -17,6 +18,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.motgolla.R
+import com.motgolla.common.RetrofitClient
 import kotlinx.coroutines.delay
 
 @Composable
@@ -35,8 +37,25 @@ fun SplashScreen(navController: NavHostController) {
     LaunchedEffect(progress) {
         if (progress == 1f) {
             delay(300) // 약간의 여유
-            navController.navigate("home") {
-                popUpTo("splash") { inclusive = true }
+            try {
+                val response = RetrofitClient.getAuthService().getMemberInfo()
+                delay(1500)
+                if (response.isSuccessful) {
+                    Log.d("SplashScreen", "Login Member : $response")
+                    navController.navigate("home") {
+                        popUpTo("splash") { inclusive = true }
+                    }
+                } else {
+                    Log.d("SplashScreen", "Need Login")
+                    navController.navigate("login") {
+                        popUpTo("splash") { inclusive = true }
+                    }
+                }
+            } catch (e: Exception) {
+                delay(1500)
+                navController.navigate("login") {
+                    popUpTo("splash") { inclusive = true }
+                }
             }
         }
     }

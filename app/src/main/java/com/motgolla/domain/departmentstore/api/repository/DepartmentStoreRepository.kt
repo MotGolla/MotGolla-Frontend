@@ -1,37 +1,27 @@
 package com.motgolla.domain.departmentstore.api.repository
 
+import android.content.Context
 import com.motgolla.BuildConfig
+import com.motgolla.common.storage.TokenInterceptor
 import com.motgolla.domain.departmentstore.api.service.DepartmentStoreService
 import com.motgolla.domain.departmentstore.data.DepartmentStoreResponse
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class DepartmentStoreRepository {
+class DepartmentStoreRepository(private val context: Context) {
 
-    private val token = "..토큰"  // 임시 고정 토큰(이후 프론트 로그인 적용 후 수정할 예정)
-
-    // 인터셉터로 모든 요청에 Authorization 헤더 추가
-    private val authInterceptor = object : Interceptor {
-        override fun intercept(chain: Interceptor.Chain): Response {
-            val originalRequest = chain.request()
-            val newRequest = originalRequest.newBuilder()
-                .addHeader("Authorization", "Bearer $token")
-                .build()
-            return chain.proceed(newRequest)
-        }
-    }
+    private val plainClient = OkHttpClient.Builder().build() // 재발급용
+    private val tokenInterceptor = TokenInterceptor(context, plainClient)
 
     private val api: DepartmentStoreService by lazy {
         val client = OkHttpClient.Builder()
-            .addInterceptor(authInterceptor)
+            .addInterceptor(tokenInterceptor)
             .build()
 
         Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
-            .client(client)  // OkHttpClient 설정 추가
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(DepartmentStoreService::class.java)

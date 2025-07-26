@@ -26,7 +26,7 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
 
     //위치서비스 처리 및 서버에서 백화점 데이터 조회
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(application)
-    private val repository = DepartmentStoreRepository()
+    private val repository = DepartmentStoreRepository(getApplication())
 
     private val _lastKnownLocation = mutableStateOf<Location?>(null)
     val lastKnownLocation: State<Location?> = _lastKnownLocation
