@@ -9,8 +9,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.motgolla.common.RetrofitClient
 import com.motgolla.ui.theme.MotgollaTheme
+import androidx.activity.viewModels
+import com.motgolla.viewmodel.record.MemoViewModel
+import com.motgolla.viewmodel.record.RecordViewModel
+import com.motgolla.ui.screen.record.ShoppingRecordScreen
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // Android 12 이상 네이티브 스플래시스크린 설치
         val splashScreen = installSplashScreen()
