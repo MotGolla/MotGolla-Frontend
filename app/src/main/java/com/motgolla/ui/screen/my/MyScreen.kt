@@ -1,6 +1,7 @@
 package com.motgolla.ui.screen.my
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,6 +29,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.motgolla.common.RetrofitClient
+import com.motgolla.common.storage.TokenStorage
 import com.motgolla.domain.login.api.service.MemberService
 
 @Composable
@@ -38,6 +41,16 @@ fun MyScreen(navController: NavController) {
     var profile by remember { mutableStateOf("https://via.placeholder.com/60") }
     var birthday by remember { mutableStateOf("생일 정보 없음") }
     var gender by remember { mutableStateOf("") }
+
+    var checked by remember {
+        mutableStateOf(
+            when (TokenStorage.getValue(context, "notificationCheck")) {
+                "true" -> true
+                "false" -> false
+                else -> false
+            }
+        )
+    }
 
     // 코루틴으로 서버에서 값 불러오기
     LaunchedEffect(Unit) {
@@ -90,7 +103,7 @@ fun MyScreen(navController: NavController) {
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
-                Text(text = nickname, color = Color.White, fontSize = 25.sp)
+                Text(text = nickname, color = Color.White, fontSize = 25.sp, fontWeight = FontWeight.Bold)
                 Text(text = "2025.06.02 가입", color = Color.White, fontSize = 15.sp)
             }
         }
@@ -140,8 +153,6 @@ fun MyScreen(navController: NavController) {
             )
         }
 
-
-
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(
@@ -150,7 +161,10 @@ fun MyScreen(navController: NavController) {
         ) {
             Text(text = "알림 설정", fontSize = 17.sp)
             Spacer(modifier = Modifier.weight(1f))
-            Switch(checked = true, onCheckedChange = {})
+            Switch(checked = checked, onCheckedChange = {
+                checked = !checked
+                onClickChecked(context, checked)
+            })
         }
     }
 
@@ -196,6 +210,11 @@ fun MyScreen(navController: NavController) {
             }
         )
     }
+}
+
+fun onClickChecked(context: Context, checked: Boolean){
+    Log.d("MyScreen", "onClickChecked: $checked")
+    TokenStorage.save(context, "notificationCheck", checked.toString())
 }
 
 fun onClickLogout(context: Context, navController: NavController){

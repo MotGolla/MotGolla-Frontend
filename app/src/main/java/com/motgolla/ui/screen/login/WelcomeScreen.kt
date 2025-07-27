@@ -64,7 +64,7 @@ fun WelcomeScreen(navController: NavController) {
                 contentDescription = "Welcome GIF",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(400.dp)
+                    .height(300.dp)
                     .clip(RoundedCornerShape(12.dp)),
                 contentScale = ContentScale.Fit
             )
