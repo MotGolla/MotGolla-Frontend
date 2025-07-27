@@ -31,7 +31,7 @@ fun MotGollaApp() {
             }
         },
         bottomBar = {
-            if (!hideBarsRoutes.contains(currentRoute)) {
+            if (!hideBarsRoutes.contains(currentRoute) || currentRoute=="home") {
                 MotgollaNavBar(navController)
             }
         }
