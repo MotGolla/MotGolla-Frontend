@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.play.services.location)
 //    implementation(libs.androidx.navigation.compose.jvmstubs)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -106,5 +107,26 @@ dependencies {
     implementation("com.airbnb.android:lottie-compose:6.4.0")
     implementation("androidx.core:core-splashscreen:1.0.0-beta01") //기본 스플래시 삭제
 
+    //아이콘
+    implementation("androidx.compose.material:material-icons-extended")
 
+
+
+
+    // URL 또는 URI 이미지 로더
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
+    // 화면이동
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    // Fragment에서 ViewModel을 안전하고 간단하게 생성
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
+
+    // 바코드 스캔
+    implementation("com.google.mlkit:barcode-scanning:17.2.0")
+    implementation("com.google.mlkit:vision-common:17.3.0")
+
+    //슬라이드 이미지
+    implementation("com.google.accompanist:accompanist-pager:0.30.1")
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.30.1")
 }

@@ -31,7 +31,7 @@ fun MotGollaApp() {
             }
         },
         bottomBar = {
-            if (!hideBarsRoutes.contains(currentRoute)) {
+            if (!hideBarsRoutes.contains(currentRoute) || currentRoute=="home") {
                 MotgollaNavBar(navController)
             }
         }
@@ -46,7 +46,6 @@ fun MotGollaApp() {
 //타이틀
 fun getTitleForRoute(route: String?): String {
     return when (route) {
-        "home" -> "홈"
         "record" -> "기록"
         "vote" -> "투표"
         "my" -> "내 정보"

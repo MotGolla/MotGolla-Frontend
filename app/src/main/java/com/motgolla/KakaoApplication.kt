@@ -11,5 +11,6 @@ class KakaoApplication : Application() {
         // Kakao SDK 초기화
         AndroidThreeTen.init(this)
         KakaoSdk.init(this, BuildConfig.KAKAO_APP_KEY)
+
     }
 }
