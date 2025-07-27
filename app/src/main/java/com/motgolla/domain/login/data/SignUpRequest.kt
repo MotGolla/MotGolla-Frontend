@@ -5,5 +5,6 @@ data class SignUpRequest(
     val oauthId: String,
     val name: String,
     val gender: String,
-    val birthday: String
+    val birthday: String,
+    val profile: String
 )

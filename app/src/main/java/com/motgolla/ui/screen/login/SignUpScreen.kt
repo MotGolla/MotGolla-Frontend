@@ -2,8 +2,6 @@ package com.motgolla.ui.screen.login
 
 import android.util.Log
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.foundation.Image
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 import androidx.compose.foundation.layout.*
@@ -33,10 +31,7 @@ fun Int.pad2(): String = toString().padStart(2, '0')
 
 @Composable
 fun SignUpScreen(
-    navController: NavController,
-    idToken: String,
-    oauthId: String,
-    nickname: String
+    navController: NavController
 ) {
     var gender by remember { mutableStateOf("F") }
     val context = LocalContext.current
@@ -146,41 +141,13 @@ fun SignUpScreen(
 
             Button(
                 onClick = {
-                    // 생년월일 포맷: yyyy-MM-dd
-                    val birthday = "${selectedYear}-${selectedMonth.pad2()}-${selectedDay.pad2()}"
-                    // 서버로 회원 가입 요청
-                    val signUpRequest = SignUpRequest(
-                        idToken = idToken,
-                        oauthId = oauthId,
-                        name = nickname,
-                        gender = when (gender) {
-                            "MALE" -> "남자"
-                            "FEMALE" -> "여자"
-                            else -> gender
-                        },
-                        birthday = birthday
-                    )
-                    Log.d("SignUp", "회원 가입 요청: $signUpRequest")
-                    SignUpService.requestSignUp(
-                        signUpRequest = signUpRequest,
-                        onSuccess = { accessToken, refreshToken ->
-                            Log.d("SignUp", "회원 가입 성공: $accessToken, $refreshToken")
-                            TokenStorage.save(context, TokenResponse(accessToken, refreshToken))
-                            kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
-                                navController.navigate("welcome") {
-                                    popUpTo("signup") { inclusive = true }
-                                }
-                            }
-                        },
-                        onFailure = { throwable ->
-                            Log.e("SignUp", "회원 가입 실패: ${throwable.message}")
-                            kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
-                                android.widget.Toast.makeText(context, "회원가입 실패: ${throwable.message}", android.widget.Toast.LENGTH_SHORT).show()
-                                navController.navigate("login") {
-                                    popUpTo("signup") { inclusive = true }
-                                }
-                            }
-                        }
+                    SignUpService.signUpWithInput(
+                        context = context,
+                        navController = navController,
+                        gender = gender,
+                        year = selectedYear,
+                        month = selectedMonth,
+                        day = selectedDay
                     )
                 },
                 modifier = Modifier
@@ -213,8 +180,5 @@ fun SignUpScreenPreviewOnly() {
     val dummyNavController = rememberNavController()
     SignUpScreen(
         navController = dummyNavController,
-        idToken = "dummyIdToken",
-        oauthId = "dummyOauthId",
-        nickname = "dummyNickname"
     )
 }

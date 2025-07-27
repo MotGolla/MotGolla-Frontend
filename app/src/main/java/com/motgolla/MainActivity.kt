@@ -11,12 +11,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.messaging.FirebaseMessaging
+import com.jakewharton.threetenabp.AndroidThreeTen
+import com.kakao.sdk.common.KakaoSdk
 import com.motgolla.common.RetrofitClient
 import com.motgolla.common.storage.TokenStorage
 import com.motgolla.domain.notification.api.repository.FcmTokenRepository
 import com.motgolla.ui.theme.MotgollaTheme
+import androidx.activity.viewModels
+import com.motgolla.viewmodel.record.MemoViewModel
+import com.motgolla.viewmodel.record.RecordViewModel
+import com.motgolla.ui.screen.record.ShoppingRecordScreen
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -44,6 +51,7 @@ class MainActivity : ComponentActivity() {
                 Log.e("FCM_TOKEN", "FCM 토큰 가져오기 실패", task.exception)
             }
         }
+
 
         setContent {
             MotgollaTheme {

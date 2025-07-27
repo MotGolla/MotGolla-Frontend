@@ -67,6 +67,9 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    // 시간
+    implementation("com.jakewharton.threetenabp:threetenabp:1.4.5")
+
     // retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
@@ -91,6 +94,9 @@ dependencies {
     // Kakao
     implementation("com.kakao.sdk:v2-all:2.15.0") // 전체 모듈 설치, 2.11.0 버전부터 지원
 
+    // 아이콘
+    implementation("androidx.compose.material:material-icons-extended")
+
     //OkHttp (optional)
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
 
@@ -101,11 +107,25 @@ dependencies {
     //스플래시 화면 - Lottie
     implementation("com.airbnb.android:lottie-compose:6.4.0")
     implementation("androidx.core:core-splashscreen:1.0.0-beta01") //기본 스플래시 삭제
-//    implementation("io.coil-kt:coil-compose:2.4.0")
-//    implementation("io.coil-kt:coil-gif:2.4.0")
 
     //아이콘
     implementation("androidx.compose.material:material-icons-extended")
+
+
+
+
+    // URL 또는 URI 이미지 로더
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
+    // 화면이동
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    // Fragment에서 ViewModel을 안전하고 간단하게 생성
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
+
+    // 바코드 스캔
+    implementation("com.google.mlkit:barcode-scanning:17.2.0")
+    implementation("com.google.mlkit:vision-common:17.3.0")
 
     //슬라이드 이미지
     implementation("com.google.accompanist:accompanist-pager:0.30.1")
