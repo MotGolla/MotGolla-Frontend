@@ -18,10 +18,11 @@ fun MotGollaApp() {
         .value
         ?.destination
         ?.route
+    val hideBarsRoutes = listOf("splash", "login", "welcome", "signup")
 
     Scaffold(
         topBar = {
-            if (currentRoute != "splash") {
+            if (!hideBarsRoutes.contains(currentRoute)) {
                 MotGollaTopBar(
                     title = getTitleForRoute(currentRoute),
                     showBackButton = true,
@@ -30,7 +31,7 @@ fun MotGollaApp() {
             }
         },
         bottomBar = {
-            if (currentRoute != "splash") {
+            if (!hideBarsRoutes.contains(currentRoute) || currentRoute=="home") {
                 MotgollaNavBar(navController)
             }
         }
@@ -45,7 +46,6 @@ fun MotGollaApp() {
 //타이틀
 fun getTitleForRoute(route: String?): String {
     return when (route) {
-        "home" -> "홈"
         "record" -> "기록"
         "vote" -> "투표"
         "my" -> "내 정보"
