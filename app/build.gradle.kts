@@ -66,6 +66,9 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    // 시간
+    implementation("com.jakewharton.threetenabp:threetenabp:1.4.5")
+
     // retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
@@ -90,6 +93,9 @@ dependencies {
     // Kakao
     implementation("com.kakao.sdk:v2-all:2.15.0") // 전체 모듈 설치, 2.11.0 버전부터 지원
 
+    // 아이콘
+    implementation("androidx.compose.material:material-icons-extended")
+
     //OkHttp (optional)
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
 
@@ -100,8 +106,6 @@ dependencies {
     //스플래시 화면 - Lottie
     implementation("com.airbnb.android:lottie-compose:6.4.0")
     implementation("androidx.core:core-splashscreen:1.0.0-beta01") //기본 스플래시 삭제
-//    implementation("io.coil-kt:coil-compose:2.4.0")
-//    implementation("io.coil-kt:coil-gif:2.4.0")
 
     //아이콘
     implementation("androidx.compose.material:material-icons-extended")

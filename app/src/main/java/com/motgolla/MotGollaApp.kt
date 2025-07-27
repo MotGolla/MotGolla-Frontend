@@ -18,7 +18,7 @@ fun MotGollaApp() {
         .value
         ?.destination
         ?.route
-    val hideBarsRoutes = listOf("splash", "login", "welcome", "signup/{idToken}/{oauthId}/{nickname}")
+    val hideBarsRoutes = listOf("splash", "login", "welcome", "signup")
 
     Scaffold(
         topBar = {

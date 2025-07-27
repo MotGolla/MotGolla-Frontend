@@ -1,5 +1,7 @@
 package com.motgolla.common.storage
 
+import com.google.gson.Gson
+
 import android.content.Context
 import android.util.Log
 import com.motgolla.domain.login.data.TokenResponse
@@ -15,6 +17,16 @@ object TokenStorage {
         prefs.edit().putString(KEY_ACCESS, tokenResponse.accessToken)
             .putString(KEY_REFRESH, tokenResponse.refreshToken)
             .apply()
+    }
+
+    fun save(context: Context, key: String, value: String) {
+        val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        prefs.edit().putString(key, value).apply()
+    }
+
+    fun getValue(context: Context, key: String): String? {
+        val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        return prefs.getString(key, null)
     }
 
     fun getTokenResponse(context: Context): TokenResponse? {

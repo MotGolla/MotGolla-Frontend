@@ -45,25 +45,10 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
         composable("home") { HomeScreen() }
         composable("record") { RecordScreen(navController = navController) }
         composable("vote") { VoteScreen() }
-        composable("my") { MyScreen() }
-        composable("login") {
-            LoginScreen(navController)
-        }
-        // ShoppingRecordScreen 등록
-        composable("shoppingRecord") {
-            val recordViewModel: RecordViewModel = viewModel()
-            val memoViewModel: MemoViewModel = viewModel()
-            ShoppingRecordScreen(viewModel = recordViewModel, memoViewModel = memoViewModel)
-        }
-        composable("signup/{idToken}/{oauthId}/{nickname}") { backStackEntry ->
-            val idToken = backStackEntry.arguments?.getString("idToken") ?: ""
-            val oauthId = backStackEntry.arguments?.getString("oauthId") ?: ""
-            val nickname = backStackEntry.arguments?.getString("nickname") ?: ""
-            SignUpScreen(navController, idToken, oauthId, nickname)
-        }
-        composable("welcome") {
-            WelcomeScreen(navController)
-        }
+        composable("my") { MyScreen(navController) }
+        composable("login") { LoginScreen(navController) }
+        composable("signup") { SignUpScreen(navController) }
+        composable("welcome") { WelcomeScreen(navController) }
     }
 }
 

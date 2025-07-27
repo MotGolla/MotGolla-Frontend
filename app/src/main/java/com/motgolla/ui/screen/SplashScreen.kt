@@ -19,6 +19,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.motgolla.R
 import com.motgolla.common.RetrofitClient
+import com.motgolla.common.storage.TokenStorage
 import kotlinx.coroutines.delay
 
 @Composable
@@ -39,8 +40,11 @@ fun SplashScreen(navController: NavHostController) {
             delay(300) // 약간의 여유
             try {
                 val response = RetrofitClient.getAuthService().getMemberInfo()
+                Log.d("SplashScreen", "Login Member : $response")
+
                 delay(1500)
-                if (response.isSuccessful) {
+
+                if (response.isSuccessful && response.body() != null) {
                     Log.d("SplashScreen", "Login Member : $response")
                     navController.navigate("home") {
                         popUpTo("splash") { inclusive = true }
