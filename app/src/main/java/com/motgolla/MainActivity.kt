@@ -3,32 +3,19 @@ package com.motgolla
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.activity.viewModels
+import com.motgolla.domain.record.view.ui.MemoViewModel
+import com.motgolla.domain.record.view.ui.RecordViewModel
+import com.motgolla.domain.record.view.ui.ShoppingRecordScreen
 
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: RecordViewModel by viewModels()
+    private val memoViewModel: MemoViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MotGollaApp()
+            ShoppingRecordScreen(viewModel = viewModel, memoViewModel = memoViewModel)
         }
     }
-}
-
-@Composable
-fun MotGollaApp() {
-    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-        Text("Hello, Compose!")
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MotGollaAppPreview() {
-    MotGollaApp()
 }

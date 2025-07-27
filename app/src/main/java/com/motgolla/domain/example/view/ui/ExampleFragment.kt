@@ -25,20 +25,20 @@ class ExampleFragment : Fragment() {
         val root: View = binding.root
 
         // ViewModel에서 지정해준 LiveData 가져오기
-        exampleViewModel.exampleResult.observe(viewLifecycleOwner, Observer { exampleDTO ->
-            exampleDTO?.let {
-                // UI(textExample)에 결과값 출력
-                val sb = StringBuilder()
-                sb.append("Receipt ID: ${exampleDTO.receiptId}\n")
-                    .append("Store ID: ${exampleDTO.storeId}\n")
-                    .append("Total Price: ${exampleDTO.totalPrice}\n")
-                    .append("Status: ${exampleDTO.status}\n")
-                    .append("Created Date: ${exampleDTO.createdDate}\n")
-                binding.textExample.text = sb.toString()
-            } ?: run {
-                binding.textExample.text = "Error loading data"
-            }
-        })
+//        exampleViewModel.recordResult.observe(viewLifecycleOwner, Observer { exampleDTO ->
+//            exampleDTO?.let {
+//                // UI(textExample)에 결과값 출력
+//                val sb = StringBuilder()
+//                sb.append("Receipt ID: ${exampleDTO.receiptId}\n")
+//                    .append("Store ID: ${exampleDTO.storeId}\n")
+//                    .append("Total Price: ${exampleDTO.totalPrice}\n")
+//                    .append("Status: ${exampleDTO.status}\n")
+//                    .append("Created Date: ${exampleDTO.createdDate}\n")
+//                binding.textExample.text = sb.toString()
+//            } ?: run {
+//                binding.textExample.text = "Error loading data"
+//            }
+//        })
 
         exampleViewModel.fetchMemberReceiptInfo(3)
 
