@@ -1,4 +1,4 @@
-package com.motgolla.domain.record.view.ui
+package com.motgolla.viewmodel.record
 
 import android.app.Application
 import android.content.Intent

@@ -1,5 +1,5 @@
 // ImagePicker.kt
-package com.motgolla.domain.record.view.ui
+package com.motgolla.ui.component.record
 
 import android.app.Activity
 import android.content.Intent

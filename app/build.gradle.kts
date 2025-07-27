@@ -20,6 +20,8 @@ android {
 
     defaultConfig {
         buildConfigField("String", "BASE_URL", "\"${localProperties["BASE_URL"]}\"")
+        buildConfigField("String", "KAKAO_APP_KEY", "\"${localProperties["KAKAO_APP_KEY"]}\"")
+        manifestPlaceholders["kakaoScheme"] = "kakao${localProperties["KAKAO_APP_KEY"]}"
         applicationId = "com.motgolla"
         minSdk = 24
         targetSdk = 36
@@ -58,6 +60,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.play.services.location)
+//    implementation(libs.androidx.navigation.compose.jvmstubs)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -79,10 +83,31 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.activity:activity-compose")
+    implementation("androidx.navigation:navigation-compose:2.7.5")
+    implementation("io.coil-kt:coil-compose:2.5.0") // 최신 버전 확인
+    implementation("io.coil-kt:coil-gif:2.5.0")
+
+    // Kakao
+    implementation("com.kakao.sdk:v2-all:2.15.0") // 전체 모듈 설치, 2.11.0 버전부터 지원
+
+    //OkHttp (optional)
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
 
     // Debug 전용 - Compose Preview용
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    //스플래시 화면 - Lottie
+    implementation("com.airbnb.android:lottie-compose:6.4.0")
+    implementation("androidx.core:core-splashscreen:1.0.0-beta01") //기본 스플래시 삭제
+//    implementation("io.coil-kt:coil-compose:2.4.0")
+//    implementation("io.coil-kt:coil-gif:2.4.0")
+
+    //아이콘
+    implementation("androidx.compose.material:material-icons-extended")
+
+
+
 
     // URL 또는 URI 이미지 로더
     implementation("io.coil-kt:coil-compose:2.4.0")

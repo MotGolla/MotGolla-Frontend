@@ -1,4 +1,4 @@
-package com.motgolla.domain.record.view.ui
+package com.motgolla.ui.screen.record
 
 import android.Manifest
 import android.app.Application
@@ -36,6 +36,11 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import coil.compose.rememberAsyncImagePainter
 import com.motgolla.R
+import com.motgolla.ui.component.record.MemoItem
+import com.motgolla.ui.component.record.RecordImageItem
+import com.motgolla.ui.component.record.rememberImagePicker
+import com.motgolla.viewmodel.record.MemoViewModel
+import com.motgolla.viewmodel.record.RecordViewModel
 import java.io.File
 
 @Composable
@@ -102,19 +107,6 @@ fun ShoppingRecordScreen(viewModel: RecordViewModel, memoViewModel: MemoViewMode
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(bottom = 80.dp)
     ) {
-        // 상단바
-        item {
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .background(Color.LightGray),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("상단바 (더미)", fontSize = 14.sp)
-            }
-        }
-
         // 택 사진
         item {
             Text("택 사진", fontSize = 14.sp, fontWeight = FontWeight.Bold)
@@ -371,6 +363,7 @@ fun uriToFile(context: Context, uri: Uri): File {
 @Composable
 fun ShoppingRecordScreenPreview() {
     val fakeViewModel = RecordViewModel()
-    val fakeMemoViewModel = MemoViewModel(Application())
+    val fakeMemoViewModel =
+        MemoViewModel(Application())
     ShoppingRecordScreen(viewModel = fakeViewModel, memoViewModel = fakeMemoViewModel)
 }

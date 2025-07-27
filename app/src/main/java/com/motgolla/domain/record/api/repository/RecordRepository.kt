@@ -15,9 +15,8 @@ import retrofit2.Response
 
 class RecordRepository {
 
-    // RetrofitClient 기반으로 인스턴스 생성 후 RecordService 구현체 전달
     private val recordService: RecordService by lazy {
-        RetrofitClient.instance.create(RecordService::class.java)
+        RetrofitClient.getRecordService()
     }
 
     fun getMemberReceiptInfo(receiptId: Int, onResult: (Result<RecordResponse>) -> Unit) {

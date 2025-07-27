@@ -1,4 +1,4 @@
-package com.motgolla.domain.record.view.ui
+package com.motgolla.ui.component.record
 
 import android.Manifest
 import android.widget.Toast
@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.motgolla.R
+import com.motgolla.viewmodel.record.MemoViewModel
 
 @Composable
 fun MemoItem(viewModel: MemoViewModel) {

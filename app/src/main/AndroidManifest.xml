@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <!-- 카메라만 사용 -->
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-
-    <!-- 오디오 사용    -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.motgolla"
+    >
 
 
     <application
         android:allowBackup="true"
-        android:networkSecurityConfig="@xml/network_security_config"
+        android:name=".KakaoApplication"
         android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -21,15 +16,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Motgolla"
-        >
+        android:networkSecurityConfig="@xml/network_security_config">
 
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Motgolla">
+            android:theme="@style/Theme.MotGolla.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Redirect URI: "kakao{NATIVE_APP_KEY}://oauth" -->
+                <data
+                    android:host="oauth"
+                    android:scheme="${kakaoScheme}"/>
             </intent-filter>
         </activity>
 
@@ -45,4 +54,16 @@
                 android:resource="@xml/file_paths" />
         </provider>
     </application>
+
+    <!-- 카메라만 사용 -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <!-- 오디오 사용    -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+
 </manifest>
