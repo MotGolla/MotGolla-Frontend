@@ -7,6 +7,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.jakewharton.threetenabp.AndroidThreeTen
+import com.kakao.sdk.common.KakaoSdk
 import com.motgolla.common.RetrofitClient
 import com.motgolla.ui.theme.MotgollaTheme
 
@@ -16,6 +18,7 @@ class MainActivity : ComponentActivity() {
         val splashScreen = installSplashScreen()
 
         super.onCreate(savedInstanceState)
+
         setContent {
             MotgollaTheme {
                 val navController = rememberNavController()
