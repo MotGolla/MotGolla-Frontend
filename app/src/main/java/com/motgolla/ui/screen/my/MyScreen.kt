@@ -31,7 +31,6 @@ import com.motgolla.common.RetrofitClient
 import com.motgolla.common.storage.TokenStorage
 import com.motgolla.domain.login.api.service.MemberService
 import com.motgolla.domain.notification.api.service.NotificationService
-import com.motgolla.ui.component.modal.RecommendModal
 
 @Composable
 fun MyScreen(navController: NavController) {

@@ -1,5 +1,6 @@
 package com.motgolla.ui.screen.record
 
+import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -34,6 +35,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.derivedStateOf
 import androidx.navigation.NavController
+import com.motgolla.common.storage.TokenStorage
+import com.motgolla.domain.recommend.data.ProductPreview
+import com.motgolla.domain.recommend.service.RecommendService
+import com.motgolla.ui.component.item.ProductPreviewList
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -259,6 +265,8 @@ fun RecordDetailContent(
             }
         }
 
+        RecommendRow(context, record.productId)
+
         //  웹뷰 다이얼로그
         if (showMap) {
             Dialog(onDismissRequest = { showMap = false }) {
@@ -333,12 +341,42 @@ fun StatusBox(text: String, bgColor: Color, textColor: Color, modifier: Modifier
     }
 }
 
+@Composable
+fun RecommendRow(context: Context, productId: Long) {
+    val nickname = TokenStorage.getValue(context, "nickname") ?: "사용자"
+    var productList by remember { mutableStateOf<List<ProductPreview>>(emptyList()) }
+    val recommendService = remember { RecommendService() }
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(productId) {
+        coroutineScope.launch {
+            productList = recommendService.getRecommendedProducts(productId)
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "${nickname}님을 위한 추천 아이템",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+        )
+
+        ProductPreviewList(productList, 5)
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
 fun RecordDetailScreenPreview() {
     val dummyRecord = RecordDetailResponse(
         recordId = 1,
+        productId = 1,
         productName = "Women Bold Fox Head Patch Regular Cardigan",
         brandName = "메종키츠네",
         productPrice = 535000,

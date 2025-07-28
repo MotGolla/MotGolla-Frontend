@@ -2,6 +2,7 @@ package com.motgolla.domain.record.data.response
 
 data class RecordDetailResponse (
     val recordId: Long,
+    val productId: Long,
     val productName: String,
     val brandName: String,
     val productPrice: Int,
