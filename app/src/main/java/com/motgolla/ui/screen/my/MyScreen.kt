@@ -1,7 +1,6 @@
 package com.motgolla.ui.screen.my
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,6 +30,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.motgolla.common.RetrofitClient
 import com.motgolla.common.storage.TokenStorage
 import com.motgolla.domain.login.api.service.MemberService
+import com.motgolla.domain.notification.api.service.NotificationService
 
 @Composable
 fun MyScreen(navController: NavController) {
@@ -161,10 +161,13 @@ fun MyScreen(navController: NavController) {
         ) {
             Text(text = "알림 설정", fontSize = 17.sp)
             Spacer(modifier = Modifier.weight(1f))
-            Switch(checked = checked, onCheckedChange = {
-                checked = !checked
-                onClickChecked(context, checked)
-            })
+            Switch(
+                checked = checked,
+                onCheckedChange = {
+                    checked = it
+                    onClickChecked(context, it)
+                }
+            )
         }
     }
 
@@ -213,8 +216,7 @@ fun MyScreen(navController: NavController) {
 }
 
 fun onClickChecked(context: Context, checked: Boolean){
-    Log.d("MyScreen", "onClickChecked: $checked")
-    TokenStorage.save(context, "notificationCheck", checked.toString())
+    NotificationService.updateNotificationSetting(context, checked)
 }
 
 fun onClickLogout(context: Context, navController: NavController){

@@ -42,4 +42,25 @@ class FcmTokenRepository {
             }
         })
     }
+
+    fun deleteTokenFromServer(token: String?, accessToken: String){
+        if (token == null) return
+
+        val bearerToken = "Bearer $accessToken"
+        val call = api.deleteToken(FcmTokenRequest(token), bearerToken)
+
+        call.enqueue(object : Callback<Void>{
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    Log.d("FCM_TOKEN", "Token successfully deleted from server")
+                } else {
+                    Log.w("FCM_TOKEN", "Failed to delete token: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.e("FCM_TOKEN", "Error deleting token", t)
+            }
+        })
+    }
 }
