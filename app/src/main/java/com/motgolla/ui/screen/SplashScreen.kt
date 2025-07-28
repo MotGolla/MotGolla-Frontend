@@ -76,7 +76,6 @@ fun SplashScreen(navController: NavHostController) {
 private suspend fun navigateByLoginState(navController: NavHostController) {
     try {
         val response = RetrofitClient.getAuthService().getMemberInfo()
-        delay(1500)
         if (response.isSuccessful) {
             Log.d("SplashScreen", "Login Member : $response")
             navController.navigate("home") {

@@ -34,6 +34,8 @@ class MainActivity : ComponentActivity() {
                 val token = task.result
                 Log.d("FCM_TOKEN", "FCM 받은 토큰: $token")
 
+                TokenStorage.saveFcmToken(this, token)
+
                 // 저장된 accessToken 가져오기 (SharedPreferences나 저장소에서)
                 val accessToken = TokenStorage.getTokenResponse(this)?.accessToken
                 if (!accessToken.isNullOrEmpty()) {

@@ -1,5 +1,6 @@
 package com.motgolla.domain.record.api.service
 
+import com.motgolla.domain.recommend.data.RecommendedProduct
 import com.motgolla.domain.record.data.request.MemoSummaryRequest
 import com.motgolla.domain.record.data.response.BarcodeInfoResponse
 import com.motgolla.domain.record.data.response.MemoSummaryResponse
@@ -41,7 +42,12 @@ interface RecordService {
     @POST("/api/record/memo-summary")
     fun summarizeMemo(@Body request: MemoSummaryRequest): Call<MemoSummaryResponse>
 
+
     @GET("/api/record/{recordId}")
     suspend fun getRecordById(@Path("recordId") recordId: Long): RecordDetailResponse
+
+    @GET("/api/product/{productId}/recommend")
+    suspend fun getRecommendedProducts(@Path("productId") productId: Long): List<RecommendedProduct>
+
 
 }

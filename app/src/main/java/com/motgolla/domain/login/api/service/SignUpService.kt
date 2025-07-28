@@ -48,7 +48,7 @@ object SignUpService {
     ) {
         val birthday = "${year}-${month.pad2()}-${day.pad2()}"
 
-        val signUpRequest = com.motgolla.domain.login.data.SignUpRequest(
+        val signUpRequest = SignUpRequest(
             idToken = TokenStorage.getValue(context, "idToken") ?: "",
             oauthId = TokenStorage.getValue(context, "oauthId") ?: "",
             name = TokenStorage.getValue(context, "nickname") ?: "",

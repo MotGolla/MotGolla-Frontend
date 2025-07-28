@@ -5,5 +5,6 @@ data class RecommendedProduct(
     val name: String,
     val brand: String,
     val floor: Int,
-    val price: Int
+    val price: Int,
+    val imageUrl: String
 )
