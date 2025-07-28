@@ -86,7 +86,7 @@ fun DepartmentStoreSection(onClickMore: () -> Unit = {}) {
         HorizontalPagerIndicator(
             pagerState = pagerState,
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            activeColor = Color.White,
+            activeColor = Color(0xFF3B40CC),
             inactiveColor = Color.Gray
         )
     }
