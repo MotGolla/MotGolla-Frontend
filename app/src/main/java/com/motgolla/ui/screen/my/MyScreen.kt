@@ -41,6 +41,7 @@ fun MyScreen(navController: NavController) {
     var profile by remember { mutableStateOf("https://via.placeholder.com/60") }
     var birthday by remember { mutableStateOf("생일 정보 없음") }
     var gender by remember { mutableStateOf("") }
+    var createdAt by remember { mutableStateOf("2025-06-02") }
 
     var checked by remember {
         mutableStateOf(
@@ -62,6 +63,7 @@ fun MyScreen(navController: NavController) {
                     profile = memberInfo.profile?.takeIf { it.isNotBlank() } ?: "https://via.placeholder.com/60"
                     birthday = memberInfo.birthday
                     gender = memberInfo.gender
+                    createdAt = memberInfo.createdAt.toString().take(10)
                 }
             } else {
                 println("회원 정보 조회 실패: ${response.code()}")
@@ -104,7 +106,7 @@ fun MyScreen(navController: NavController) {
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Text(text = nickname, color = Color.White, fontSize = 25.sp, fontWeight = FontWeight.Bold)
-                Text(text = "2025.06.02 가입", color = Color.White, fontSize = 15.sp)
+                Text(text = "${createdAt} 가입", color = Color.White, fontSize = 15.sp)
             }
         }
 
@@ -170,6 +172,8 @@ fun MyScreen(navController: NavController) {
             )
         }
     }
+
+
 
     // Confirmation dialogs
     if (showLogoutDialog) {
