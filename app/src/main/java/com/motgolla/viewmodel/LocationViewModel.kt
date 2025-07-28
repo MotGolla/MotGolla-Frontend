@@ -38,8 +38,12 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
     private val _locationChanged = mutableStateOf(false)
     val locationChanged: State<Boolean> = _locationChanged
 
+    private val _isManualSelection = mutableStateOf(false)
+    val isManualSelection: State<Boolean> = _isManualSelection
+
     private var previousLocation: Location? = null
     private var pendingDepartmentName: String? = null
+    private var isFetchingStore = false
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(result: LocationResult) {
@@ -55,8 +59,46 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    fun selectDepartmentManually(name: String) {
+        _departmentName.value = name
+        _isManualSelection.value = true
+        PreferenceUtil.saveDepartmentName(getApplication(), name)
+        resetPendingState()
+        Log.d(TAG, "수동으로 백화점 선택됨: $name")
+    }
+
+//    fun resetToAutoMode() {
+//        _isManualSelection.value = false
+//        Log.d(TAG, "자동 모드로 전환됨")
+//        previousLocation?.let {
+//            handleLocationChange(it)
+//        }
+//    }
+
+    private fun handleLocationChange(newLocation: Location) {
+        if (_isManualSelection.value) {
+            Log.d(TAG, "수동 선택 모드 - 위치 변경 무시")
+            return
+        }
+
+        if (isFetchingStore) {
+            Log.d(TAG, "서버 호출 중이므로 위치 변경 처리 중복 방지")
+            return
+        }
+
+        val changed = previousLocation?.let { prev ->
+            newLocation.distanceTo(prev) > LOCATION_CHANGE_DISTANCE
+        } ?: true
+
+        if (changed) {
+            Log.d(TAG, "위치 변화 감지: ${newLocation.latitude}, ${newLocation.longitude}")
+            isFetchingStore = true
+            fetchNearestStoreFromServer(newLocation)
+            previousLocation = newLocation
+        }
+    }
+
     fun initPreviousLocation(onComplete: () -> Unit = {}) {
-        // 권한 체크는 뷰에서 한다고 가정 (여기선 그대로 남겨도 됨)
         if (!checkLocationPermission()) {
             Log.d(TAG, "위치 권한 없음")
             onComplete()
@@ -77,26 +119,6 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    // 서버 호출 중복 방지 플래그
-    private var isFetchingStore = false
-    private fun handleLocationChange(newLocation: Location) {
-        if (isFetchingStore) {
-            Log.d(TAG, "서버 호출 중이므로 위치 변경 처리 중복 방지")
-            return
-        }
-
-        val changed = previousLocation?.let { prev ->
-            newLocation.distanceTo(prev) > LOCATION_CHANGE_DISTANCE
-        } ?: true
-
-        if (changed) {
-            Log.d(TAG, "위치 변화 감지: ${newLocation.latitude}, ${newLocation.longitude}")
-            isFetchingStore = true
-            fetchNearestStoreFromServer(newLocation)
-            previousLocation = newLocation  // 위치 변화 있을 때만 업데이트
-        }
-    }
-
     fun startLocationUpdates() {
         if (!checkLocationPermission()) {
             Log.d(TAG, "위치 권한 없음")
@@ -106,7 +128,8 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
         val request = LocationRequest.Builder(
             Priority.PRIORITY_HIGH_ACCURACY,
             5000L
-        ).setMinUpdateDistanceMeters(10f).build()
+        ).setMinUpdateDistanceMeters(10f)
+            .build()
 
         fusedLocationClient.requestLocationUpdates(request, locationCallback, null)
     }
@@ -117,7 +140,10 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
 
     private fun checkLocationPermission(): Boolean {
         val context = getApplication<Application>()
-        return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun resetPendingState() {
@@ -125,25 +151,33 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
         _locationChanged.value = false
     }
 
-    private fun fetchNearestStoreFromServer(location: Location) {
+    private fun fetchNearestStoreFromServer(location: Location, forceUpdate: Boolean = false) {
         viewModelScope.launch {
             try {
-                val store: DepartmentStoreResponse? = repository.fetchNearestStore(location.latitude, location.longitude)
+                val store = repository.fetchNearestStore(location.latitude, location.longitude)
 
                 if (store != null) {
                     Log.d(TAG, "서버에서 받은 백화점: ${store.name}, 거리: ${store.distance}m")
 
                     if (store.distance <= NEARBY_DISTANCE_METERS) {
-                        val oldDeptName = _departmentName.value
                         _lastKnownLocation.value = location
+                        val oldDeptName = _departmentName.value
 
-                        if (store.name != oldDeptName) {
-                            pendingDepartmentName = store.name
-                            _locationChanged.value = true
-                            Log.d(TAG, "백화점 변경 감지됨, 안내문 표시")
-                        } else {
+                        if (forceUpdate) {
+                            _departmentName.value = store.name
+                            PreferenceUtil.saveDepartmentName(getApplication(), store.name)
+                            _isManualSelection.value = false
                             resetPendingState()
-                            Log.d(TAG, "백화점 동일, 안내문 표시 안함")
+                            Log.d(TAG, "강제 GPS 업데이트로 백화점 이름 갱신: ${store.name}")
+                        } else {
+                            if (store.name != oldDeptName) {
+                                pendingDepartmentName = store.name
+                                _locationChanged.value = true
+                                Log.d(TAG, "백화점 변경 감지됨, 안내문 표시")
+                            } else {
+                                resetPendingState()
+                                Log.d(TAG, "백화점 동일, 안내문 표시 안함")
+                            }
                         }
                     } else {
                         resetPendingState()
@@ -157,21 +191,22 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
             } catch (e: Exception) {
                 Log.e(TAG, "서버 호출 중 오류 발생", e)
                 resetPendingState()
-            }finally{
+            } finally {
                 isFetchingStore = false
             }
         }
     }
 
-    fun updateLocationManually() {
-        Log.d(TAG, "아이콘 클릭됨. pendingDepartmentName = $pendingDepartmentName")
-        pendingDepartmentName?.let { newName ->
-            _departmentName.value = newName
-            PreferenceUtil.saveDepartmentName(getApplication(), newName)
-            resetPendingState()
-            Log.d(TAG, "사용자 요청으로 백화점 이름 갱신: $newName")
-        }
-    }
+
+//    fun updateLocationManually() {
+//        Log.d(TAG, "아이콘 클릭됨. pendingDepartmentName = $pendingDepartmentName")
+//        pendingDepartmentName?.let { newName ->
+//            _departmentName.value = newName
+//            PreferenceUtil.saveDepartmentName(getApplication(), newName)
+//            resetPendingState()
+//            Log.d(TAG, "사용자 요청으로 백화점 이름 갱신: $newName")
+//        }
+//    }
 
     fun checkIfLocationChangedOnEnter() {
         val currentLoc = previousLocation ?: return
@@ -195,4 +230,27 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
             }
         }
     }
+
+    fun forceUpdateFromGPS() {
+        Log.d(TAG, "모달에서 GPS로 강제 백화점 재탐색 실행")
+
+        if (!checkLocationPermission()) {
+            Log.d(TAG, "위치 권한 없음 - forceUpdateFromGPS")
+            return
+        }
+
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                Log.d(TAG, "GPS 위치 가져옴 (강제): ${location.latitude}, ${location.longitude}")
+                previousLocation = location
+                _isManualSelection.value = false // 자동 모드 전환
+                fetchNearestStoreFromServer(location, forceUpdate = true) // 즉시 서버 재조회
+            } else {
+                Log.d(TAG, "위치 가져오기 실패 - 위치 null")
+            }
+        }.addOnFailureListener {
+            Log.e(TAG, "위치 가져오기 오류: ${it.message}")
+        }
+    }
+
 }
