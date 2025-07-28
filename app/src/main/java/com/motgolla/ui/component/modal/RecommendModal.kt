@@ -1,24 +1,21 @@
 package com.motgolla.ui.component.modal
 
 import android.util.Log
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.motgolla.R
 import com.motgolla.common.RetrofitClient
 import com.motgolla.common.storage.TokenStorage
-import com.motgolla.domain.recommend.data.RecommendedProduct
-import com.motgolla.ui.component.item.ItemSmallBox
+import com.motgolla.domain.recommend.data.ProductPreview
+import com.motgolla.ui.component.item.ProductPreviewList
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,8 +25,8 @@ fun RecommendModal(
     onDismissRequest: () -> Unit
 ) {
     val context = LocalContext.current
-    val sheetState = rememberModalBottomSheetState()
-    var productList by remember { mutableStateOf<List<RecommendedProduct>>(emptyList()) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var productList by remember { mutableStateOf<List<ProductPreview>>(emptyList()) }
     val coroutineScope = rememberCoroutineScope()
     val nickname = TokenStorage.getValue(context, "nickname") ?: "사용자"
 
@@ -38,16 +35,24 @@ fun RecommendModal(
             try {
                 val result = RetrofitClient.getRecordService().getRecommendedProducts(productId)
                 productList = result
-                Log.d("RecommendModal", "productList: $productList")
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
 
+    // 딤 + 시트 분리 구성
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.5f)) // 딤 처리 완전 수동
+            .clickable(onClick = onDismissRequest)
+    )
+
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
-        sheetState = sheetState
+        sheetState = sheetState,
+        scrimColor = Color.Transparent // 내부 scrim은 제거
     ) {
         Column(
             modifier = Modifier
@@ -62,34 +67,7 @@ fun RecommendModal(
                     .padding(bottom = 8.dp)
             )
 
-            if (productList.isEmpty()) {
-                // 비어 있을 때 이미지 표시
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.error),
-                        contentDescription = "추천 상품 없음",
-                        modifier = Modifier.size(160.dp)
-                    )
-                    Text(
-                        text = "상품이 없어요...",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                }
-            } else {
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(productList) { product ->
-                        ItemSmallBox(product = product)
-                    }
-                }
-            }
+            ProductPreviewList(productList, 5)
         }
     }
 }

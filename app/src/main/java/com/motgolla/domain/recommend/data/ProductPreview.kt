@@ -1,6 +1,6 @@
 package com.motgolla.domain.recommend.data
 
-data class RecommendedProduct(
+data class ProductPreview(
     val id: Long,
     val name: String,
     val brand: String,
