@@ -17,7 +17,7 @@ fun TopBox(viewModel: LocationViewModel) {
             .fillMaxWidth()
             .padding(horizontal = 24.dp)
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(23.dp))
 
         LocationSection(viewModel = viewModel)
         Spacer(modifier = Modifier.height(10.dp))

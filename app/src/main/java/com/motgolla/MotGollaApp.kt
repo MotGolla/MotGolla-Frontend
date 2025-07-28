@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.motgolla.ui.component.MotGollaTopBar
@@ -21,6 +22,7 @@ fun MotGollaApp() {
     val hideBarsRoutes = listOf("splash", "login", "welcome", "signup", "home")
 
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             if (!hideBarsRoutes.contains(currentRoute)) {
                 MotGollaTopBar(

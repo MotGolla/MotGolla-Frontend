@@ -63,7 +63,7 @@ fun HomeScreen(viewModel: LocationViewModel = viewModel()) {
         BottomBox(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.77f)
+                .fillMaxHeight(0.78f)
                 .align(Alignment.BottomCenter)
         )
     }
