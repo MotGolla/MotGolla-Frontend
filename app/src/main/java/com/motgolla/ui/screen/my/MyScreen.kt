@@ -31,12 +31,14 @@ import coil.compose.rememberAsyncImagePainter
 import com.motgolla.common.RetrofitClient
 import com.motgolla.common.storage.TokenStorage
 import com.motgolla.domain.login.api.service.MemberService
+import com.motgolla.ui.component.modal.RecommendModal
 
 @Composable
 fun MyScreen(navController: NavController) {
     val context = LocalContext.current
 
     // 상태로 값 저장
+    var showModal by remember { mutableStateOf(false) }
     var nickname by remember { mutableStateOf("닉네임") }
     var profile by remember { mutableStateOf("https://via.placeholder.com/60") }
     var birthday by remember { mutableStateOf("생일 정보 없음") }
@@ -167,6 +169,8 @@ fun MyScreen(navController: NavController) {
             })
         }
     }
+
+
 
     // Confirmation dialogs
     if (showLogoutDialog) {

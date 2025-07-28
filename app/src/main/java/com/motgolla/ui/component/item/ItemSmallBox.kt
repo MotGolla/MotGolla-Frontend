@@ -13,11 +13,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.motgolla.R
 import com.motgolla.domain.recommend.data.RecommendedProduct
 
 @Composable
 fun ItemSmallBox(product: RecommendedProduct) {
+    val imageUrl = product.imageUrl?.takeIf { it.isNotBlank() }
+        ?: "android.resource://com.motgolla/drawable/sample"
+    val floorLabel = if (product.floor < 0) {
+        "B${-product.floor}"
+    } else {
+        "${product.floor}F"
+    }
+
     Column(
         modifier = Modifier
             .width(140.dp)
@@ -25,8 +34,8 @@ fun ItemSmallBox(product: RecommendedProduct) {
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.sample),
+        AsyncImage(
+            model = imageUrl,
             contentDescription = null,
             modifier = Modifier
                 .size(140.dp)
@@ -36,15 +45,15 @@ fun ItemSmallBox(product: RecommendedProduct) {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            product.name,
+            text = if (product.name.length > 17) product.name.take(17) + "..." else product.name,
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.align(Alignment.Start)
         )
 
         Text(
-            product.brand,
-            fontSize = 14.sp,
+            text = product.brand.take(20),
+            fontSize = 12.sp,
             modifier = Modifier.align(Alignment.Start)
         )
 
@@ -54,8 +63,14 @@ fun ItemSmallBox(product: RecommendedProduct) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("${product.floor}F", fontSize = 13.sp)
-            Text("%,d".format(product.price), fontSize = 13.sp)
+            Text(
+                text = floorLabel,
+                fontSize = 13.sp
+            )
+            Text(
+                text = String.format("%,d원", product.price),
+                fontSize = 13.sp
+            )
         }
     }
 }
@@ -63,5 +78,5 @@ fun ItemSmallBox(product: RecommendedProduct) {
 @Composable
 @Preview(showBackground = true)
 fun ItemSmallBoxPreview() {
-    ItemSmallBox(RecommendedProduct(1, "미쏘", "에센셜 브이넥 가디건", 4, 19900))
+    ItemSmallBox(RecommendedProduct(1, "미쏘", "에센셜 브이넥 가디건", -2, 19900, ""))
 }
