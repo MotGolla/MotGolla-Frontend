@@ -20,7 +20,11 @@ import com.motgolla.ui.screen.vote.VoteScreen
 import com.motgolla.viewmodel.record.MemoViewModel
 import com.motgolla.viewmodel.record.RecordViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+import com.motgolla.ui.screen.record.ImageViewerScreen
 import kotlin.getValue
+import android.net.Uri
 
 @Composable
 fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -49,6 +53,24 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
         composable("login") { LoginScreen(navController) }
         composable("signup") { SignUpScreen(navController) }
         composable("welcome") { WelcomeScreen(navController) }
+        composable(
+            route = "image_viewer/{encodedUrls}/{initialIndex}",
+            arguments = listOf(
+                navArgument("encodedUrls") { type = NavType.StringType },
+                navArgument("initialIndex") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val encoded = backStackEntry.arguments?.getString("encodedUrls") ?: ""
+            val decoded = Uri.decode(encoded)
+            val initial = backStackEntry.arguments?.getInt("initialIndex") ?: 0
+
+            ImageViewerScreen(
+                navController = navController,
+                imageListStr = decoded,
+                initialIndex = initial
+            )
+        }
+
     }
 }
 
