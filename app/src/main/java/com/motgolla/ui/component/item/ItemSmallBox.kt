@@ -38,8 +38,8 @@ fun ItemSmallBox(product: RecommendedProduct) {
             model = imageUrl,
             contentDescription = null,
             modifier = Modifier
-                .size(140.dp)
-                .clip(RoundedCornerShape(12.dp))
+                .size(150.dp)
+                .clip(RoundedCornerShape(6.dp)) // 기존 12.dp → 6.dp로 살짝만 둥글게
         )
 
         Spacer(modifier = Modifier.height(8.dp))
