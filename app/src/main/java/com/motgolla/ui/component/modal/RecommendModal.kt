@@ -9,11 +9,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.motgolla.R
 import com.motgolla.common.RetrofitClient
+import com.motgolla.common.storage.TokenStorage
 import com.motgolla.domain.recommend.data.RecommendedProduct
 import com.motgolla.ui.component.item.ItemSmallBox
 import kotlinx.coroutines.launch
@@ -24,9 +27,11 @@ fun RecommendModal(
     productId: Long,
     onDismissRequest: () -> Unit
 ) {
+    val context = LocalContext.current
     val sheetState = rememberModalBottomSheetState()
     var productList by remember { mutableStateOf<List<RecommendedProduct>>(emptyList()) }
     val coroutineScope = rememberCoroutineScope()
+    val nickname = TokenStorage.getValue(context, "nickname") ?: "사용자"
 
     LaunchedEffect(productId) {
         coroutineScope.launch {
@@ -50,7 +55,7 @@ fun RecommendModal(
                 .padding(16.dp)
         ) {
             Text(
-                text = "닉네임님을 위한 추천 아이템",
+                text = "${nickname}님을 위한 추천 아이템",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)

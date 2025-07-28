@@ -173,8 +173,6 @@ fun MyScreen(navController: NavController) {
         }
     }
 
-
-
     // Confirmation dialogs
     if (showLogoutDialog) {
         AlertDialog(
