@@ -23,12 +23,20 @@ import com.motgolla.viewmodel.LocationViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.motgolla.common.RetrofitClient
+import com.motgolla.domain.record.api.repository.ShoppingHistoryRepository
+import com.motgolla.viewmodel.record.ShoppingHistoryViewModel
 
 @Composable
 fun HomeScreen(viewModel: LocationViewModel = viewModel()) {
 
     var initDone by remember { mutableStateOf(false) }
 
+    val shoppingHistoryViewModel = remember {
+        ShoppingHistoryViewModel(
+            ShoppingHistoryRepository(RetrofitClient.getRecordService())
+        )
+    }
     //앱 시작 시 위치 불러오기
     LaunchedEffect(Unit) {
         viewModel.initPreviousLocation {
@@ -64,7 +72,8 @@ fun HomeScreen(viewModel: LocationViewModel = viewModel()) {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.78f)
-                .align(Alignment.BottomCenter)
+                .align(Alignment.BottomCenter),
+            shoppingHistoryViewModel = shoppingHistoryViewModel
         )
     }
 }

@@ -3,7 +3,7 @@ package com.motgolla.ui.screen.home.top
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocationCity
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,7 +36,7 @@ fun LocationSection(viewModel: LocationViewModel) {
         ) {
             if (locationChanged) {
                 Text(
-                    text = "백화점 위치가 맞나요? 아이콘을 눌러 갱신해주세요!",
+                    text = "백화점 위치가 맞나요? 위치를 갱신해주세요!",
                     color = Color.Yellow,
                     fontSize = 14.sp,
                     modifier = Modifier.align(Alignment.CenterStart)
@@ -56,7 +56,7 @@ fun LocationSection(viewModel: LocationViewModel) {
             )
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
-                imageVector = Icons.Default.LocationCity,
+                imageVector = Icons.Default.ExpandMore,
                 contentDescription = "백화점 수동 선택",
                 tint = Color.White,
                 modifier = Modifier.clickable {

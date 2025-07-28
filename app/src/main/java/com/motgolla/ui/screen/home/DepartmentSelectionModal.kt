@@ -1,37 +1,24 @@
 package com.motgolla.ui.screen.home
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.GpsFixed
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.motgolla.domain.departmentstore.data.departmentStoresByRegion
+
 @Composable
 fun DepartmentSelectionModal(
     isVisible: Boolean,
@@ -39,68 +26,76 @@ fun DepartmentSelectionModal(
     onManualDepartmentSelected: (String) -> Unit,
     onUseGPS: () -> Unit
 ) {
-    if (isVisible) {
-        Dialog(
-            onDismissRequest = onDismiss,
-            properties = DialogProperties(
-                dismissOnClickOutside = true,
-                usePlatformDefaultWidth = false
-            )
+    if (!isVisible) return
+
+    val borderColor = Color(0xFFAA80F9)
+
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(
+            dismissOnClickOutside = true,
+            usePlatformDefaultWidth = false
+        )
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { onDismiss() },
+            contentAlignment = Alignment.BottomCenter
         ) {
-            Box(
+            Surface(
+                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+                color = Color.White,
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.8f)
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
-                    ) {
-                        // 회색 영역 클릭 시 모달 닫기
-                        onDismiss()
-                    },
-                contentAlignment = Alignment.BottomCenter
+                    ) { /* 모달 내 터치 무시 */ }
             ) {
-                Surface(
-                    shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
-                    color = Color.White,
+
+                val scrollState = rememberScrollState()
+
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.8f)
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        ) { /* 모달 안 터치 무시 */ }
+                        .padding(20.dp)
+                        .verticalScroll(scrollState)
                 ) {
-                    Column(modifier = Modifier.padding(20.dp)) {
-                        // 상단 핸들
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .width(40.dp)
-                                .height(4.dp)
-                                .clip(RoundedCornerShape(2.dp))
-                                .background(Color.LightGray)
-                        )
+                    // 상단 핸들
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .width(40.dp)
+                            .height(4.dp)
+                            .clip(RoundedCornerShape(2.dp))
+                            .background(Color.LightGray)
+                    )
+                    Spacer(Modifier.height(16.dp))
 
-                        Spacer(Modifier.height(16.dp))
-
+                    // 제목과 현재 위치 버튼 같은 행에 배치
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
                         Text(
                             "백화점을 선택해주세요",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black
                         )
-
-                        Spacer(Modifier.height(20.dp))
-
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
-                                .fillMaxWidth()
                                 .clickable {
                                     onUseGPS()
                                     onDismiss()
                                 }
-                                .padding(vertical = 14.dp)
+                                .padding(8.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Default.GpsFixed,
@@ -108,29 +103,61 @@ fun DepartmentSelectionModal(
                                 tint = Color(0xFF1976D2),
                                 modifier = Modifier.size(22.dp)
                             )
-                            Spacer(Modifier.width(10.dp))
-                            Text("GPS로 백화점 다시 잡기", color = Color(0xFF1976D2), fontSize = 16.sp)
-                        }
-
-                        Divider(thickness = 1.dp, color = Color.LightGray)
-
-                        Spacer(Modifier.height(12.dp))
-
-                        val departments = listOf("A현대백화점", "B현대백화점", "C현대백화점")
-
-                        departments.forEach { name ->
+                            Spacer(Modifier.width(4.dp))
                             Text(
-                                text = name,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        onManualDepartmentSelected(name)
-                                        onDismiss()
-                                    }
-                                    .padding(vertical = 14.dp),
-                                fontSize = 16.sp,
-                                color = Color.Black
+                                "현재 위치 백화점",
+                                color = Color(0xFF1976D2),
+                                fontSize = 14.sp
                             )
+                        }
+                    }
+
+                    Spacer(Modifier.height(20.dp))
+
+                    // 구역별 백화점 리스트 출력
+                    departmentStoresByRegion.forEach { (region, storesRows) ->
+                        Text(
+                            text = region,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                        Divider(color = Color.LightGray, thickness = 1.dp)
+                        Spacer(Modifier.height(8.dp))
+
+                        storesRows.forEach { storesInRow ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                storesInRow.forEach { storeName ->
+                                    Box(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .clip(RoundedCornerShape(12.dp))
+                                            .border(2.dp, borderColor, RoundedCornerShape(12.dp))
+                                            .clickable {
+                                                onManualDepartmentSelected(storeName)
+                                                onDismiss()
+                                            }
+                                            .padding(vertical = 12.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = storeName,
+                                            fontSize = 14.sp,
+                                            color = Color.Black,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
+                                }
+                                if (storesInRow.size == 1) {
+                                    Spacer(modifier = Modifier.weight(1f))
+                                }
+                            }
+                            Spacer(Modifier.height(12.dp))
                         }
                     }
                 }

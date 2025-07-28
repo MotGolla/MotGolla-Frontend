@@ -4,7 +4,6 @@ import com.motgolla.common.RetrofitClient
 import com.motgolla.domain.record.api.service.RecordService
 import com.motgolla.domain.record.data.request.MemoSummaryRequest
 import com.motgolla.domain.record.data.response.BarcodeInfoResponse
-import com.motgolla.domain.record.data.request.RecordRequest
 import com.motgolla.domain.record.data.response.MemoSummaryResponse
 import com.motgolla.domain.record.data.response.RecordResponse
 import okhttp3.MultipartBody
@@ -130,8 +129,5 @@ class RecordRepository {
             }
         })
     }
-
-
-
 
 }

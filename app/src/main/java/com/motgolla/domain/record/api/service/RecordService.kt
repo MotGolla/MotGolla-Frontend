@@ -6,6 +6,7 @@ import com.motgolla.domain.record.data.response.BarcodeInfoResponse
 import com.motgolla.domain.record.data.response.MemoSummaryResponse
 import com.motgolla.domain.record.data.response.RecordDetailResponse
 import com.motgolla.domain.record.data.response.RecordResponse
+import com.motgolla.domain.record.data.response.ShoppingHistoryResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -15,6 +16,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface RecordService {
 
@@ -49,5 +51,9 @@ interface RecordService {
     @GET("/api/product/{productId}/recommend")
     suspend fun getRecommendedProducts(@Path("productId") productId: Long): List<ProductPreview>
 
-
+    @GET("/api/record/products")
+    suspend fun getShoppingHistory(
+        @Query("date") date: String,
+        @Query("limit") limit: Int
+    ): ShoppingHistoryResponse
 }
