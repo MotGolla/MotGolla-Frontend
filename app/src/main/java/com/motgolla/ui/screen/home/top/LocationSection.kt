@@ -1,6 +1,10 @@
 package com.motgolla.ui.screen.home.top
 
 import android.util.Log
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -20,11 +24,25 @@ import com.motgolla.viewmodel.LocationViewModel
 
 @Composable
 fun LocationSection(viewModel: LocationViewModel) {
-    //백화점 이름과 위치 변경 여부
     val departmentName by viewModel.departmentName
     val locationChanged by viewModel.locationChanged
 
     Column {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(20.dp)
+        ) {
+            if (locationChanged) {
+                Text(
+                    text = "백화점 위치가 맞나요? 아이콘을 눌러 갱신해주세요!",
+                    color = Color.Yellow,
+                    fontSize = 14.sp,
+                    modifier = Modifier.align(Alignment.CenterStart)
+                )
+            }
+        }
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
@@ -45,14 +63,6 @@ fun LocationSection(viewModel: LocationViewModel) {
                 }
             )
         }
-
-        if (locationChanged) {
-            Text(
-                text = "백화점 위치가 맞나요? 아이콘을 눌러 갱신해주세요!",
-                color = Color.Yellow,
-                fontSize = 14.sp,
-                modifier = Modifier.padding(4.dp)
-            )
-        }
     }
 }
+
