@@ -1,6 +1,5 @@
 package com.motgolla.ui.component.modal
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,9 +11,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.motgolla.common.RetrofitClient
 import com.motgolla.common.storage.TokenStorage
 import com.motgolla.domain.recommend.data.ProductPreview
+import com.motgolla.domain.recommend.service.RecommendService
 import com.motgolla.ui.component.item.ProductPreviewList
 import kotlinx.coroutines.launch
 
@@ -30,29 +29,25 @@ fun RecommendModal(
     val coroutineScope = rememberCoroutineScope()
     val nickname = TokenStorage.getValue(context, "nickname") ?: "사용자"
 
+    val recommendService = remember { RecommendService() }
+
     LaunchedEffect(productId) {
         coroutineScope.launch {
-            try {
-                val result = RetrofitClient.getRecordService().getRecommendedProducts(productId)
-                productList = result
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            productList = recommendService.getRecommendedProducts(productId)
         }
     }
 
-    // 딤 + 시트 분리 구성
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.5f)) // 딤 처리 완전 수동
+            .background(Color.Black.copy(alpha = 0.5f))
             .clickable(onClick = onDismissRequest)
     )
 
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
-        scrimColor = Color.Transparent // 내부 scrim은 제거
+        scrimColor = Color.Transparent
     ) {
         Column(
             modifier = Modifier
