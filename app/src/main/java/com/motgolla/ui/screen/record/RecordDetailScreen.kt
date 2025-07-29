@@ -40,6 +40,8 @@ import com.motgolla.domain.recommend.data.ProductPreview
 import com.motgolla.domain.recommend.service.RecommendService
 import com.motgolla.ui.component.item.ProductPreviewList
 import kotlinx.coroutines.launch
+import androidx.compose.ui.window.DialogProperties
+import androidx.compose.foundation.layout.fillMaxSize
 
 
 @Composable
@@ -269,8 +271,15 @@ fun RecordDetailContent(
 
         //  웹뷰 다이얼로그
         if (showMap) {
-            Dialog(onDismissRequest = { showMap = false }) {
-                Box(Modifier.padding(8.dp)) { //  padding은 외부에서
+            Dialog(
+                onDismissRequest = { showMap = false },
+                properties = DialogProperties(usePlatformDefaultWidth = false)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp)
+                ) { //  padding은 외부에서
                     Surface(
                         shape = RoundedCornerShape(16.dp),
                         modifier = Modifier
