@@ -40,6 +40,8 @@ import com.motgolla.domain.recommend.data.ProductPreview
 import com.motgolla.domain.recommend.service.RecommendService
 import com.motgolla.ui.component.item.ProductPreviewList
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 
 
 @Composable
@@ -72,7 +74,7 @@ fun RecordDetailScreen(
 @Composable
 fun RecordDetailContent(
     record: RecordDetailResponse,
-    navController: NavController? = null // 기본 null
+    navController: NavController? = null
 ) {
     val context = LocalContext.current
     val allImages = remember(record.imageUrls, record.tagImageUrl) {
@@ -86,225 +88,194 @@ fun RecordDetailContent(
         derivedStateOf {
             val offset = listState.firstVisibleItemScrollOffset
             val index = listState.firstVisibleItemIndex
-            if (offset > 150) index + 1 else index //  보정
+            if (offset > 150) index + 1 else index
         }
     }
 
     var enlargedImageUrl by remember { mutableStateOf<String?>(null) }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-
-        // 이미지 슬라이더 + 지도 아이콘
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(260.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            LazyRow(
-                state = listState,
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(allImages) { imageUrl ->
-                    AsyncImage(
-                        model = imageUrl,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .width(300.dp)
-                            .fillMaxHeight()
-                            .clickable {
-                                navController?.let {
-                                    val index = allImages.indexOf(imageUrl)
-                                    val encodedImages = Uri.encode(allImages.joinToString(","))
-                                    it.navigate("image_viewer/${encodedImages}/$index")
-                                }
-                            },
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            }
-
-            if (enlargedImageUrl != null) {
-                Dialog(onDismissRequest = { enlargedImageUrl = null }) {
-                    Box(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth()
-                    ) {
-                        AsyncImage(
-                            model = enlargedImageUrl,
-                            contentDescription = "확대 이미지",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .aspectRatio(1f), // 정사각형 또는 조정 가능
-                            contentScale = ContentScale.Fit
-                        )
-
-                        IconButton(
-                            onClick = { enlargedImageUrl = null },
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(8.dp)
-                        ) {
-                            Icon(Icons.Default.Close, contentDescription = "닫기", tint = Color.DarkGray)
-                        }
-                    }
-                }
-            }
-
-        }
-
-        //  슬라이드 인디케이터 (가운데 정렬)
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            repeat(allImages.size) { index ->
-                Box(
-                    modifier = Modifier
-                        .size(12.dp)
-                        .padding(3.dp)
-                        .background(
-                            if (index == activeIndex) Color(0xFF7E57C2) else Color.Gray,
-                            CircleShape
-                        )
-                )
-            }
-        }
-
-
-        //  상태 + 날짜 (한 행)  & 지도 아이콘
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically, // 세로축 가운데 정렬
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row {
-                StatusBox(
-                    text = "구매 ${if (record.productStatus == "COMPLETED") "완료" else "보류"}",
-                    bgColor = Color(0xFF7E57C2),
-                    textColor = Color.White
-                )
-
-                StatusBox(
-                    text = record.recordCreatedAt,
-                    bgColor = Color(0xFFEDE7F6),
-                    textColor = Color.Gray
-                )
-            }
-
-            Box(
-                modifier = Modifier
-                    .height(32.dp) // StatusBox와 동일한 높이
-                    .width(32.dp), // 아이콘 크기 기준 너비
-                contentAlignment = Alignment.Center
-            ) {
-                IconButton(
-                    onClick = { showMap = true },
-                    modifier = Modifier.fillMaxSize() // 버튼 전체 크기 채우기
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Map,
-                        contentDescription = "지도 보기",
-                        tint = Color.Gray
-                    )
-                }
-            }
-        }
-
-
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // 이름 & 가격
-        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-            Text(text = record.productName, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Text(
-                text = "%,d원".format(record.productPrice),
-                fontSize = 18.sp,
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // 속성 정렬
-        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-            InfoAlignedRow("브랜드", record.brandName)
-            InfoAlignedRow("모델명", record.productNumber)
-            InfoAlignedRow("사이즈", record.productSize)
-            InfoAlignedRow("백화점 지점", record.storeName)
-            InfoAlignedRow("매장 위치", record.brandLocationInfo)
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // 메모
-        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-            Text(text = "메모", fontWeight = FontWeight.Bold, color = Color.Gray)
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Box(
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        item {
+            // 이미지 슬라이더
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(color = Color(0xFFF6F6F6), shape = RoundedCornerShape(8.dp))
-                    .padding(12.dp)
+                    .height(260.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                LazyRow(
+                    state = listState,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(allImages) { imageUrl ->
+                        AsyncImage(
+                            model = imageUrl,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .width(300.dp)
+                                .fillMaxHeight()
+                                .clickable {
+                                    navController?.let {
+                                        val index = allImages.indexOf(imageUrl)
+                                        val encodedImages = Uri.encode(allImages.joinToString(","))
+                                        it.navigate("image_viewer/${encodedImages}/$index")
+                                    }
+                                },
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                }
+            }
+        }
+
+        item {
+            // 슬라이드 인디케이터
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                repeat(allImages.size) { index ->
+                    Box(
+                        modifier = Modifier
+                            .size(12.dp)
+                            .padding(3.dp)
+                            .background(
+                                if (index == activeIndex) Color(0xFF7E57C2) else Color.Gray,
+                                CircleShape
+                            )
+                    )
+                }
+            }
+        }
+
+        item {
+            // 상태 & 날짜 & 지도 버튼
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row {
+                    StatusBox(
+                        text = "구매 ${if (record.productStatus == "COMPLETED") "완료" else "보류"}",
+                        bgColor = Color(0xFF7E57C2),
+                        textColor = Color.White
+                    )
+
+                    StatusBox(
+                        text = record.recordCreatedAt,
+                        bgColor = Color(0xFFEDE7F6),
+                        textColor = Color.Gray
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .height(32.dp)
+                        .width(32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    IconButton(
+                        onClick = { showMap = true },
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Map,
+                            contentDescription = "지도 보기",
+                            tint = Color.Gray
+                        )
+                    }
+                }
+            }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(12.dp))
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                Text(text = record.productName, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 Text(
-                    text = record.productSummary,
-                    fontSize = 14.sp
+                    text = "%,d원".format(record.productPrice),
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }
 
-        RecommendRow(context, record.productId)
+        item {
+            Spacer(modifier = Modifier.height(12.dp))
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                InfoAlignedRow("브랜드", record.brandName)
+                InfoAlignedRow("모델명", record.productNumber)
+                InfoAlignedRow("사이즈", record.productSize)
+                InfoAlignedRow("백화점 지점", record.storeName)
+                InfoAlignedRow("매장 위치", record.brandLocationInfo)
+            }
+        }
 
-        //  웹뷰 다이얼로그
-        if (showMap) {
-            Dialog(onDismissRequest = { showMap = false }) {
-                Box(Modifier.padding(8.dp)) { //  padding은 외부에서
-                    Surface(
-                        shape = RoundedCornerShape(16.dp),
-                        modifier = Modifier
-                            .fillMaxWidth() //  완전히 채우기
-                            .fillMaxHeight(0.9f)
-                            .padding(0.dp)
-                    ) {
-                        Column {
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(8.dp),
-                                horizontalArrangement = Arrangement.End
-                            ) {
-                                TextButton(onClick = { showMap = false }) {
-                                    Text("닫기")
-                                }
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                Text(text = "메모", fontWeight = FontWeight.Bold, color = Color.Gray)
+                Spacer(modifier = Modifier.height(12.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = Color(0xFFF6F6F6), shape = RoundedCornerShape(8.dp))
+                        .padding(12.dp)
+                ) {
+                    Text(text = record.productSummary, fontSize = 14.sp)
+                }
+            }
+        }
+
+        item {
+            RecommendRow(context, record.productId)
+        }
+    }
+
+    if (showMap) {
+        Dialog(onDismissRequest = { showMap = false }) {
+            Box(Modifier.padding(8.dp)) {
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.9f)
+                ) {
+                    Column {
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            TextButton(onClick = { showMap = false }) {
+                                Text("닫기")
                             }
-                            AndroidView(factory = {
-                                WebView(it).apply {
-                                    webViewClient = WebViewClient()
-                                    settings.javaScriptEnabled = true
-                                    loadUrl(record.storeMapLink)
-                                }
-                            }, modifier = Modifier.fillMaxSize())
                         }
+                        AndroidView(factory = {
+                            WebView(it).apply {
+                                webViewClient = WebViewClient()
+                                settings.javaScriptEnabled = true
+                                loadUrl(record.storeMapLink)
+                            }
+                        }, modifier = Modifier.fillMaxSize())
                     }
                 }
             }
-
         }
-
     }
 }
+
 
 @Composable
 fun InfoAlignedRow(label: String, value: String) {
