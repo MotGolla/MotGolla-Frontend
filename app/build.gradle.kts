@@ -107,14 +107,11 @@ dependencies {
     //스플래시 화면 - Lottie
     implementation("com.airbnb.android:lottie-compose:6.4.0")
     implementation("androidx.core:core-splashscreen:1.0.0-beta01") //기본 스플래시 삭제
-//    implementation("io.coil-kt:coil-compose:2.4.0")
-//    implementation("io.coil-kt:coil-gif:2.4.0")
+    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation("io.coil-kt:coil-gif:2.4.0")
 
     //아이콘
     implementation("androidx.compose.material:material-icons-extended")
-
-
-
 
     // URL 또는 URI 이미지 로더
     implementation("io.coil-kt:coil-compose:2.4.0")
@@ -144,6 +141,4 @@ dependencies {
 
     implementation("com.kizitonwose.calendar:core:2.7.0")
     implementation("com.kizitonwose.calendar:compose:2.7.0")
-
-
 }

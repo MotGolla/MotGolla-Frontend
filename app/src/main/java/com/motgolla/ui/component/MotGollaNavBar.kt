@@ -7,17 +7,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -31,23 +34,25 @@ fun MotgollaNavBar(navController: NavController) {
 
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
-        tonalElevation = 8.dp
+        tonalElevation = 8.dp,
+        modifier = Modifier.height(60.dp)
     ) {
         MotGollaNavScreen.items.forEach { screen ->
             NavigationBarItem(
                 icon = {
-                    Image(
-                        painter = painterResource(id = screen.iconRes),
-                        contentDescription = screen.title,
-                        modifier = Modifier.size(24.dp),
-                        colorFilter = if (currentRoute == screen.route) {
-                            ColorFilter.tint(selectedColor)
-                        } else {
-                            ColorFilter.tint(unselectedColor)
-                        }
-                    )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Image(
+                            painter = painterResource(id = screen.iconRes),
+                            contentDescription = screen.title,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = screen.title,
+                            fontSize = 10.sp
+                        )
+                    }
                 },
-                label = { Text(text = screen.title) },
                 selected = currentRoute == screen.route,
                 onClick = {
                     if (currentRoute != screen.route) {

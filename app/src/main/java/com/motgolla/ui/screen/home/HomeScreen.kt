@@ -61,31 +61,22 @@ fun HomeScreen(
             .background(
                 Brush.verticalGradient(
                     colorStops = arrayOf(
-                        0.0f to Color(0xFFAA80F9),
-                        0.6f to Color(0xFF6165D7),
-                        1.0f to Color(0xFF6165D7)
+                        0.0f to Color(0xFF8d0aff),
+                        0.1f to Color(0xFF700aff),
+                        0.22f to Color(0xFF4a12ff)
                     )
                 )
             )
-            .padding(top = 40.dp)
+            .padding(top = 35.dp)
     ) {
         TopBox(viewModel = viewModel)
-
-        // 하단 박스
         BottomBox(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.78f)
+                .fillMaxHeight(0.80f)
                 .align(Alignment.BottomCenter),
             shoppingHistoryViewModel = shoppingHistoryViewModel,
             navController = navController
         )
     }
 }
-
-
-//@Preview(showBackground = true)
-//@Composable
-//fun HomeScreenPreview() {
-//    HomeScreen()
-//}
