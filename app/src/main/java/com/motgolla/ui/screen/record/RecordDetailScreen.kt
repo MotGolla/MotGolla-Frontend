@@ -42,7 +42,9 @@ import com.motgolla.ui.component.item.ProductPreviewList
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.DialogProperties
 
 
@@ -303,35 +305,88 @@ fun RecordDetailContent(
     }
 
     if (showStatusChangeDialog) {
-        AlertDialog(
+        Dialog(
             onDismissRequest = { showStatusChangeDialog = false },
-            title = { Text("구매 상태 변경") },
-            text = {
-                Text("구매 상태를 '${if (record.productStatus == "COMPLETED") "보류" else "완료"}'로 변경하시겠습니까?")
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showStatusChangeDialog = false
-                        isUpdatingStatus = true
-                        // 상태 변경 API 호출
-                        // 이 코드는 아래 ViewModel에 연결된 코드로 작성
-                        viewModel.changeStatus(
-                            recordId = record.recordId,
-                            newStatus = if (record.productStatus == "COMPLETED") "AVAILABLE" else "COMPLETED"
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false, // 꽉 채우기
+                dismissOnClickOutside = false    // 우리가 수동으로 처리
+            )
+        ) {
+            // 바깥 배경 클릭 시 닫기
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable(onClick = { showStatusChangeDialog = false }),
+                contentAlignment = Alignment.Center
+            ) {
+                // 모달 내용 (클릭 이벤트 소비용)
+                Column(
+                    modifier = Modifier
+                        .width(300.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color.White)
+                        .padding(horizontal = 20.dp, vertical = 24.dp)
+                        .clickable(enabled = true, onClick = {}), // 이벤트 소비
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "구매 상태 변경",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = Color.Black
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = "구매 상태를 '${if (record.productStatus == "COMPLETED") "보류" else "완료"}'로 변경하시겠습니까?",
+                        fontSize = 14.sp,
+                        color = Color.Gray,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // 확인 버튼
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(44.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(Color(0xFF7B2CBF))
+                            .clickable {
+                                showStatusChangeDialog = false
+                                isUpdatingStatus = true
+                                viewModel.changeStatus(
+                                    recordId = record.recordId,
+                                    newStatus = if (record.productStatus == "COMPLETED") "AVAILABLE" else "COMPLETED"
+                                )
+                            },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "확인",
+                            color = Color.White,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium
                         )
                     }
-                ) {
-                    Text("확인")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showStatusChangeDialog = false }) {
-                    Text("취소")
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "취소",
+                        color = Color.Gray,
+                        fontSize = 13.sp,
+                        modifier = Modifier.clickable { showStatusChangeDialog = false }
+                    )
                 }
             }
-        )
+        }
     }
+
+
 
 }
 
