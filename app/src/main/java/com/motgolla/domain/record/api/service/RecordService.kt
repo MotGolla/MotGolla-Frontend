@@ -32,20 +32,19 @@ interface RecordService {
     @Multipart
     @POST("/api/record/register")
     fun submitRecord(
-        @Part("departmentStore") departmentStore: RequestBody,
+        @Part("department_store_brand_id") departmentStore: RequestBody,
         @Part tagImg: MultipartBody.Part?,
         @Part productImgs: List<MultipartBody.Part>,
-        @Part("brandName") brandName: RequestBody,
-        @Part("productId") productId: RequestBody,
-        @Part("productName") productName: RequestBody,
-        @Part("productNumber") productNumber: RequestBody,
-        @Part("productSize") productSize: RequestBody,
-        @Part("noteSummary") noteSummary: RequestBody
+        @Part("product_id") productId: RequestBody,
+        @Part("product_size") productSize: RequestBody,
+        @Part("note_summary") noteSummary: RequestBody
     ): Call<RecordResponse>
 
-    @GET("/api/barcodes/{barcode}/product")
-    fun getProductByBarcode(@Path("barcode") barcode: String): Call<BarcodeInfoResponse>
-
+    @GET("/api/barcodes/product")
+    fun getProductByBarcode(
+        @Query("barcode") barcode: String,
+        @Query("department_store_id") departmentStoreId: Long
+    ): Call<BarcodeInfoResponse>
     @POST("/api/record/memo-summary")
     fun summarizeMemo(@Body request: MemoSummaryRequest): Call<MemoSummaryResponse>
 

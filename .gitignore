@@ -24,3 +24,5 @@ src/google-services.json
 **/app/debug/**.apk
 **/app/debug/*.apk
 **/app/debug/app-debug.apk.zip
+
+app/google-services.json

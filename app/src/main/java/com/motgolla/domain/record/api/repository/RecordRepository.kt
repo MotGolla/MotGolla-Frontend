@@ -47,25 +47,19 @@ class RecordRepository {
     }
 
     fun submitRecord(
-        departmentStore: RequestBody,
+        departmentStoreBrandId: RequestBody,
         tagImg: MultipartBody.Part?,
         productImgs: List<MultipartBody.Part>,
-        brandName: RequestBody,
         productId: RequestBody,
-        productName: RequestBody,
-        productNumber: RequestBody,
         productSize: RequestBody,
         noteSummary: RequestBody,
         onResult: (Result<RecordResponse>) -> Unit
     ) {
         recordService.submitRecord(
-            departmentStore,
+            departmentStoreBrandId,
             tagImg,
             productImgs,
-            brandName,
             productId,
-            productName,
-            productNumber,
             productSize,
             noteSummary
         ).enqueue(object : Callback<RecordResponse> {
@@ -88,8 +82,12 @@ class RecordRepository {
     }
 
     // 바코드 스캔 정보 API
-    fun getProductByBarcode(barcode: String, onResult: (Result<BarcodeInfoResponse>) -> Unit) {
-        recordService.getProductByBarcode(barcode)
+    fun getProductByBarcode(
+        barcode: String,
+        departmentStoreId: Long,
+        onResult: (Result<BarcodeInfoResponse>) -> Unit
+    ) {
+        recordService.getProductByBarcode(barcode, departmentStoreId)
             .enqueue(object : Callback<BarcodeInfoResponse> {
                 override fun onResponse(
                     call: Call<BarcodeInfoResponse>,
@@ -195,7 +193,10 @@ class RecordRepository {
         callback: (Result<RecordDatesResponse>) -> Unit
     ) {
         recordService.getRecordDates(yearMonth).enqueue(object : Callback<RecordDatesResponse> {
-            override fun onResponse(call: Call<RecordDatesResponse>, response: Response<RecordDatesResponse>) {
+            override fun onResponse(
+                call: Call<RecordDatesResponse>,
+                response: Response<RecordDatesResponse>
+            ) {
                 if (response.isSuccessful) {
                     response.body()?.let { callback(Result.success(it)) }
                 } else {
@@ -208,6 +209,4 @@ class RecordRepository {
             }
         })
     }
-
-
 }

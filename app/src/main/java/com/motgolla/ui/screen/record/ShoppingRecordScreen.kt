@@ -5,6 +5,8 @@ import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.util.Log
+import androidx.navigation.compose.rememberNavController
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -34,8 +36,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.motgolla.R
+import com.motgolla.ui.component.record.FloorSelector
 import com.motgolla.ui.component.record.MemoItem
 import com.motgolla.ui.component.record.RecordImageItem
 import com.motgolla.ui.component.record.rememberImagePicker
@@ -45,20 +49,26 @@ import com.motgolla.viewmodel.record.RecordRegisterViewModel
 import java.io.File
 
 @Composable
-fun ShoppingRecordScreen(viewModel: RecordRegisterViewModel, memoViewModel: MemoViewModel) {
+fun ShoppingRecordScreen(
+    viewModel: RecordRegisterViewModel,
+    memoViewModel: MemoViewModel, navController: NavController
+) {
     val context = LocalContext.current
 
     val inPreview = LocalInspectionMode.current
 
     //예시화면
-    val departmentName = remember { mutableStateOf("불러오는 중...") }
-
 
     // 컴포저블이 처음 실행될 때 SharedPreference에서 읽어오기
     LaunchedEffect(Unit) {
-        val savedName = PreferenceUtil.getDepartmentName(context)
-        departmentName.value = savedName ?: "알 수 없음"
-        viewModel.setDepartmentStore(departmentName.value)
+        val savedId = PreferenceUtil.getDepartmentId(context)
+        if (savedId != null) {
+            viewModel.setDepartmentStoreId(savedId)
+        } else {
+            // ID가 없을 경우 예외 처리 또는 기본 동작 설정
+            Log.w("DepartmentInit", "저장된 백화점 ID가 없습니다.")
+        }
+
     }
 
     // 카메라 권한
@@ -93,13 +103,18 @@ fun ShoppingRecordScreen(viewModel: RecordRegisterViewModel, memoViewModel: Memo
 
     // 이미지 피커
     val pickImage = rememberImagePicker(
-        onSingle = { uri -> uri?.let { viewModel.setTagImageFile(uriToFile(context, it)) } },
-        onMulti = { uris -> viewModel.addClothingImageFiles(uris.map { uriToFile(context, it) }) }
+        onSingle = { uri ->
+            uri?.let { viewModel.updateUiTagImageFile(uriToFile(context, it)) }
+        },
+        onMulti = { uris ->
+            viewModel.addClothingImageFiles(uris.map { uriToFile(context, it) })
+        }
     )
-
     // 상태
-    val tagImageFile by viewModel.tagImageFile.collectAsState()
+    val uiTagImageFile = viewModel.uiTagImageFile
+    val apiTagImageFile by viewModel.apiTagImageFile.collectAsState()
     val productImageFiles by viewModel.productImageFiles.collectAsState()
+    val departmentStoreId by viewModel.departmentStoreId.collectAsState()
     val brand by viewModel.brand.collectAsState()
     val model by viewModel.model.collectAsState()
     val modelNumber by viewModel.modelNumber.collectAsState()
@@ -135,10 +150,16 @@ fun ShoppingRecordScreen(viewModel: RecordRegisterViewModel, memoViewModel: Memo
                         .size(100.dp)
                         .border(1.dp, Color(0xFFE6E8EB), RoundedCornerShape(8.dp))
                         .background(Color.White, RoundedCornerShape(8.dp))
-                        .pointerInput(Unit) { detectTapGestures { pickImage(false) } },
+                        .then(
+                            if (!barcodeLoading) {
+                                Modifier.pointerInput(Unit) {
+                                    detectTapGestures { pickImage(false) }
+                                }
+                            } else Modifier // 로딩 중엔 클릭 막음
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
-                    if (tagImageFile == null) {
+                    if (uiTagImageFile == null) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(6.dp)
@@ -152,7 +173,7 @@ fun ShoppingRecordScreen(viewModel: RecordRegisterViewModel, memoViewModel: Memo
                         }
                     } else {
                         Image(
-                            painter = rememberAsyncImagePainter(tagImageFile!!),
+                            painter = rememberAsyncImagePainter(uiTagImageFile),
                             contentDescription = null,
                             modifier = Modifier
                                 .fillMaxSize()
@@ -166,7 +187,7 @@ fun ShoppingRecordScreen(viewModel: RecordRegisterViewModel, memoViewModel: Memo
                     modifier = Modifier.weight(1f)
                 ) {
                     when {
-                        tagImageFile == null -> {
+                        uiTagImageFile == null -> {
                             // ① 사진 찍기 전
                             Text(
                                 "택에 바코드가 보이도록 사진을 찍어주세요.",
@@ -175,20 +196,20 @@ fun ShoppingRecordScreen(viewModel: RecordRegisterViewModel, memoViewModel: Memo
                                 modifier = Modifier.padding(top = 8.dp)
                             )
                         }
-                        barcodeLoading -> {
 
-                        }
-                        barcodeSuccessMessage.isNotEmpty() -> {
-                            // ③ 성공
-                            Text(
-                                barcodeSuccessMessage,
-                                color = Color(0xFF1D8348),
-                                fontSize = 12.sp,
-                                modifier = Modifier.padding(top = 8.dp)
+                        barcodeLoading -> {
+                            // ② 바코드 인식 중
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .size(16.dp)
+                                    .offset(x = 70.dp, y = 8.dp), // x만큼 오른쪽, y는 위쪽 여백
+                                strokeWidth = 2.dp,
+                                color = Color.Gray
                             )
                         }
+
                         barcodeErrorMessage.isNotEmpty() -> {
-                            // ④ 서버 연결 실패 또는 응답 에러
+                            // ③ 서버 연결 실패 또는 응답 에러
                             Text(
                                 barcodeErrorMessage,
                                 color = Color.Red,
@@ -196,8 +217,19 @@ fun ShoppingRecordScreen(viewModel: RecordRegisterViewModel, memoViewModel: Memo
                                 modifier = Modifier.padding(top = 8.dp)
                             )
                         }
+
+                        barcodeSuccessMessage.isNotEmpty() -> {
+                            // ④ 성공
+                            Text(
+                                barcodeSuccessMessage,
+                                color = Color(0xFF1D8348), // 초록색
+                                fontSize = 12.sp,
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                        }
+
                         else -> {
-                            // ⑤ 바코드 인식 실패
+                            // ⑤ 바코드 인식 실패 (에러/성공 메시지도 없고 로딩도 아님)
                             Text(
                                 "바코드가 인식되지 않았습니다. 다시 찍어주세요.",
                                 color = Color.Gray,
@@ -206,15 +238,11 @@ fun ShoppingRecordScreen(viewModel: RecordRegisterViewModel, memoViewModel: Memo
                             )
                         }
                     }
+
                 }
             }
 
-            // 택 이미지를 올릴 때마다 바코드 인식 트리거
-            LaunchedEffect(tagImageFile) {
-                tagImageFile?.let { file ->
-                    viewModel.scanBarcodeFromFile(context, file)
-                }
-            }
+
         }
         // 상품/착용샷 사진
         item {
@@ -294,7 +322,18 @@ fun ShoppingRecordScreen(viewModel: RecordRegisterViewModel, memoViewModel: Memo
                 }
             }
         }
-
+        item {
+            if (departmentStoreId != 0L) {
+                FloorSelector(
+                    departmentStoreId = departmentStoreId,
+                    brandName = brand,
+                    refreshTrigger = uiTagImageFile,
+                    onLocationSelected = { selectedLocation ->
+                        viewModel.setDepartmentStoreBrandId(selectedLocation)
+                    }
+                )
+            }
+        }
         // 브랜드명
         item {
             OutlinedTextField(
@@ -346,16 +385,24 @@ fun ShoppingRecordScreen(viewModel: RecordRegisterViewModel, memoViewModel: Memo
 
         // 기록하기 버튼
         item {
-            val isFormValid = brand.isNotBlank() && model.isNotBlank() && modelNumber.isNotBlank()
+            val isFormValid =
+                brand.isNotBlank() && model.isNotBlank() && modelNumber.isNotBlank() && apiTagImageFile != null
             Button(
-                onClick = { viewModel.setMemo(memoViewModel.memo.value)
-                    viewModel.submitRecord { /* 결과 처리 추후 nav로 이동 */ } },
+                onClick = {
+                    viewModel.setMemo(memoViewModel.memo.value)
+                    viewModel.submitRecord { /* 내일 추천 모달 추가 */
+                        navController.navigate("home") {
+                            popUpTo("shoppingRecord") { inclusive = true } // 필요 시 백스택 정리
+                        }
+                    }
+                },
                 enabled = isFormValid,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF7B2CBF),
                     contentColor = Color.White
                 ),
                 modifier = Modifier
+
                     .fillMaxWidth()
                     .height(48.dp)
             ) {
@@ -379,5 +426,5 @@ fun ShoppingRecordScreenPreview() {
     val fakeViewModel = RecordRegisterViewModel()
     val fakeMemoViewModel =
         MemoViewModel(Application())
-    ShoppingRecordScreen(viewModel = fakeViewModel, memoViewModel = fakeMemoViewModel)
+    ShoppingRecordScreen(viewModel = fakeViewModel, memoViewModel = fakeMemoViewModel,  navController = rememberNavController())
 }

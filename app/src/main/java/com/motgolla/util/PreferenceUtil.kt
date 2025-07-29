@@ -2,6 +2,8 @@ package com.motgolla.util
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
+import com.motgolla.domain.departmentstore.data.departmentStoresIDByName
 
 object PreferenceUtil {
     private const val PREFS_NAME = "app_prefs"
@@ -14,10 +16,16 @@ object PreferenceUtil {
     fun saveDepartmentName(context: Context, name: String) {
         val editor = getPrefs(context).edit()
         editor.putString(KEY_DEPARTMENT_NAME, name)
+        editor.putLong(name, departmentStoresIDByName.get(name) ?: 0L)
         editor.apply()
     }
 
     fun getDepartmentName(context: Context): String? {
         return getPrefs(context).getString(KEY_DEPARTMENT_NAME, null)
+    }
+
+    fun getDepartmentId(context: Context): Long? {
+        val name = getPrefs(context).getString(KEY_DEPARTMENT_NAME, null)
+        return getPrefs(context).getLong(name, 0L)
     }
 }
