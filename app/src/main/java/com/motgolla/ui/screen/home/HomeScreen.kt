@@ -67,15 +67,13 @@ fun HomeScreen(
                     )
                 )
             )
-            .padding(top = 40.dp)
+            .padding(top = 35.dp)
     ) {
         TopBox(viewModel = viewModel)
-
-        // 하단 박스
         BottomBox(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.78f)
+                .fillMaxHeight(0.80f)
                 .align(Alignment.BottomCenter),
             shoppingHistoryViewModel = shoppingHistoryViewModel,
             navController = navController

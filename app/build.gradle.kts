@@ -113,9 +113,6 @@ dependencies {
     //아이콘
     implementation("androidx.compose.material:material-icons-extended")
 
-
-
-
     // URL 또는 URI 이미지 로더
     implementation("io.coil-kt:coil-compose:2.4.0")
 
@@ -137,4 +134,8 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-messaging-ktx:23.4.1")
+
+
+    implementation("com.kizitonwose.calendar:core:2.7.0")
+    implementation("com.kizitonwose.calendar:compose:2.7.0")
 }
