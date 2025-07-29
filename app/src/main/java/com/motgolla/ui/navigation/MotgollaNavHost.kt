@@ -25,6 +25,7 @@ import androidx.navigation.navArgument
 import com.motgolla.ui.screen.record.ImageViewerScreen
 import kotlin.getValue
 import android.net.Uri
+import com.motgolla.ui.screen.record.RecordDetailScreen
 import com.motgolla.ui.screen.vote.VoteProductSelectScreen
 import com.motgolla.ui.screen.vote.VoteScreenWrapper
 import com.motgolla.ui.screen.vote.VoteTitleInputScreen
@@ -51,7 +52,9 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
         composable("splash") {
             SplashScreen(navController)
         }
-        composable("home") { HomeScreen() }
+        composable("home") {
+            HomeScreen(navController = navController)
+        }
         composable("record") { RecordScreen(navController = navController) }
         composable("vote") { VoteScreenWrapper() }
         composable("my") { MyScreen(navController) }
@@ -96,6 +99,10 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
                 imageListStr = decoded,
                 initialIndex = initial
             )
+        }
+        composable("record_detail/{recordId}") { backStackEntry ->
+            val recordId = backStackEntry.arguments?.getString("recordId")?.toLong() ?: return@composable
+            RecordDetailScreen(recordId = recordId, navController = navController)
         }
 
     }
