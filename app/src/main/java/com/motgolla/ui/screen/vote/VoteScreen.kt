@@ -82,8 +82,9 @@ fun VoteScreen(
         if (voteCards.isEmpty()) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
+                    .fillMaxSize()
+                    .padding(top = 150.dp),
+                contentAlignment = Alignment.TopCenter
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally

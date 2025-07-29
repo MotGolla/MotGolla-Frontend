@@ -246,13 +246,18 @@ fun RecordDetailContent(
     if (showMap) {
         Dialog(
             onDismissRequest = { showMap = false },
-            properties = DialogProperties(usePlatformDefaultWidth = false)
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false,
+                dismissOnClickOutside = true
+            )
         ) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(8.dp)
-            ) { //  padding은 외부에서
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(8.dp),
+                contentAlignment = Alignment.Center
+            ) {
                 Surface(
                     shape = RoundedCornerShape(16.dp),
                     modifier = Modifier
