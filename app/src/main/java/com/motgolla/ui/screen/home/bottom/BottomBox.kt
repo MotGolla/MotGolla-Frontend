@@ -40,7 +40,7 @@ fun BottomBox(
                 .padding(start = 20.dp, end = 20.dp, top = 24.dp)
         ) {
             DepartmentStoreSection()
-            Spacer(modifier = Modifier.height(22.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             ShoppingHistorySection(
                 viewModel = shoppingHistoryViewModel,
                 navController = navController

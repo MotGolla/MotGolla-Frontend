@@ -52,7 +52,7 @@ fun DepartmentStoreSection(onClickMore: () -> Unit = {}) {
                 uriHandler.openUri("https://www.ehyundai.com/mobile/event/EV/main.do?param=event")
             }
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         HorizontalPager(
             count = images.size,

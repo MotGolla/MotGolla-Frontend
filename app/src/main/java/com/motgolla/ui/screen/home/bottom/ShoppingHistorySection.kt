@@ -21,7 +21,6 @@ fun ShoppingHistorySection(
         SectionHeader(
             title = "오늘의 쇼핑 기록",
             onClickMore = {
-                // TODO: "더보기" 페이지로 이동 구현
             }
         )
 
