@@ -1,5 +1,6 @@
 package com.motgolla.ui.screen.home.bottom
 
+import android.net.Uri
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -13,15 +14,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.google.accompanist.pager.*
 import com.motgolla.R
 import kotlinx.coroutines.delay
+
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun DepartmentStoreSection(onClickMore: () -> Unit = {}) {
+fun DepartmentStoreSection(
+    navController: NavHostController,
+    onClickMore: () -> Unit = {}
+) {
     val pagerState = rememberPagerState()
 
     val images = listOf(
@@ -31,8 +36,6 @@ fun DepartmentStoreSection(onClickMore: () -> Unit = {}) {
         R.drawable.event4 to "https://www.ehyundai.com/newPortal/EV/EV000003_14_V.do?eventNo=34657&eventCd=B0349900&list_page=&search=&keyword=&eventSearch=&eventSearchDep=&imgLink=/attachfiles/event/8cef0ad18c354e229551554f82e0b151.png",
         R.drawable.event5 to "https://www.ehyundai.com/newPortal/EV/EV000003_14_V.do?eventNo=34857&eventCd=B0349900&list_page=&search=&keyword=&eventSearch=&eventSearchDep=&imgLink=/attachfiles/event/85f6a28ade674b4f8316d50f7413e80a.png",
     )
-
-    val uriHandler = LocalUriHandler.current
 
     LaunchedEffect(Unit) {
         while (true) {
@@ -49,9 +52,11 @@ fun DepartmentStoreSection(onClickMore: () -> Unit = {}) {
         SectionHeader(
             title = "백화점 정보",
             onClickMore = {
-                uriHandler.openUri("https://www.ehyundai.com/mobile/event/EV/main.do?param=event")
+                val encoded = Uri.encode("https://www.ehyundai.com/mobile/event/EV/main.do?param=event")
+                navController.navigate("webview/$encoded")
             }
         )
+
         Spacer(modifier = Modifier.height(10.dp))
 
         HorizontalPager(
@@ -67,7 +72,8 @@ fun DepartmentStoreSection(onClickMore: () -> Unit = {}) {
                 modifier = Modifier
                     .fillMaxSize()
                     .clickable {
-                        uriHandler.openUri(images[page].second)
+                        val encodedUrl = Uri.encode(images[page].second)
+                        navController.navigate("webview/$encodedUrl")
                     }
             ) {
                 Image(

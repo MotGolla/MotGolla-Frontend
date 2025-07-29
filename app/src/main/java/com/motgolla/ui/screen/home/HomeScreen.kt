@@ -24,13 +24,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.motgolla.common.RetrofitClient
 import com.motgolla.domain.record.api.repository.ShoppingHistoryRepository
 import com.motgolla.viewmodel.record.ShoppingHistoryViewModel
 
 @Composable
 fun HomeScreen(
-    navController: NavController,
+    navController: NavHostController,
     viewModel: LocationViewModel = viewModel()
 ) {
 

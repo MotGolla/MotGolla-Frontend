@@ -26,6 +26,7 @@ import kotlin.getValue
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.motgolla.ui.screen.home.bottom.DepartmentStoreWebView
 import com.motgolla.ui.screen.record.RecordDetailScreen
 import com.motgolla.ui.screen.record.ShoppingRecordMainScreen
 import com.motgolla.ui.screen.vote.VoteProductSelectScreen
@@ -123,6 +124,22 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
             val recordId = backStackEntry.arguments?.getString("recordId")?.toLong() ?: return@composable
             RecordDetailScreen(recordId = recordId, navController = navController)
         }
+
+        composable(
+            route = "webview/{encodedUrl}",
+            arguments = listOf(
+                navArgument("encodedUrl") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val encodedUrl = backStackEntry.arguments?.getString("encodedUrl") ?: ""
+            val decodedUrl = Uri.decode(encodedUrl)
+
+            DepartmentStoreWebView(
+                url = decodedUrl,
+                onBack = { navController.popBackStack() }
+            )
+        }
+
 
     }
 }

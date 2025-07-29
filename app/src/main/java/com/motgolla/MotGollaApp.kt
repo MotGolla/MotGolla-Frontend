@@ -37,7 +37,9 @@ fun MotGollaApp() {
             }
         },
         bottomBar = {
-            if (!hideBarsRoutes.contains(currentRoute) || currentRoute=="home") {
+            if (!hideBarsRoutes.contains(currentRoute) && !currentRoute.orEmpty().startsWith("webview") ||
+                currentRoute == "home"
+            ) {
                 MotgollaNavBar(navController)
             }
         }
