@@ -7,12 +7,12 @@ data class BarcodeInfoResponse(
     @SerializedName("brand")
     val brand : String,
 
-    @SerializedName("productId")
+    @SerializedName("product_id")
     val productId : Long,
 
-    @SerializedName("productName")
+    @SerializedName("product_name")
     val productName: String,
 
-    @SerializedName("productNumber")
+    @SerializedName("product_number")
     val productNumber: String
 )

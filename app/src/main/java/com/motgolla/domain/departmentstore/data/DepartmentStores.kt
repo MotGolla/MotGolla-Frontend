@@ -19,3 +19,22 @@ val departmentStoresByRegion = mapOf(
         listOf("현대백화점 충청점", "커넥트현대 청주")
     )
 )
+
+
+val departmentStoresIDByName = hashMapOf(
+    "현대백화점 압구정본점" to 1L,
+    "더현대 서울" to 2L,
+    "더현대 대구" to 3L,
+    "현대백화점 무역센터점" to 4L,
+    "현대백화점 천호점" to 5L,
+    "현대백화점 신촌점" to 6L,
+    "현대백화점 미아점" to 7L,
+    "현대백화점 목동점" to 8L,
+    "현대백화점 중동점" to 9L,
+    "현대백화점 킨텍스점" to 10L,
+    "현대백화점 판교점" to 11L,
+    "현대백화점 울산점" to 12L,
+    "현대백화점 충청점" to 13L,
+    "커넥트현대 부산" to 14L,
+    "커넥트현대 청주" to 15L
+)

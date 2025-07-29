@@ -23,6 +23,13 @@ class MemoViewModel(application: Application) : AndroidViewModel(application) {
     // 해당 메모를 openAI를 통해 요약 --> 백엔드 단에서 진행
     private val _memo = MutableStateFlow("")
     val memo: StateFlow<String> = _memo
+
+    private val _memoLoading = MutableStateFlow(false)
+    val memoLoading: StateFlow<Boolean> = _memoLoading
+
+    fun setMemoLoading(loading: Boolean) {
+        _memoLoading.value = loading
+    }
     fun setMemo(new: String) {
         _memo.value = new
     }
@@ -41,6 +48,7 @@ class MemoViewModel(application: Application) : AndroidViewModel(application) {
     private var latestPartialResult: String? = null
 
     fun startRecording() {
+        _memo.value = "" // 여기 추가
         val context = getApplication<Application>().applicationContext
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context)
 
@@ -125,8 +133,9 @@ class MemoViewModel(application: Application) : AndroidViewModel(application) {
     fun stopRecording() {
         Log.d("MemoViewModel", "stopRecording() 호출됨")
 
+        _memoLoading.value = true  // 1. 로딩 시작
+
         if (!hasResult && !latestPartialResult.isNullOrBlank()) {
-            _memo.value = latestPartialResult!!
             Log.d("MemoViewModel", "onResults 없이 마지막 partial 저장됨: ${latestPartialResult!!}")
         }
 
@@ -139,10 +148,32 @@ class MemoViewModel(application: Application) : AndroidViewModel(application) {
         } catch (e: Exception) {
             Log.e("MemoViewModel", "stopRecording 중 오류: ${e.message}")
         }
+
         speechRecognizer = null
         _isRecording.value = false
         stopTimer()
+
+        // 2. 요약 API 호출
+        val currentMemo = latestPartialResult ?: ""
+        _memo.value = ""  // UI에 비워두기
+        if (currentMemo.isNotBlank()) {
+            recordRepository.summarizeMemo(currentMemo) { result ->
+                result
+                    .onSuccess { summary ->
+                        _memo.value = summary
+                        Log.d("MemoViewModel", "요약 성공: $summary")
+                    }
+                    .onFailure { error ->
+                        Log.e("MemoViewModel", "요약 실패: ${error.message}")
+                    }
+
+                _memoLoading.value = false // 3. 로딩 종료
+            }
+        } else {
+            _memoLoading.value = false // 비어있으면 요약도 하지 않음
+        }
     }
+
 
     private fun startTimer() {
         recordingJob = viewModelScope.launch {

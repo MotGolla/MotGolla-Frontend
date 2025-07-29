@@ -1,8 +1,9 @@
 package com.motgolla.viewmodel.record
 
-import android.content.Context
 import android.graphics.BitmapFactory
-import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.barcode.BarcodeScanning
@@ -25,8 +26,12 @@ class RecordRegisterViewModel : ViewModel() {
     private val recordRepository = RecordRepository()
 
     // 이미지 파일 상태 관리
-    private val _tagImageFile = MutableStateFlow<File?>(null)
-    val tagImageFile: StateFlow<File?> = _tagImageFile
+    // UI용 이미지
+    var uiTagImageFile by mutableStateOf<File?>(null)
+
+    // API 전송용 이미지
+    private val _apiTagImageFile = MutableStateFlow<File?>(null)
+    val apiTagImageFile: StateFlow<File?> = _apiTagImageFile
 
     private val _productImageFiles = MutableStateFlow<List<File>>(emptyList())
     val productImageFiles: StateFlow<List<File>> = _productImageFiles
@@ -43,8 +48,12 @@ class RecordRegisterViewModel : ViewModel() {
 
 
     // 현재 백화점명으로 바꿔야함 지금은 임시데이터
-    private val _departmentStore = MutableStateFlow("")
-    val departmentStore: StateFlow<String> = _departmentStore
+    private val _departmentStoreId = MutableStateFlow(0L)
+    val departmentStoreId: StateFlow<Long> = _departmentStoreId
+
+
+    private val _departmentStoreBrandId = MutableStateFlow(0L)
+    val departmentStoreBrandId: StateFlow<Long> = _departmentStoreBrandId
 
     private val _modelSize = MutableStateFlow("")
     val modelSize: StateFlow<String> = _modelSize
@@ -86,8 +95,16 @@ class RecordRegisterViewModel : ViewModel() {
     }
 
     // setter 함수들
-    fun setTagImageFile(file: File?) {
-        _tagImageFile.value = file
+    fun setApiTagImageFile(file: File?) {
+        _apiTagImageFile.value = file
+    }
+
+    fun updateUiTagImageFile(file: File?) {
+        uiTagImageFile = file
+        file?.let {
+            // UI에 표시한 후, 바코드 인식 시도
+            scanBarcodeFromFile(file)
+        }
     }
 
     fun addClothingImageFiles(files: List<File>) {
@@ -114,60 +131,85 @@ class RecordRegisterViewModel : ViewModel() {
         _modelSize.value = value
     }
 
-    fun setMemo(value: String) {
-        _memo.value = value
-    }
-
-    fun setDepartmentStore(value: String) {
-        _departmentStore.value = value
-    }
-
     fun setProductId(value: Long) {
         _productId.value = value
     }
 
+    fun setMemo(value: String) {
+        _memo.value = value
+    }
+
+    fun setDepartmentStoreId(value: Long) {
+        _departmentStoreId.value = value
+    }
+
+    fun setDepartmentStoreBrandId(value: Long) {
+        _departmentStoreBrandId.value = value
+
+    }
+
+
+    fun applyBarcodeInfoToForm(info: BarcodeInfoResponse) {
+        setBrand(info.brand ?: "")
+        setModel(info.productName ?: "")
+        setModelNumber(info.productNumber ?: "")
+        setModelSize("") // 사이즈는 직접 입력 받는 경우 그대로 유지해도 됩니다
+    }
+
+    fun clearFormFields() {
+        setBrand("")
+        setModel("")
+        setModelNumber("")
+        setModelSize("")
+    }
+
     // 바코드 스캔 및 서버 정보 요청
-    fun scanBarcodeFromFile(context: Context, imageFile: File) {
+    fun scanBarcodeFromFile(imageFile: File) {
         val bitmap = BitmapFactory.decodeFile(imageFile.absolutePath)
         val inputImage = InputImage.fromBitmap(bitmap, 0)
-
         val scanner = BarcodeScanning.getClient()
+
         _barcodeLoading.value = true
+        _barcodeSuccessMessage.value = ""
+        _barcodeErrorMessage.value = ""
 
         scanner.process(inputImage)
             .addOnSuccessListener { barcodes ->
                 val rawValue = barcodes.firstOrNull()?.rawValue
                 if (rawValue != null) {
                     _scannedBarcode.value = rawValue
-                    _barcodeErrorMessage.value = ""
-                    _barcodeSuccessMessage.value = ""
 
-                    recordRepository.getProductByBarcode(rawValue) { result ->
+                    recordRepository.getProductByBarcode(
+                        rawValue,
+                        _departmentStoreId.value
+                    ) { result ->
                         result.onSuccess { response ->
                             _barcodeInfo.value = response
-                            Log.d("barcodeInfo", "infos: $response")
-
-                            _barcodeErrorMessage.value = ""
+                            applyBarcodeInfoToForm(response) // 입력 필드 채우기
+                            setApiTagImageFile(imageFile)
                             _barcodeSuccessMessage.value = "바코드 인식에 성공했어요!\n상품 정보를 불러왔습니다."
-                            _barcodeLoading.value = false
                         }.onFailure { e ->
                             _barcodeErrorMessage.value = e.message ?: "상품 정보를 불러올 수 없습니다."
-                            _barcodeSuccessMessage.value = ""
-                            _barcodeLoading.value = false
+                            setApiTagImageFile(null)
+                            clearFormFields() // 초기화
                         }
+                        _barcodeLoading.value = false
                     }
                 } else {
                     _barcodeErrorMessage.value = "바코드를 인식하지 못했습니다."
-                    _barcodeSuccessMessage.value = ""
+                    setApiTagImageFile(null)
+                    clearFormFields() // 초기화
                     _barcodeLoading.value = false
                 }
             }
             .addOnFailureListener {
                 _barcodeErrorMessage.value = it.message ?: "바코드 스캔에 실패했습니다."
-                _barcodeSuccessMessage.value = ""
+                setApiTagImageFile(null)
+                clearFormFields() // 초기화
                 _barcodeLoading.value = false
             }
     }
+
     private fun getMimeType(file: File): String {
         return when (file.extension.lowercase()) {
             "jpg", "jpeg" -> "image/jpeg"
@@ -176,43 +218,45 @@ class RecordRegisterViewModel : ViewModel() {
             else -> "application/octet-stream"
         }
     }
+
+
     // File -> MultipartBody.Part 변환 함수
     private fun fileToPart(partName: String, file: File?): MultipartBody.Part? =
         file?.let {
-            val mimeType = getMimeType(it).toMediaTypeOrNull() ?: "image/jpeg".toMediaTypeOrNull()
+            val mimeType =
+                getMimeType(it).toMediaTypeOrNull() ?: "image/jpeg".toMediaTypeOrNull()
             val requestFile = it.asRequestBody(mimeType)
             MultipartBody.Part.createFormData(partName, it.name, requestFile)
         }
 
     private fun filesToParts(partName: String, files: List<File>): List<MultipartBody.Part> =
         files.mapNotNull { file ->
-            val mimeType = getMimeType(file).toMediaTypeOrNull() ?: "image/jpeg".toMediaTypeOrNull()
+            val mimeType =
+                getMimeType(file).toMediaTypeOrNull() ?: "image/jpeg".toMediaTypeOrNull()
             val requestFile = file.asRequestBody(mimeType)
             MultipartBody.Part.createFormData(partName, file.name, requestFile)
         }
 
     // 실제 서버에 개별 파트로 전송하는 함수
     fun submitRecord(onResult: (Result<RecordResponse>) -> Unit) {
-        val tagImgPart = fileToPart("tagImg", tagImageFile.value)
+        val tagImgPart = fileToPart("tagImg", apiTagImageFile.value)
         val productImgParts = filesToParts("productImgs", productImageFiles.value)
 
-        val departmentStorePart: RequestBody = departmentStore.value.toRequestBody("text/plain".toMediaTypeOrNull())
+        val departmentStoreBrandIdPart: RequestBody = departmentStoreBrandId.value.toString()
+            .toRequestBody("text/plain".toMediaTypeOrNull())
 
-        val brandNamePart: RequestBody = brand.value.toRequestBody("text/plain".toMediaTypeOrNull())
-        val productIdPart: RequestBody = productId.value.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-        val productNamePart: RequestBody = model.value.toRequestBody("text/plain".toMediaTypeOrNull())
-        val productNumberPart: RequestBody = modelNumber.value.toRequestBody("text/plain".toMediaTypeOrNull())
-        val productSizePart: RequestBody = modelSize.value.toRequestBody("text/plain".toMediaTypeOrNull())
-        val noteSummaryPart: RequestBody = memo.value.toRequestBody("text/plain".toMediaTypeOrNull())
+        val productIdPart: RequestBody =
+            productId.value.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        val productSizePart: RequestBody =
+            modelSize.value.toRequestBody("text/plain".toMediaTypeOrNull())
+        val noteSummaryPart: RequestBody =
+            memo.value.toRequestBody("text/plain".toMediaTypeOrNull())
 
         recordRepository.submitRecord(
-            departmentStorePart,
+            departmentStoreBrandIdPart,
             tagImgPart,
             productImgParts,
-            brandNamePart,
             productIdPart,
-            productNamePart,
-            productNumberPart,
             productSizePart,
             noteSummaryPart,
             onResult
