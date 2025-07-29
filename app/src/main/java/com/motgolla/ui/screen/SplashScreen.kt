@@ -7,6 +7,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.ui.res.painterResource
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -54,14 +61,29 @@ fun SplashScreen(navController: NavHostController) {
             .background(Color(0xFFFFFEFC)),
         contentAlignment = Alignment.Center
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(context)
-                .data(R.drawable.test2)
-                .build(),
-            contentDescription = "Splash GIF",
-            imageLoader = imageLoader,
-            modifier = Modifier.size(300.dp)
-        )
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "Logo",
+                modifier = Modifier
+                    .size(320.dp)
+            )
+            AsyncImage(
+                model = ImageRequest.Builder(context)
+                    .data(R.drawable.test2)
+                    .build(),
+                contentDescription = "Splash GIF",
+                imageLoader = imageLoader,
+                modifier = Modifier
+                    .offset(y = (-16).dp)
+                    .size(500.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
     }
 }
 
