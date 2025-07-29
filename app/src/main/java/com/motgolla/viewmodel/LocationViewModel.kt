@@ -246,12 +246,4 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
 
         Log.d(TAG, "위치 권한 거부됨. 기본 백화점 설정: $defaultName")
     }
-
-    fun hasLocationPermission(): Boolean {
-        val context = getApplication<Application>()
-        return ActivityCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-    }
 }
