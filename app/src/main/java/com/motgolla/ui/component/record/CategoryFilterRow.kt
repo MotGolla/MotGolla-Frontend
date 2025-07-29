@@ -34,13 +34,13 @@ fun CategoryFilterRow(
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .width(64.dp)
                     .height(30.dp)
                     .background(
                         color = if (isSelected) Color(0xFF834FF1) else Color(0xFFF1F1F1),
                         shape = RoundedCornerShape(14.dp)
                     )
                     .clickable { onCategorySelected(category) }
+                    .padding(horizontal = 14.dp)
             ) {
                 Text(
                     text = category,
