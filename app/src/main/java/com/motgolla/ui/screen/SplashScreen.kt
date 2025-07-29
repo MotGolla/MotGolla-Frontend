@@ -70,7 +70,7 @@ fun SplashScreen(navController: NavHostController) {
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Logo",
                 modifier = Modifier
-                    .size(320.dp)
+                    .size(300.dp)
             )
             AsyncImage(
                 model = ImageRequest.Builder(context)

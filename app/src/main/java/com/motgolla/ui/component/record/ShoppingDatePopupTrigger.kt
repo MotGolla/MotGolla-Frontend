@@ -93,13 +93,7 @@ fun ShoppingDatePopupTrigger(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.White)
-                        .padding(16.dp)
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        ) {
-                            // 캘린더 클릭은 dismiss되지 않도록 막기
-                        },
+                        .padding(16.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     ShoppingDateCalendar(
