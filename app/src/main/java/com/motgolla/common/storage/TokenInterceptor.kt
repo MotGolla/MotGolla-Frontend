@@ -39,10 +39,15 @@ class TokenInterceptor(
             val reissueResponse = client.newCall(reissueRequest).execute()
             // 재발급 성공한 경우
             if (reissueResponse.isSuccessful) {
+                Log.d("TokenInterceptor", "액세스 토큰 재발급 성공")
                 val gson = com.google.gson.Gson()
                 val newToken = gson.fromJson(reissueResponse.body?.charStream(), TokenResponse::class.java)
                 // 토큰 저장
-                TokenStorage.save(context, newToken)
+                val mergedToken = TokenResponse(
+                    accessToken = newToken.accessToken,
+                    refreshToken = tokenResponse.refreshToken
+                )
+                TokenStorage.save(context, mergedToken)
                 // 재요청
                 val newRequest = original.newBuilder()
                     .addHeader("Authorization", "Bearer ${newToken.accessToken}")
