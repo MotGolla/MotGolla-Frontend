@@ -138,7 +138,12 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-messaging-ktx:23.4.1")
 
+
+    // slider
+    implementation("androidx.compose.foundation:foundation:1.6.0")
+
     implementation("com.kizitonwose.calendar:core:2.7.0")
     implementation("com.kizitonwose.calendar:compose:2.7.0")
+
 
 }
