@@ -1,7 +1,6 @@
 package com.motgolla.ui.navigation
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -15,7 +14,6 @@ import com.motgolla.ui.screen.login.LoginScreen
 import com.motgolla.ui.screen.login.SignUpScreen
 import com.motgolla.ui.screen.login.WelcomeScreen
 import com.motgolla.ui.screen.my.MyScreen
-import com.motgolla.ui.screen.record.ShoppingRecordMainScreen
 import com.motgolla.ui.screen.record.ShoppingRecordScreen
 import com.motgolla.ui.screen.vote.VoteScreen
 import com.motgolla.viewmodel.record.MemoViewModel
@@ -26,6 +24,10 @@ import androidx.navigation.navArgument
 import com.motgolla.ui.screen.record.ImageViewerScreen
 import kotlin.getValue
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.motgolla.ui.screen.record.RecordDetailScreen
+import com.motgolla.ui.screen.record.ShoppingRecordMainScreen
 import com.motgolla.ui.screen.vote.VoteProductSelectScreen
 import com.motgolla.ui.screen.vote.VoteScreenWrapper
 import com.motgolla.ui.screen.vote.VoteTitleInputScreen
@@ -54,7 +56,9 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
         composable("splash") {
             SplashScreen(navController)
         }
-        composable("home") { HomeScreen() }
+        composable("home") {
+            HomeScreen(navController = navController)
+        }
         composable("vote") { VoteScreenWrapper() }
         composable("my") { MyScreen(navController) }
         composable("login") { LoginScreen(navController) }
@@ -70,11 +74,22 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
                 }
             )
         }
+        composable("shoppingRecord") {
+            val recordRegisterViewModel: RecordRegisterViewModel = viewModel()
+            val memoViewModel: MemoViewModel = viewModel()
+            ShoppingRecordScreen(recordRegisterViewModel, memoViewModel)
+        }
+
         composable("record") {
             val recordViewModel: RecordViewModel = viewModel()
             ShoppingRecordMainScreen(navController, recordViewModel)
         }
 
+        composable("plus") {
+            val recordRegisterViewModel: RecordRegisterViewModel = viewModel()
+            val memoViewModel: MemoViewModel = viewModel()
+            ShoppingRecordScreen(recordRegisterViewModel, memoViewModel)
+        }
 
         composable("vote/titleInput") {
             VoteTitleInputScreen(
@@ -85,20 +100,6 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
                     }
                 }
             )
-        }
-
-        // ShoppingRecordScreen 등록
-        composable("shoppingRecord") {
-            val recordRegisterViewModel: RecordRegisterViewModel = viewModel()
-            val memoViewModel: MemoViewModel = viewModel()
-            ShoppingRecordScreen(viewModel = recordRegisterViewModel, memoViewModel = memoViewModel)
-        }
-
-        // plus 버튼
-        composable("plus") {
-            val recordRegisterViewModel: RecordRegisterViewModel = viewModel()
-            val memoViewModel: MemoViewModel = viewModel()
-            ShoppingRecordScreen(viewModel = recordRegisterViewModel, memoViewModel = memoViewModel)
         }
 
         composable(
@@ -118,6 +119,11 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
                 initialIndex = initial
             )
         }
+        composable("record_detail/{recordId}") { backStackEntry ->
+            val recordId = backStackEntry.arguments?.getString("recordId")?.toLong() ?: return@composable
+            RecordDetailScreen(recordId = recordId, navController = navController)
+        }
+
     }
 }
 

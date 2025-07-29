@@ -7,17 +7,21 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.motgolla.viewmodel.record.ShoppingHistoryViewModel
 
 @Composable
-fun ShoppingHistorySection(viewModel: ShoppingHistoryViewModel) {
+fun ShoppingHistorySection(
+    viewModel: ShoppingHistoryViewModel,
+    navController: NavController
+) {
     val products by remember { mutableStateOf(viewModel.products) }
 
     Column(modifier = Modifier.fillMaxWidth()) {
         SectionHeader(
             title = "오늘의 쇼핑 기록",
             onClickMore = {
-                // 이동할 페이지 넣기
+                // TODO: "더보기" 페이지로 이동 구현
             }
         )
 
@@ -28,7 +32,13 @@ fun ShoppingHistorySection(viewModel: ShoppingHistoryViewModel) {
             modifier = Modifier.fillMaxWidth()
         ) {
             items(products) { product ->
-                ShoppingHistoryBox(product)
+                ShoppingHistoryBox(
+                    product = product,
+                    onClick = {
+                        //  상세 페이지로 이동 (recordId 기반)
+                        navController.navigate("record_detail/${product.recordId}")
+                    }
+                )
             }
         }
     }
