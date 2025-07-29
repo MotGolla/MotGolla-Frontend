@@ -135,4 +135,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-messaging-ktx:23.4.1")
+
+    // slider
+    implementation("androidx.compose.foundation:foundation:1.6.0")
 }
