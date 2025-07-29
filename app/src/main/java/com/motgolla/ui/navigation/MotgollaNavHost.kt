@@ -66,10 +66,17 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
         composable("signup") { SignUpScreen(navController) }
         composable("welcome") { WelcomeScreen(navController) }
 
-        composable("vote/productSelect") {
+        composable(
+            route = "vote/productSelect?date={date}",
+            arguments = listOf(
+                navArgument("date") { defaultValue = "2025-07-28" }
+            )
+        ) { backStackEntry ->
+            val date = backStackEntry.arguments?.getString("date") ?: "2025-07-28"
+
             VoteProductSelectScreen(
                 viewModel = voteCreateViewModel,
-                date = "2025-07-28",
+                date = date,
                 onNext = {
                     navController.navigate("vote/titleInput")
                 }

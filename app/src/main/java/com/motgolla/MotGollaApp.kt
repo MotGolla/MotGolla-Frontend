@@ -25,6 +25,10 @@ fun MotGollaApp() {
         ?.route
     val hideBarsRoutes = listOf("splash", "login", "welcome", "signup", "home")
 
+    val shouldHideNavBar =
+                currentRoute?.startsWith("vote/productSelect") == true ||
+                currentRoute?.startsWith("vote/titleInput") == true
+
     Scaffold(
         containerColor = Color.White,
         topBar = {
@@ -37,7 +41,7 @@ fun MotGollaApp() {
             }
         },
         bottomBar = {
-            if (!hideBarsRoutes.contains(currentRoute) && !currentRoute.orEmpty().startsWith("webview") ||
+            if (!shouldHideNavBar && !hideBarsRoutes.contains(currentRoute) && !currentRoute.orEmpty().startsWith("webview") ||
                 currentRoute == "home"
             ) {
                 MotgollaNavBar(navController)

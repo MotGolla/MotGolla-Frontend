@@ -120,7 +120,7 @@ fun ShoppingRecordListScreen(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() }
                             ) {
-                                navController.navigate("voteRegister")
+                                navController.navigate("vote/productSelect?date=$selectedDate")
                             }
                         )
                     }
