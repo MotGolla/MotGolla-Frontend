@@ -39,14 +39,28 @@ import com.motgolla.R
 import com.motgolla.ui.component.record.MemoItem
 import com.motgolla.ui.component.record.RecordImageItem
 import com.motgolla.ui.component.record.rememberImagePicker
+import com.motgolla.util.PreferenceUtil
 import com.motgolla.viewmodel.record.MemoViewModel
-import com.motgolla.viewmodel.record.RecordViewModel
+import com.motgolla.viewmodel.record.RecordRegisterViewModel
 import java.io.File
 
 @Composable
-fun ShoppingRecordScreen(viewModel: RecordViewModel, memoViewModel: MemoViewModel) {
+fun ShoppingRecordScreen(viewModel: RecordRegisterViewModel, memoViewModel: MemoViewModel) {
     val context = LocalContext.current
+
     val inPreview = LocalInspectionMode.current
+
+    // 상태로 백화점 이름 저장 (초기값은 null or "알 수 없음"으로 둬도 좋아요)
+    //예시화면
+    val departmentName = remember { mutableStateOf("불러오는 중...") }
+
+
+    // 컴포저블이 처음 실행될 때 SharedPreference에서 읽어오기
+    LaunchedEffect(Unit) {
+        val savedName = PreferenceUtil.getDepartmentName(context)
+        departmentName.value = savedName ?: "알 수 없음"
+        viewModel.setDepartmentStore(departmentName.value)
+    }
 
     // 카메라 권한
     var hasCameraPermission by remember {
@@ -98,6 +112,7 @@ fun ShoppingRecordScreen(viewModel: RecordViewModel, memoViewModel: MemoViewMode
     val barcodeLoading by viewModel.barcodeLoading.collectAsState()
     val barcodeSuccessMessage by viewModel.barcodeSuccessMessage.collectAsState()
     val barcodeErrorMessage by viewModel.barcodeErrorMessage.collectAsState()
+
 
 
     LazyColumn(
@@ -362,7 +377,7 @@ fun uriToFile(context: Context, uri: Uri): File {
 @Preview(showBackground = true)
 @Composable
 fun ShoppingRecordScreenPreview() {
-    val fakeViewModel = RecordViewModel()
+    val fakeViewModel = RecordRegisterViewModel()
     val fakeMemoViewModel =
         MemoViewModel(Application())
     ShoppingRecordScreen(viewModel = fakeViewModel, memoViewModel = fakeMemoViewModel)

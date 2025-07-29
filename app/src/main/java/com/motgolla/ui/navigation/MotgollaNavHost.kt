@@ -14,23 +14,27 @@ import com.motgolla.ui.screen.login.LoginScreen
 import com.motgolla.ui.screen.login.SignUpScreen
 import com.motgolla.ui.screen.login.WelcomeScreen
 import com.motgolla.ui.screen.my.MyScreen
-import com.motgolla.ui.screen.record.RecordScreen
 import com.motgolla.ui.screen.record.ShoppingRecordScreen
 import com.motgolla.ui.screen.vote.VoteScreen
 import com.motgolla.viewmodel.record.MemoViewModel
-import com.motgolla.viewmodel.record.RecordViewModel
+import com.motgolla.viewmodel.record.RecordRegisterViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.motgolla.ui.screen.record.ImageViewerScreen
 import kotlin.getValue
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.motgolla.ui.screen.record.RecordDetailScreen
+import com.motgolla.ui.screen.record.ShoppingRecordMainScreen
 import com.motgolla.ui.screen.vote.VoteProductSelectScreen
 import com.motgolla.ui.screen.vote.VoteScreenWrapper
 import com.motgolla.ui.screen.vote.VoteTitleInputScreen
 import com.motgolla.viewmodel.vote.VoteCreateViewModel
+import com.motgolla.viewmodel.record.RecordViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
 
@@ -55,7 +59,6 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
         composable("home") {
             HomeScreen(navController = navController)
         }
-        composable("record") { RecordScreen(navController = navController) }
         composable("vote") { VoteScreenWrapper() }
         composable("my") { MyScreen(navController) }
         composable("login") { LoginScreen(navController) }
@@ -70,6 +73,22 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
                     navController.navigate("vote/titleInput")
                 }
             )
+        }
+        composable("shoppingRecord") {
+            val recordRegisterViewModel: RecordRegisterViewModel = viewModel()
+            val memoViewModel: MemoViewModel = viewModel()
+            ShoppingRecordScreen(recordRegisterViewModel, memoViewModel)
+        }
+
+        composable("record") {
+            val recordViewModel: RecordViewModel = viewModel()
+            ShoppingRecordMainScreen(navController, recordViewModel)
+        }
+
+        composable("plus") {
+            val recordRegisterViewModel: RecordRegisterViewModel = viewModel()
+            val memoViewModel: MemoViewModel = viewModel()
+            ShoppingRecordScreen(recordRegisterViewModel, memoViewModel)
         }
 
         composable("vote/titleInput") {

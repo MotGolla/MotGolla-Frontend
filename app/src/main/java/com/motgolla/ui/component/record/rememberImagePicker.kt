@@ -1,6 +1,4 @@
-// ImagePicker.kt
 package com.motgolla.ui.component.record
-
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -11,7 +9,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
 import java.io.File
-
 /**
  * 카메라 전용 런처 + 다중 선택 런처 통합
  * multiple = false → 카메라만
