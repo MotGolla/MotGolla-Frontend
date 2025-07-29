@@ -30,6 +30,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.rememberAsyncImagePainter
 import com.motgolla.domain.record.data.response.ShoppingRecordInfoResponse
 
@@ -92,15 +94,18 @@ fun ShoppingRecordItem(item: ShoppingRecordInfoResponse, onCompleteClicked: (Lon
                 fontSize = 12.sp,
                 color = Color.Gray
             )
-            Spacer(modifier = Modifier.height(2.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = item.productName,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 14.sp, lineHeight = 18.sp  // 줄간격 조정
+                fontSize = 14.sp,
+                lineHeight = 18.sp,  // 줄간격 조정
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
             )
 
-            Spacer(modifier = Modifier.height(2.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -159,4 +164,21 @@ fun CompleteButton(
             color = textColor
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ShoppingRecordItemPreview() {
+    ShoppingRecordItem(
+        item = ShoppingRecordInfoResponse(
+            recordId = 1L,
+            state = "PENDING",
+            imgUrl = "",
+            productName = "샘플 제품 이름이 길어도 두 줄까지 보여줍니다.",
+            brandName = "테스트브랜드",
+            brandFloor = "3F",
+            productPrice = "19,900원"
+        ),
+        onCompleteClicked = {}
+    )
 }
