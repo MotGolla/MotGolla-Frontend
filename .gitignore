@@ -16,3 +16,7 @@
 local.properties
 
 src/google-services.json
+
+# Android build outputs
+**/app-debug.apk
+**/app/*.apk
