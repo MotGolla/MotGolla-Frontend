@@ -42,6 +42,7 @@ import com.motgolla.ui.component.item.ProductPreviewList
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.window.DialogProperties
 
 
 @Composable
@@ -243,8 +244,15 @@ fun RecordDetailContent(
     }
 
     if (showMap) {
-        Dialog(onDismissRequest = { showMap = false }) {
-            Box(Modifier.padding(8.dp)) {
+        Dialog(
+            onDismissRequest = { showMap = false },
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp)
+            ) { //  padding은 외부에서
                 Surface(
                     shape = RoundedCornerShape(16.dp),
                     modifier = Modifier
