@@ -26,6 +26,10 @@ import com.motgolla.ui.screen.record.ImageViewerScreen
 import kotlin.getValue
 import android.net.Uri
 import com.motgolla.ui.screen.record.RecordDetailScreen
+import com.motgolla.ui.screen.vote.VoteProductSelectScreen
+import com.motgolla.ui.screen.vote.VoteScreenWrapper
+import com.motgolla.ui.screen.vote.VoteTitleInputScreen
+import com.motgolla.viewmodel.vote.VoteCreateViewModel
 
 @Composable
 fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -39,6 +43,7 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
         }
     }
 
+    val voteCreateViewModel: VoteCreateViewModel = viewModel()
     NavHost(
         navController = navController,
         startDestination = "splash",
@@ -51,11 +56,33 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
             HomeScreen(navController = navController)
         }
         composable("record") { RecordScreen(navController = navController) }
-        composable("vote") { VoteScreen() }
+        composable("vote") { VoteScreenWrapper() }
         composable("my") { MyScreen(navController) }
         composable("login") { LoginScreen(navController) }
         composable("signup") { SignUpScreen(navController) }
         composable("welcome") { WelcomeScreen(navController) }
+
+        composable("vote/productSelect") {
+            VoteProductSelectScreen(
+                viewModel = voteCreateViewModel,
+                date = "2025-07-28",
+                onNext = {
+                    navController.navigate("vote/titleInput")
+                }
+            )
+        }
+
+        composable("vote/titleInput") {
+            VoteTitleInputScreen(
+                viewModel = voteCreateViewModel,
+                onSuccess = {
+                    navController.navigate("vote") {
+                        popUpTo("vote/productSelect") { inclusive = true }
+                    }
+                }
+            )
+        }
+
         composable(
             route = "image_viewer/{encodedUrls}/{initialIndex}",
             arguments = listOf(
