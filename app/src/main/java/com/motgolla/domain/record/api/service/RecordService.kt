@@ -60,10 +60,10 @@ interface RecordService {
 
 
     @PATCH("api/record/{recordId}/status")
-    fun updateRecordState(
+    suspend fun updateRecordState(
         @Path("recordId") recordId: Long,
         @Body request: UpdateRecordStatusRequest
-    ): Call<Void>
+    ): retrofit2.Response<Void>
 
 
     @GET("/api/record/dates")
