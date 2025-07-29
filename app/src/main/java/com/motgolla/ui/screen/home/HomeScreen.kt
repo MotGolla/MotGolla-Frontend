@@ -23,12 +23,16 @@ import com.motgolla.viewmodel.LocationViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.navigation.NavController
 import com.motgolla.common.RetrofitClient
 import com.motgolla.domain.record.api.repository.ShoppingHistoryRepository
 import com.motgolla.viewmodel.record.ShoppingHistoryViewModel
 
 @Composable
-fun HomeScreen(viewModel: LocationViewModel = viewModel()) {
+fun HomeScreen(
+    navController: NavController,
+    viewModel: LocationViewModel = viewModel()
+) {
 
     var initDone by remember { mutableStateOf(false) }
 
@@ -73,14 +77,15 @@ fun HomeScreen(viewModel: LocationViewModel = viewModel()) {
                 .fillMaxWidth()
                 .fillMaxHeight(0.78f)
                 .align(Alignment.BottomCenter),
-            shoppingHistoryViewModel = shoppingHistoryViewModel
+            shoppingHistoryViewModel = shoppingHistoryViewModel,
+            navController = navController
         )
     }
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen()
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun HomeScreenPreview() {
+//    HomeScreen()
+//}

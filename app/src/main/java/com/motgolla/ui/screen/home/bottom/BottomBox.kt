@@ -13,12 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.motgolla.viewmodel.record.ShoppingHistoryViewModel
 
 @Composable
 fun BottomBox(
     modifier: Modifier = Modifier,
-    shoppingHistoryViewModel: ShoppingHistoryViewModel
+    shoppingHistoryViewModel: ShoppingHistoryViewModel,
+    navController: NavController
 ) {
     Box(
         modifier = modifier
@@ -39,7 +41,10 @@ fun BottomBox(
         ) {
             DepartmentStoreSection()
             Spacer(modifier = Modifier.height(22.dp))
-            ShoppingHistorySection(shoppingHistoryViewModel)
+            ShoppingHistorySection(
+                viewModel = shoppingHistoryViewModel,
+                navController = navController
+            )
         }
     }
 }
