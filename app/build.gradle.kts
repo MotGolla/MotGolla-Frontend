@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
+    id("com.google.gms.google-services")
 }
 
 val localProperties = Properties().apply {
@@ -66,6 +67,9 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    // 시간
+    implementation("com.jakewharton.threetenabp:threetenabp:1.4.5")
+
     // retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
@@ -89,6 +93,9 @@ dependencies {
 
     // Kakao
     implementation("com.kakao.sdk:v2-all:2.15.0") // 전체 모듈 설치, 2.11.0 버전부터 지원
+
+    // 아이콘
+    implementation("androidx.compose.material:material-icons-extended")
 
     //OkHttp (optional)
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
@@ -125,6 +132,11 @@ dependencies {
     //슬라이드 이미지
     implementation("com.google.accompanist:accompanist-pager:0.30.1")
     implementation("com.google.accompanist:accompanist-pager-indicators:0.30.1")
+
+    //Firebase
+    implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-messaging-ktx:23.4.1")
 
     implementation("com.kizitonwose.calendar:core:2.7.0")
     implementation("com.kizitonwose.calendar:compose:2.7.0")

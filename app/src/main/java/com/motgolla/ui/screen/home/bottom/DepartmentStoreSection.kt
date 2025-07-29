@@ -49,7 +49,7 @@ fun DepartmentStoreSection(onClickMore: () -> Unit = {}) {
         SectionHeader(
             title = "백화점 정보",
             onClickMore = {
-                uriHandler.openUri("https://www.ehyundai.com/newPortal/EV/EV000001_L.do#")
+                uriHandler.openUri("https://www.ehyundai.com/mobile/event/EV/main.do?param=event")
             }
         )
         Spacer(modifier = Modifier.height(12.dp))
@@ -59,8 +59,8 @@ fun DepartmentStoreSection(onClickMore: () -> Unit = {}) {
             state = pagerState,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
-                .background(Color.LightGray, shape = RoundedCornerShape(16.dp)),
+                .height(190.dp)
+                .background(Color.LightGray, shape = RoundedCornerShape(10.dp)),
             verticalAlignment = Alignment.CenterVertically
         ) { page ->
             Box(
@@ -76,7 +76,7 @@ fun DepartmentStoreSection(onClickMore: () -> Unit = {}) {
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(10.dp))
                 )
             }
         }
@@ -86,7 +86,7 @@ fun DepartmentStoreSection(onClickMore: () -> Unit = {}) {
         HorizontalPagerIndicator(
             pagerState = pagerState,
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            activeColor = Color.White,
+            activeColor = Color(0xFF3B40CC),
             inactiveColor = Color.Gray
         )
     }

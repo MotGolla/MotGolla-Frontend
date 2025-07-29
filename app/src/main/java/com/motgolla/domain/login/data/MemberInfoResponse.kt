@@ -5,6 +5,6 @@ data class MemberInfoResponse(
     val name: String,
     val birthday: String,
     val gender: String,
-    val profile: String,
-    val createdAt: String
+    val profile: String?,       // nullable로 변경
+    val createdAt: String?      // nullable로 변경
 )

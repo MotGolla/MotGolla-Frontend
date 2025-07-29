@@ -26,14 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import androidx.compose.ui.unit.dp
 import com.motgolla.R
-import com.motgolla.common.RetrofitClient
-import com.motgolla.common.storage.TokenStorage
 import com.motgolla.domain.login.api.service.KakaoLoginService
-import com.motgolla.domain.login.data.LoginRequest
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 
@@ -89,45 +82,16 @@ fun LoginScreen(
                 .clickable {
                     KakaoLoginService.loginWithKakao(
                         context = context,
-                        onSuccess = { nickname, profileUrl, oauthId, idToken ->
-                            Log.d(
-                                "KakaoLogin",
-                                "카카오 로그인 성공: $nickname, $profileUrl, $oauthId, $idToken"
-                            )
-
-                            val loginRequest = LoginRequest(idToken = idToken!!, oauthId = oauthId)
-                            CoroutineScope(Dispatchers.IO).launch {
-                                try {
-                                    // 서버 로그인 요청
-                                    val response =
-                                        RetrofitClient.getAuthService().login(loginRequest)
-                                    withContext(Dispatchers.Main) {
-                                        // 가입된 회원인 경우 welcome 페이지로 이동
-                                        if (response.isSuccessful) {
-                                            Log.d("Login", "로그인 성공")
-                                            // 토큰 저장
-                                            val tokenResponse = response.body()
-                                            if (tokenResponse != null) {
-                                                TokenStorage.save(context, tokenResponse)
-                                            } else {
-                                                Log.e("SignUp", "token is null")
-                                            }
-                                            navController.navigate("welcome")
-
-                                            // 아닌 경우 회원 가입 페이지로 이동
-                                        } else if (response.code() == 401) {
-                                            Log.d("Login", "회원 가입 필요: ${response.body()}")
-                                            navController.navigate("signup/${idToken}/${oauthId}/${nickname}")
-                                        } else {
-                                            Log.e(
-                                                "Login",
-                                                "Unexpected response: ${response.code()}"
-                                            )
-                                        }
-                                    }
-                                } catch (e: Exception) {
-                                    Log.e("Login", "로그인 요청 실패", e)
-                                }
+                        onSuccess = { nickname, profileImageUrl, oauthId, idToken ->
+                            if (nickname != null) {
+                                KakaoLoginService.handleKakaoLoginSuccess(
+                                    context,
+                                    navController,
+                                    nickname,
+                                    profileImageUrl,
+                                    oauthId,
+                                    idToken
+                                )
                             }
                         },
                         onFailure = { error ->
@@ -136,6 +100,8 @@ fun LoginScreen(
                     )
                 }
         )
+
+        Spacer(modifier = Modifier.height(50.dp))
     }
 }
 

@@ -34,6 +34,7 @@ class RecordRegisterViewModel : ViewModel() {
     private val _brand = MutableStateFlow("")
     val brand: StateFlow<String> = _brand
 
+
     private val _model = MutableStateFlow("")
     val model: StateFlow<String> = _model
 
@@ -42,7 +43,7 @@ class RecordRegisterViewModel : ViewModel() {
 
 
     // 현재 백화점명으로 바꿔야함 지금은 임시데이터
-    private val _departmentStore = MutableStateFlow("현대백화점 판교점")
+    private val _departmentStore = MutableStateFlow("")
     val departmentStore: StateFlow<String> = _departmentStore
 
     private val _modelSize = MutableStateFlow("")
@@ -115,6 +116,10 @@ class RecordRegisterViewModel : ViewModel() {
 
     fun setMemo(value: String) {
         _memo.value = value
+    }
+
+    fun setDepartmentStore(value: String) {
+        _departmentStore.value = value
     }
 
     fun setProductId(value: Long) {

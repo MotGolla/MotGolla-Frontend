@@ -1,16 +1,33 @@
 package com.motgolla.ui.component
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-
+import androidx.navigation.compose.rememberNavController
 @Composable
 fun MotgollaNavBar(navController: NavController) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination?.route
+
+    val selectedColor = MaterialTheme.colorScheme.primary
+    val unselectedColor = Color.Gray
 
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
@@ -19,11 +36,18 @@ fun MotgollaNavBar(navController: NavController) {
         MotGollaNavScreen.items.forEach { screen ->
             NavigationBarItem(
                 icon = {
-                    Icon(imageVector = screen.icon, contentDescription = screen.title)
+                    Image(
+                        painter = painterResource(id = screen.iconRes),
+                        contentDescription = screen.title,
+                        modifier = Modifier.size(24.dp),
+                        colorFilter = if (currentRoute == screen.route) {
+                            ColorFilter.tint(selectedColor)
+                        } else {
+                            ColorFilter.tint(unselectedColor)
+                        }
+                    )
                 },
-                label = {
-                    Text(text = screen.title)
-                },
+                label = { Text(text = screen.title) },
                 selected = currentRoute == screen.route,
                 onClick = {
                     if (currentRoute != screen.route) {
@@ -38,12 +62,21 @@ fun MotgollaNavBar(navController: NavController) {
                 },
                 alwaysShowLabel = true,
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = MaterialTheme.colorScheme.primary,
-                    selectedTextColor = MaterialTheme.colorScheme.primary,
-                    unselectedIconColor = Color.Gray,
-                    unselectedTextColor = Color.Gray
+                    selectedIconColor = selectedColor,
+                    selectedTextColor = selectedColor,
+                    unselectedIconColor = unselectedColor,
+                    unselectedTextColor = unselectedColor,
+                    indicatorColor = Color.Transparent
                 )
             )
         }
     }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun MotgollaNavBarPreview() {
+    val navController = rememberNavController()
+    MotgollaNavBar(navController = navController)
 }

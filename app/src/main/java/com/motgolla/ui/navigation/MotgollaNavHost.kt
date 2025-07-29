@@ -21,6 +21,15 @@ import com.motgolla.ui.screen.vote.VoteScreen
 import com.motgolla.viewmodel.record.MemoViewModel
 import com.motgolla.viewmodel.record.RecordRegisterViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+import com.motgolla.ui.screen.record.ImageViewerScreen
+import kotlin.getValue
+import android.net.Uri
+import com.motgolla.ui.screen.vote.VoteProductSelectScreen
+import com.motgolla.ui.screen.vote.VoteScreenWrapper
+import com.motgolla.ui.screen.vote.VoteTitleInputScreen
+import com.motgolla.viewmodel.vote.VoteCreateViewModel
 import com.motgolla.viewmodel.record.RecordViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -36,6 +45,7 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
         }
     }
 
+    val voteCreateViewModel: VoteCreateViewModel = viewModel()
     NavHost(
         navController = navController,
         startDestination = "splash",
@@ -45,30 +55,61 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
             SplashScreen(navController)
         }
         composable("home") { HomeScreen() }
+        composable("vote") { VoteScreenWrapper() }
+        composable("my") { MyScreen(navController) }
+        composable("login") { LoginScreen(navController) }
+        composable("signup") { SignUpScreen(navController) }
+        composable("welcome") { WelcomeScreen(navController) }
+
+        composable("vote/productSelect") {
+            VoteProductSelectScreen(
+                viewModel = voteCreateViewModel,
+                date = "2025-07-28",
+                onNext = {
+                    navController.navigate("vote/titleInput")
+                }
+            )
+        }
         composable("record") {
             val recordViewModel: RecordViewModel = viewModel()
-            ShoppingRecordMainScreen(navController,recordViewModel)
+            ShoppingRecordMainScreen(navController, recordViewModel)
         }
 
-        composable("vote") { VoteScreen() }
-        composable("my") { MyScreen() }
-        composable("login") {
-            LoginScreen(navController)
+
+        composable("vote/titleInput") {
+            VoteTitleInputScreen(
+                viewModel = voteCreateViewModel,
+                onSuccess = {
+                    navController.navigate("vote") {
+                        popUpTo("vote/productSelect") { inclusive = true }
+                    }
+                }
+            )
         }
+
         // ShoppingRecordScreen 등록
         composable("shoppingRecord") {
             val recordRegisterViewModel: RecordRegisterViewModel = viewModel()
             val memoViewModel: MemoViewModel = viewModel()
             ShoppingRecordScreen(viewModel = recordRegisterViewModel, memoViewModel = memoViewModel)
         }
-        composable("signup/{idToken}/{oauthId}/{nickname}") { backStackEntry ->
-            val idToken = backStackEntry.arguments?.getString("idToken") ?: ""
-            val oauthId = backStackEntry.arguments?.getString("oauthId") ?: ""
-            val nickname = backStackEntry.arguments?.getString("nickname") ?: ""
-            SignUpScreen(navController, idToken, oauthId, nickname)
-        }
-        composable("welcome") {
-            WelcomeScreen(navController)
+
+        composable(
+            route = "image_viewer/{encodedUrls}/{initialIndex}",
+            arguments = listOf(
+                navArgument("encodedUrls") { type = NavType.StringType },
+                navArgument("initialIndex") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val encoded = backStackEntry.arguments?.getString("encodedUrls") ?: ""
+            val decoded = Uri.decode(encoded)
+            val initial = backStackEntry.arguments?.getInt("initialIndex") ?: 0
+
+            ImageViewerScreen(
+                navController = navController,
+                imageListStr = decoded,
+                initialIndex = initial
+            )
         }
     }
 }
