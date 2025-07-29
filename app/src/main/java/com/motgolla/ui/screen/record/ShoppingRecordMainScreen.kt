@@ -94,8 +94,6 @@ fun ShoppingRecordMainScreen(
             }
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
-
         // 카테고리 필터
         CategoryFilterRow(
             selectedCategory = selectedCategory,
