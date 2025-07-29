@@ -40,6 +40,7 @@ import coil.compose.rememberAsyncImagePainter
 fun VoteCardItem(
     card: VoteCard,
     onSelectCandidate: (cardId: Long, candidateId: Long) -> Unit,
+    onDetailClick: (Long) -> Unit,
     onSubmitVote: (cardId: Long) -> Unit
 ) {
     Column(
@@ -95,7 +96,8 @@ fun VoteCardItem(
                     isVoted = card.hasVoted,
                     onClick = {
                         onSelectCandidate(card.id, candidate.id)
-                    }
+                    },
+                    onDetailClick = { recordId -> onDetailClick(recordId) }
                 )
             }
         }

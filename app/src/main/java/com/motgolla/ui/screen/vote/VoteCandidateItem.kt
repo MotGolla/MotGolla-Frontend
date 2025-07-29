@@ -36,7 +36,8 @@ import coil.compose.rememberAsyncImagePainter
 fun VoteCandidateItem(
     candidate: VoteCandidate,
     isVoted: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onDetailClick: (Long) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -74,7 +75,8 @@ fun VoteCandidateItem(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(4.dp)
-                .size(16.dp),
+                .size(16.dp)
+                .clickable { onDetailClick(candidate.id) },
             tint = Color.DarkGray
         )
 
@@ -93,6 +95,17 @@ fun VoteCandidateItem(
                         .matchParentSize()
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
+                )
+
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = "상세보기",
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(4.dp)
+                        .size(16.dp)
+                        .clickable { onDetailClick(candidate.id) },
+                    tint = Color.DarkGray
                 )
 
                 // 2. 득표율 오버레이
@@ -126,35 +139,5 @@ fun VoteCandidateItem(
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun VoteCandidateItemPreview() {
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text("득표율 없는 경우", fontSize = 14.sp, modifier = Modifier.padding(bottom = 8.dp))
-        VoteCandidateItem(
-            candidate = VoteCandidate(
-                id = 1,
-                imageUrl = "https://flexible.img.hani.co.kr/flexible/normal/700/1040/imgdb/original/2021/0428/20210428504000.jpg",
-                voteRatio = null
-            ),
-            isVoted = false,
-            onClick = {}
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text("득표율 60%", fontSize = 14.sp, modifier = Modifier.padding(bottom = 8.dp))
-        VoteCandidateItem(
-            candidate = VoteCandidate(
-                id = 2,
-                imageUrl = "https://flexible.img.hani.co.kr/flexible/normal/700/1040/imgdb/original/2021/0428/20210428504000.jpg",
-                voteRatio = 60
-            ),
-            isVoted = true,
-            onClick = {}
-        )
     }
 }
