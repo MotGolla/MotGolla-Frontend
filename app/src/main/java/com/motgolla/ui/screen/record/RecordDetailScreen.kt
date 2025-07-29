@@ -42,6 +42,9 @@ import com.motgolla.ui.component.item.ProductPreviewList
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.DialogProperties
 
 
@@ -61,7 +64,8 @@ fun RecordDetailScreen(
         uiState.errorMessage != null -> ErrorScreen(uiState.errorMessage!!)
         uiState.record != null -> RecordDetailContent(
             record = uiState.record!!,
-            navController = navController
+            navController = navController,
+            viewModel = viewModel
         )
         else -> Box(
             modifier = Modifier.fillMaxSize(),
@@ -75,7 +79,8 @@ fun RecordDetailScreen(
 @Composable
 fun RecordDetailContent(
     record: RecordDetailResponse,
-    navController: NavController? = null
+    navController: NavController? = null,
+    viewModel: RecordDetailViewModel
 ) {
     val context = LocalContext.current
     val allImages = remember(record.imageUrls, record.tagImageUrl) {
@@ -94,6 +99,9 @@ fun RecordDetailContent(
     }
 
     var enlargedImageUrl by remember { mutableStateOf<String?>(null) }
+
+    var showStatusChangeDialog by remember { mutableStateOf(false) }
+    var isUpdatingStatus by remember { mutableStateOf(false) }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize()
@@ -167,17 +175,15 @@ fun RecordDetailContent(
             ) {
                 Row {
                     StatusBox(
-                        text = "구매 ${if (record.productStatus == "COMPLETED") "완료" else "보류"}",
-                        bgColor = Color(0xFF7E57C2),
-                        textColor = Color.White
+                        status = record.productStatus,
+                        onClick = { showStatusChangeDialog = true }
                     )
 
-                    StatusBox(
-                        text = record.recordCreatedAt,
-                        bgColor = Color(0xFFEDE7F6),
-                        textColor = Color.Gray
+                    CreatedAtBox(
+                        text = record.recordCreatedAt
                     )
                 }
+
 
                 Box(
                     modifier = Modifier
@@ -246,42 +252,142 @@ fun RecordDetailContent(
     if (showMap) {
         Dialog(
             onDismissRequest = { showMap = false },
-            properties = DialogProperties(usePlatformDefaultWidth = false)
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false,
+                dismissOnClickOutside = true,
+                dismissOnBackPress = true
+            )
         ) {
+            // 바깥 클릭 감지를 위한 박스
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(8.dp)
-            ) { //  padding은 외부에서
-                Surface(
-                    shape = RoundedCornerShape(16.dp),
+                    .clickable(onClick = { showMap = false }) // 바깥 영역 클릭 시 닫기
+            ) {
+                // 내부 클릭은 이벤트 소모하여 닫히지 않도록 처리
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight(0.9f)
+                        .align(Alignment.Center)
+                        .clickable(enabled = true, onClick = {}) // 이벤트 소모
                 ) {
-                    Column {
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp),
-                            horizontalArrangement = Arrangement.End
-                        ) {
-                            TextButton(onClick = { showMap = false }) {
-                                Text("닫기")
+                    Surface(
+                        shape = RoundedCornerShape(16.dp),
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Column {
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp),
+                                horizontalArrangement = Arrangement.End
+                            ) {
+                                TextButton(onClick = { showMap = false }) {
+                                    Text("닫기")
+                                }
                             }
+                            AndroidView(
+                                factory = {
+                                    WebView(it).apply {
+                                        webViewClient = WebViewClient()
+                                        settings.javaScriptEnabled = true
+                                        loadUrl(record.storeMapLink)
+                                    }
+                                },
+                                modifier = Modifier.fillMaxSize()
+                            )
                         }
-                        AndroidView(factory = {
-                            WebView(it).apply {
-                                webViewClient = WebViewClient()
-                                settings.javaScriptEnabled = true
-                                loadUrl(record.storeMapLink)
-                            }
-                        }, modifier = Modifier.fillMaxSize())
                     }
                 }
             }
         }
     }
+
+    if (showStatusChangeDialog) {
+        Dialog(
+            onDismissRequest = { showStatusChangeDialog = false },
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false, // 꽉 채우기
+                dismissOnClickOutside = false    // 우리가 수동으로 처리
+            )
+        ) {
+            // 바깥 배경 클릭 시 닫기
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable(onClick = { showStatusChangeDialog = false }),
+                contentAlignment = Alignment.Center
+            ) {
+                // 모달 내용 (클릭 이벤트 소비용)
+                Column(
+                    modifier = Modifier
+                        .width(300.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color.White)
+                        .padding(horizontal = 20.dp, vertical = 24.dp)
+                        .clickable(enabled = true, onClick = {}), // 이벤트 소비
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "구매 상태 변경",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = Color.Black
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = "구매 상태를 '${if (record.productStatus == "COMPLETED") "보류" else "완료"}'로 변경하시겠습니까?",
+                        fontSize = 14.sp,
+                        color = Color.Gray,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // 확인 버튼
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(44.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(Color(0xFF7B2CBF))
+                            .clickable {
+                                showStatusChangeDialog = false
+                                isUpdatingStatus = true
+                                viewModel.changeStatus(
+                                    recordId = record.recordId,
+                                    newStatus = if (record.productStatus == "COMPLETED") "AVAILABLE" else "COMPLETED"
+                                )
+                            },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "확인",
+                            color = Color.White,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "취소",
+                        color = Color.Gray,
+                        fontSize = 13.sp,
+                        modifier = Modifier.clickable { showStatusChangeDialog = false }
+                    )
+                }
+            }
+        }
+    }
+
+
+
 }
 
 
@@ -299,24 +405,51 @@ fun InfoAlignedRow(label: String, value: String) {
 }
 
 @Composable
-fun InfoRow(label: String, value: String) {
-    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp)) {
-        Text(text = "$label: ", fontWeight = FontWeight.SemiBold)
-        Text(text = value)
+fun StatusBox(
+    status: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val (bgColor, textColor, textLabel) = when (status) {
+        "COMPLETED" -> Triple(Color(0xFF7E57C2), Color.White, "구매 완료")
+        "AVAILABLE" -> Triple(Color(0xFF000000), Color.White, "구매 보류")
+        else -> Triple(Color.LightGray, Color.DarkGray, status) // 날짜 등도 표시 가능
+    }
+
+    Box(
+        modifier = modifier
+            .clickable { onClick() }
+            .background(bgColor)
+            .height(28.dp)
+            .padding(horizontal = 12.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = textLabel,
+            color = textColor,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium
+        )
     }
 }
 
 @Composable
-fun StatusBox(text: String, bgColor: Color, textColor: Color, modifier: Modifier = Modifier) {
+fun CreatedAtBox(
+    text: String,
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = modifier
-            .background(bgColor)
-            .height(32.dp) // 고정 높이
-//            .width(IntrinsicSize.Min)
+            .height(28.dp)
+            .background(Color(0xFFEDE7F6))
             .padding(horizontal = 12.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = text, color = textColor, fontSize = 14.sp, maxLines = 1,)
+        Text(
+            text = text,
+            color = Color.Gray,
+            fontSize = 14.sp
+        )
     }
 }
 
@@ -375,7 +508,10 @@ fun RecordDetailScreenPreview() {
         storeMapLink = "https://place.map.kakao.com/2006302169"
     )
 
+    val dummyViewModel = object : RecordDetailViewModel() {}
+
     RecordDetailContent(
-        record = dummyRecord
+        record = dummyRecord,
+        viewModel = dummyViewModel
     )
 }

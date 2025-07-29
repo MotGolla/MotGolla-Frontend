@@ -62,115 +62,104 @@ fun ShoppingDateCalendar(
         }
     }
 
-    // Dialog 항상 표시 (아이콘 누를 때 이미 Dialog 호출한 상태라고 가정)
-    Dialog(onDismissRequest = {}) {
-        val calendarState = rememberCalendarState(
-            startMonth = startMonth,
-            endMonth = endMonth,
-            firstVisibleMonth = YearMonth.from(today),
-            firstDayOfWeek = daysOfWeek.first()
-        )
-        val currentMonth = calendarState.firstVisibleMonth.yearMonth
-
-        Column(
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // 🔼 월 네비게이션과 타이틀
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(bottom = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // 🔼 월 네비게이션과 타이틀
-            Row(
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Previous month",
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Previous month",
-                    modifier = Modifier
-                        .clickable {
-                            coroutineScope.launch {
-                                calendarState.animateScrollToMonth(
-                                    calendarState.firstVisibleMonth.yearMonth.minusMonths(1)
-                                )
-                            }
+                    .clickable {
+                        coroutineScope.launch {
+                            calendarState.animateScrollToMonth(
+                                calendarState.firstVisibleMonth.yearMonth.minusMonths(1)
+                            )
                         }
-                        .padding(8.dp)
-                )
+                    }
+                    .padding(8.dp)
+            )
+            Text(
+                text = calendarState.firstVisibleMonth.yearMonth.format(DateTimeFormatter.ofPattern("yyyy년 M월")),
+                fontSize = 18.sp,
+                color = Color(0xFF00796B),
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.Center
+            )
+            Icon(
+                imageVector = Icons.Default.ArrowForward,
+                contentDescription = "Next month",
+                modifier = Modifier
+                    .clickable {
+                        coroutineScope.launch {
+                            calendarState.animateScrollToMonth(
+                                calendarState.firstVisibleMonth.yearMonth.plusMonths(1)
+                            )
+                        }
+                    }
+                    .padding(8.dp)
+            )
+        }
+
+        // 요일 헤더
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            daysOfWeek.forEach { day ->
                 Text(
-                    text = currentMonth.format(DateTimeFormatter.ofPattern("yyyy년 M월")),
-                    fontSize = 18.sp,
-                    color = Color(0xFF00796B),
+                    text = day.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+                    fontSize = 14.sp,
                     modifier = Modifier.weight(1f),
+                    color = Color.Gray,
                     textAlign = TextAlign.Center
                 )
-                Icon(
-                    imageVector = Icons.Default.ArrowForward,
-                    contentDescription = "Next month",
-                    modifier = Modifier
-                        .clickable {
-                            coroutineScope.launch {
-                                calendarState.animateScrollToMonth(
-                                    calendarState.firstVisibleMonth.yearMonth.plusMonths(1)
-                                )
-                            }
-                        }
-                        .padding(8.dp)
-                )
             }
+        }
 
-            // 요일 헤더
-            Row(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                daysOfWeek.forEach { day ->
+        Spacer(modifier = Modifier.height(8.dp))
+
+        HorizontalCalendar(
+            state = calendarState,
+            dayContent = { day ->
+                val date = day.date
+                val isAvailable = availableDates.contains(date)
+                val isSelected = date == selectedDate
+
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .aspectRatio(1f)
+                        .padding(6.dp)
+                        .then(
+                            if (isAvailable) Modifier.background(
+                                color = if (isSelected) Color(0xFF7B2CBF) else Color(0xFFEADDFF),
+                                shape = CircleShape
+                            ) else Modifier
+                        )
+                        .clickable(enabled = isAvailable) {
+                            selectedDate = date
+                            onDateSelected(date)
+                        }
+                ) {
                     Text(
-                        text = day.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
-                        fontSize = 14.sp,
-                        modifier = Modifier.weight(1f),
-                        color = Color.Gray,
-                        textAlign = TextAlign.Center
+                        text = date.dayOfMonth.toString(),
+                        color = if (isAvailable) Color.Black else Color.LightGray,
+                        fontSize = 14.sp
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            HorizontalCalendar(
-                state = calendarState,
-                dayContent = { day ->
-                    val date = day.date
-                    val isAvailable = availableDates.contains(date)
-                    val isSelected = date == selectedDate
-
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .aspectRatio(1f)
-                            .padding(6.dp)
-                            .then(
-                                if (isAvailable) Modifier.background(
-                                    color = if (isSelected) Color(0xFF7B2CBF) else Color(0xFFEADDFF),
-                                    shape = CircleShape
-                                ) else Modifier
-                            )
-                            .clickable(enabled = isAvailable) {
-                                selectedDate = date
-                                onDateSelected(date)
-                            }
-                    ) {
-                        Text(
-                            text = date.dayOfMonth.toString(),
-                            color = if (isAvailable) Color.Black else Color.LightGray,
-                            fontSize = 14.sp
-                        )
-                    }
-                }
-            )
-        }
+        )
     }
 }

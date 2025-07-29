@@ -43,7 +43,7 @@ fun LocationSection(viewModel: LocationViewModel) {
                 )
             }
         }
-
+        Spacer(modifier = Modifier.height(2.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()

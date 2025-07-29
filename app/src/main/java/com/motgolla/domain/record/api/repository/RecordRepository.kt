@@ -172,23 +172,19 @@ class RecordRepository {
     }
 
     // 상태 업데이트
-    fun updateRecordStateToCompleted(recordId: Long, callback: (Result<Unit>) -> Unit) {
-        val requestBody = UpdateRecordStatusRequest() // "COMPLETED" 기본값 사용
-        recordService.updateRecordState(recordId, requestBody)
-            .enqueue(object : Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful) {
-                        callback(Result.success(Unit))
-                    } else {
-                        callback(Result.failure(Exception("서버 오류: ${response.code()}")))
-                    }
-                }
-
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    callback(Result.failure(t))
-                }
-            })
+    suspend fun updateRecordStateToCompleted(recordId: Long): Result<Unit> {
+        return try {
+            val response = recordService.updateRecordState(recordId, UpdateRecordStatusRequest("COMPLETED"))
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception("서버 오류: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
+
 
 
     // 월별 요일 가져오기

@@ -9,7 +9,8 @@ import com.motgolla.domain.record.data.response.ShoppingRecordInfoResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
 class RecordViewModel : ViewModel() {
 
@@ -118,9 +119,9 @@ class RecordViewModel : ViewModel() {
 
     // 상태 변경
     fun completeRecord(recordId: Long, category: String?, date: String) {
-        recordRepository.updateRecordStateToCompleted(recordId) { result ->
+        viewModelScope.launch {
+            val result = recordRepository.updateRecordStateToCompleted(recordId)
             result.onSuccess {
-                // 변경 성공 → 상태 초기화 후 새로 fetch
                 resetAndFetch(category, date)
             }.onFailure { e ->
                 Log.e("RecordViewModel", "상태 변경 실패: ${e.message}")

@@ -16,7 +16,7 @@ class VoteViewModel(
     var voteCards = mutableStateOf<List<VoteCard>>(emptyList())
         private set
 
-    private var selectedCandidateMap = mutableMapOf<Long, Long>()
+    var selectedCandidateMap = mutableMapOf<Long, Long>()
 
     fun loadVotes(type: String = "ALL") {
         viewModelScope.launch {
