@@ -53,7 +53,7 @@ fun MotGollaApp() {
             modifier = Modifier
                 .padding(
                     top = innerPadding.calculateTopPadding(),
-                    bottom = 0.dp,
+                    bottom = innerPadding.calculateBottomPadding(),
                     start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
                     end = innerPadding.calculateEndPadding(LayoutDirection.Ltr)
                 )

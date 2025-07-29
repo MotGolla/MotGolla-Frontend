@@ -50,7 +50,6 @@ fun ShoppingRecordScreen(viewModel: RecordRegisterViewModel, memoViewModel: Memo
 
     val inPreview = LocalInspectionMode.current
 
-    // 상태로 백화점 이름 저장 (초기값은 null or "알 수 없음"으로 둬도 좋아요)
     //예시화면
     val departmentName = remember { mutableStateOf("불러오는 중...") }
 
