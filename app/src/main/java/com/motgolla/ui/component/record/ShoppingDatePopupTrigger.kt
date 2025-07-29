@@ -82,19 +82,37 @@ fun ShoppingDatePopupTrigger(
         ) {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White)
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                ShoppingDateCalendar(
-                    availableDates = availableDates,
-                    onDateSelected = {
-                        onDateSelected(it)
+                    .fillMaxSize() // 전체 화면을 차지하는 투명 배경
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
                         showCalendarDialog = false
                     },
-                    onMonthChanged = onMonthOpened
-                )
+                contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White)
+                        .padding(16.dp)
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) {
+                            // 캘린더 클릭은 dismiss되지 않도록 막기
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    ShoppingDateCalendar(
+                        availableDates = availableDates,
+                        onDateSelected = {
+                            onDateSelected(it)
+                            showCalendarDialog = false
+                        },
+                        onMonthChanged = onMonthOpened
+                    )
+                }
             }
         }
     }

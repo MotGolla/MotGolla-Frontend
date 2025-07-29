@@ -94,6 +94,13 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
             ShoppingRecordScreen(viewModel = recordRegisterViewModel, memoViewModel = memoViewModel)
         }
 
+        // plus 버튼
+        composable("plus") {
+            val recordRegisterViewModel: RecordRegisterViewModel = viewModel()
+            val memoViewModel: MemoViewModel = viewModel()
+            ShoppingRecordScreen(viewModel = recordRegisterViewModel, memoViewModel = memoViewModel)
+        }
+
         composable(
             route = "image_viewer/{encodedUrls}/{initialIndex}",
             arguments = listOf(
