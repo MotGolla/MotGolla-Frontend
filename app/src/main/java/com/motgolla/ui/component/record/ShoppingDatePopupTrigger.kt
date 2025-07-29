@@ -52,17 +52,15 @@ fun ShoppingDatePopupTrigger(
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier
+            .padding(top = 8.dp)
+            .clickable { showCalendarDialog = true }
     ) {
         Icon(
             imageVector = Icons.Default.CalendarToday,
             contentDescription = "calendar",
             tint = Color.Black,
-            modifier = Modifier
-                .size(24.dp)
-                .clickable {
-                    showCalendarDialog = true
-                }
+            modifier = Modifier.size(24.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
@@ -82,7 +80,7 @@ fun ShoppingDatePopupTrigger(
         ) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize() // 전체 화면을 차지하는 투명 배경
+                    .fillMaxSize()
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
@@ -95,13 +93,7 @@ fun ShoppingDatePopupTrigger(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.White)
-                        .padding(16.dp)
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        ) {
-                            // 캘린더 클릭은 dismiss되지 않도록 막기
-                        },
+                        .padding(16.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     ShoppingDateCalendar(

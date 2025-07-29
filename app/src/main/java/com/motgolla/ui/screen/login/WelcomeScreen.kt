@@ -72,7 +72,7 @@ fun WelcomeScreen(navController: NavController) {
         }
     }
     LaunchedEffect(Unit) {
-        delay(3000)
+        delay(1700)
         navController.navigate("home") {
             popUpTo("welcome") { inclusive = true }
         }

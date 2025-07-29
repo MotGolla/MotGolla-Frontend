@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,11 +29,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import com.motgolla.R
 import com.motgolla.common.RetrofitClient
 import com.motgolla.common.storage.TokenStorage
 import com.motgolla.domain.login.api.service.MemberService
 import com.motgolla.domain.notification.api.service.NotificationService
-import com.motgolla.ui.component.record.FloorSelector
 
 @Composable
 fun MyScreen(navController: NavController) {
@@ -81,19 +82,14 @@ fun MyScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 30.dp),
+            .padding(horizontal = 0.dp, vertical = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Profile Section
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    brush = Brush.horizontalGradient(
-                        listOf(Color(0xFF2FC8AB), Color(0xFF2CC0E1))
-                    ),
-                    shape = RoundedCornerShape(16.dp)
-                )
+                .align(Alignment.Start)
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -106,34 +102,47 @@ fun MyScreen(navController: NavController) {
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(text = nickname, color = Color.White, fontSize = 25.sp, fontWeight = FontWeight.Bold)
-                Text(text = "${createdAt} 가입", color = Color.White, fontSize = 15.sp)
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.Start
+
+            ) {
+                Text(text = nickname, color = Color.Black, fontSize = 25.sp, fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = "${createdAt} 가입", color = Color.Black.copy(alpha = 0.7f), fontSize = 15.sp)
             }
         }
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         // Birthday and Gender Section
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color(0xFFF5F5F5), shape = RoundedCornerShape(8.dp))
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(Icons.Default.Cake, contentDescription = null)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = birthday, fontSize = 16.sp)
-            Spacer(modifier = Modifier.weight(1f))
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFFF5F5F5), shape = RoundedCornerShape(8.dp))
+                    .padding(vertical = 20.dp, horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(Icons.Default.Cake, contentDescription = null)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(text = birthday, fontSize = 16.sp)
+                Spacer(modifier = Modifier.weight(1f))
 
-            if(gender == "F")
-                Icon(Icons.Default.Female, contentDescription = null)
-            else if(gender == "M")
-                Icon(Icons.Default.Male, contentDescription = null)
+                if(gender == "F")
+                    Icon(Icons.Default.Female, contentDescription = null)
+                else if(gender == "M")
+                    Icon(Icons.Default.Male, contentDescription = null)
+            }
+            Image(
+                painter = painterResource(id = R.drawable.mypage_dog),
+                contentDescription = null,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .offset(x = 0.dp, y = (-100).dp)
+                    .size(160.dp)
+            )
         }
-
-        Spacer(modifier = Modifier.height(35.dp))
 
         Column(
             modifier = Modifier
@@ -144,7 +153,7 @@ fun MyScreen(navController: NavController) {
                 text = "로그아웃",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp)
+                    .padding(vertical = 10.dp)
                     .clickable { showLogoutDialog = true }
             )
 
@@ -152,7 +161,7 @@ fun MyScreen(navController: NavController) {
                 text = "회원탈퇴",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp)
+                    .padding(vertical = 10.dp)
                     .clickable { showResignDialog = true }
             )
         }
@@ -160,7 +169,9 @@ fun MyScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "알림 설정", fontSize = 17.sp)

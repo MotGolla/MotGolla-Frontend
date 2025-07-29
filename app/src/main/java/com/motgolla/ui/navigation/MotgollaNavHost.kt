@@ -1,6 +1,5 @@
 package com.motgolla.ui.navigation
 
-import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -15,18 +14,15 @@ import com.motgolla.ui.screen.login.SignUpScreen
 import com.motgolla.ui.screen.login.WelcomeScreen
 import com.motgolla.ui.screen.my.MyScreen
 import com.motgolla.ui.screen.record.ShoppingRecordScreen
-import com.motgolla.ui.screen.vote.VoteScreen
 import com.motgolla.viewmodel.record.MemoViewModel
 import com.motgolla.viewmodel.record.RecordRegisterViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.motgolla.ui.screen.record.ImageViewerScreen
-import kotlin.getValue
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.motgolla.ui.screen.home.bottom.DepartmentStoreWebView
 import com.motgolla.ui.screen.record.RecordDetailScreen
 import com.motgolla.ui.screen.record.ShoppingRecordMainScreen
 import com.motgolla.ui.screen.vote.VoteProductSelectScreen
@@ -60,16 +56,23 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
         composable("home") {
             HomeScreen(navController = navController)
         }
-        composable("vote") { VoteScreenWrapper() }
+        composable("vote") { VoteScreenWrapper(navController) }
         composable("my") { MyScreen(navController) }
         composable("login") { LoginScreen(navController) }
         composable("signup") { SignUpScreen(navController) }
         composable("welcome") { WelcomeScreen(navController) }
 
-        composable("vote/productSelect") {
+        composable(
+            route = "vote/productSelect?date={date}",
+            arguments = listOf(
+                navArgument("date") { defaultValue = "2025-07-28" }
+            )
+        ) { backStackEntry ->
+            val date = backStackEntry.arguments?.getString("date") ?: "2025-07-28"
+
             VoteProductSelectScreen(
                 viewModel = voteCreateViewModel,
-                date = "2025-07-28",
+                date = date,
                 onNext = {
                     navController.navigate("vote/titleInput")
                 }
@@ -124,22 +127,6 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
             val recordId = backStackEntry.arguments?.getString("recordId")?.toLong() ?: return@composable
             RecordDetailScreen(recordId = recordId, navController = navController)
         }
-
-        composable(
-            route = "webview/{encodedUrl}",
-            arguments = listOf(
-                navArgument("encodedUrl") { type = NavType.StringType }
-            )
-        ) { backStackEntry ->
-            val encodedUrl = backStackEntry.arguments?.getString("encodedUrl") ?: ""
-            val decodedUrl = Uri.decode(encodedUrl)
-
-            DepartmentStoreWebView(
-                url = decodedUrl,
-                onBack = { navController.popBackStack() }
-            )
-        }
-
 
     }
 }

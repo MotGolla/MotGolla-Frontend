@@ -1,6 +1,8 @@
 package com.motgolla.ui.screen.home.bottom
 
 import android.net.Uri
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -8,20 +10,26 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.ui.Alignment
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
 import com.google.accompanist.pager.*
 import com.motgolla.R
 import kotlinx.coroutines.delay
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun DepartmentStoreSection(
     navController: NavHostController,
@@ -36,6 +44,9 @@ fun DepartmentStoreSection(
         R.drawable.event4 to "https://www.ehyundai.com/newPortal/EV/EV000003_14_V.do?eventNo=34657&eventCd=B0349900&list_page=&search=&keyword=&eventSearch=&eventSearchDep=&imgLink=/attachfiles/event/8cef0ad18c354e229551554f82e0b151.png",
         R.drawable.event5 to "https://www.ehyundai.com/newPortal/EV/EV000003_14_V.do?eventNo=34857&eventCd=B0349900&list_page=&search=&keyword=&eventSearch=&eventSearchDep=&imgLink=/attachfiles/event/85f6a28ade674b4f8316d50f7413e80a.png",
     )
+
+    var showWebView by remember { mutableStateOf(false) }
+    var selectedUrl by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         while (true) {
@@ -52,8 +63,8 @@ fun DepartmentStoreSection(
         SectionHeader(
             title = "백화점 정보",
             onClickMore = {
-                val encoded = Uri.encode("https://www.ehyundai.com/mobile/event/EV/main.do?param=event")
-                navController.navigate("webview/$encoded")
+                selectedUrl = "https://www.ehyundai.com/mobile/event/EV/main.do?param=event"
+                showWebView = true
             }
         )
 
@@ -72,8 +83,8 @@ fun DepartmentStoreSection(
                 modifier = Modifier
                     .fillMaxSize()
                     .clickable {
-                        val encodedUrl = Uri.encode(images[page].second)
-                        navController.navigate("webview/$encodedUrl")
+                        selectedUrl = images[page].second
+                        showWebView = true
                     }
             ) {
                 Image(
@@ -95,5 +106,51 @@ fun DepartmentStoreSection(
             activeColor = Color(0xFF3B40CC),
             inactiveColor = Color.Gray
         )
+    }
+
+    if (showWebView) {
+        Dialog(
+            onDismissRequest = { showWebView = false },
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false,
+                dismissOnClickOutside = true
+            )
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(8.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.9f)
+                ) {
+                    Column {
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            TextButton(onClick = { showWebView = false }) {
+                                Text("닫기")
+                            }
+                        }
+
+                        AndroidView(factory = {
+                            WebView(it).apply {
+                                webViewClient = WebViewClient()
+                                settings.javaScriptEnabled = true
+                                loadUrl(selectedUrl)
+                            }
+                        }, modifier = Modifier.fillMaxSize())
+                    }
+                }
+            }
+        }
     }
 }

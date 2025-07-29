@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.motgolla.ui.component.MotGollaTopBar
@@ -27,7 +26,7 @@ fun MotGollaApp() {
         .value
         ?.destination
         ?.route
-//    val hideBarsRoutes = listOf("splash", "login", "welcome", "signup", "home")
+
     val currentScreen = MotGollaScreen.fromRoute(currentRoute)
 
     Scaffold(
@@ -60,12 +59,3 @@ fun MotGollaApp() {
     }
 }
 
-//타이틀
-fun getTitleForRoute(route: String?): String {
-    return when (route) {
-        "record" -> "기록"
-        "vote" -> "투표"
-        "my" -> "내 정보"
-        else -> ""
-    }
-}

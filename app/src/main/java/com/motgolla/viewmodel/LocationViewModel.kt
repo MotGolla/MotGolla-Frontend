@@ -31,8 +31,8 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
     private val _lastKnownLocation = mutableStateOf<Location?>(null)
     val lastKnownLocation: State<Location?> = _lastKnownLocation
 
-    //백화점 기본 값 -> 알 수 없음
-    private val _departmentName = mutableStateOf("알 수 없음")
+    //백화점 기본 값
+    private val _departmentName = mutableStateOf("현대백화점 압구정본점")
     val departmentName: State<String> = _departmentName
 
     private val _locationChanged = mutableStateOf(false)
@@ -56,6 +56,9 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
         val savedName = PreferenceUtil.getDepartmentName(application)
         if (!savedName.isNullOrEmpty()) {
             _departmentName.value = savedName
+        } else {
+            _departmentName.value = "현대백화점 압구정본점"
+            PreferenceUtil.saveDepartmentName(application, "현대백화점 압구정본점")
         }
     }
 
@@ -66,14 +69,6 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
         resetPendingState()
         Log.d(TAG, "수동으로 백화점 선택됨: $name")
     }
-
-//    fun resetToAutoMode() {
-//        _isManualSelection.value = false
-//        Log.d(TAG, "자동 모드로 전환됨")
-//        previousLocation?.let {
-//            handleLocationChange(it)
-//        }
-//    }
 
     private fun handleLocationChange(newLocation: Location) {
         if (_isManualSelection.value) {
@@ -196,17 +191,6 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
             }
         }
     }
-
-
-//    fun updateLocationManually() {
-//        Log.d(TAG, "아이콘 클릭됨. pendingDepartmentName = $pendingDepartmentName")
-//        pendingDepartmentName?.let { newName ->
-//            _departmentName.value = newName
-//            PreferenceUtil.saveDepartmentName(getApplication(), newName)
-//            resetPendingState()
-//            Log.d(TAG, "사용자 요청으로 백화점 이름 갱신: $newName")
-//        }
-//    }
 
     fun checkIfLocationChangedOnEnter() {
         val currentLoc = previousLocation ?: return
