@@ -61,9 +61,9 @@ fun HomeScreen(
             .background(
                 Brush.verticalGradient(
                     colorStops = arrayOf(
-                        0.0f to Color(0xFFAA80F9),
-                        0.6f to Color(0xFF6165D7),
-                        1.0f to Color(0xFF6165D7)
+                        0.0f to Color(0xFF8d0aff),
+                        0.1f to Color(0xFF700aff),
+                        0.22f to Color(0xFF4a12ff)
                     )
                 )
             )
@@ -82,10 +82,3 @@ fun HomeScreen(
         )
     }
 }
-
-
-//@Preview(showBackground = true)
-//@Composable
-//fun HomeScreenPreview() {
-//    HomeScreen()
-//}
