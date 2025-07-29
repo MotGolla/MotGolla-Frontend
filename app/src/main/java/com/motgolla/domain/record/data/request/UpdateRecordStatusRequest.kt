@@ -1,6 +1,9 @@
 package com.motgolla.domain.record.data.request
 
+import com.google.gson.annotations.SerializedName
+
 data class UpdateRecordStatusRequest(
 
-    val status: String = "COMPLETED",
+    @SerializedName("status")
+    val status: String,
 )
