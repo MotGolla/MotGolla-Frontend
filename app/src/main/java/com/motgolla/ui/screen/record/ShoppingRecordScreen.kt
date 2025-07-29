@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.util.Log
+import androidx.navigation.compose.rememberNavController
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -35,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.motgolla.R
 import com.motgolla.ui.component.record.FloorSelector
@@ -47,7 +49,10 @@ import com.motgolla.viewmodel.record.RecordRegisterViewModel
 import java.io.File
 
 @Composable
-fun ShoppingRecordScreen(viewModel: RecordRegisterViewModel, memoViewModel: MemoViewModel) {
+fun ShoppingRecordScreen(
+    viewModel: RecordRegisterViewModel,
+    memoViewModel: MemoViewModel, navController: NavController
+) {
     val context = LocalContext.current
 
     val inPreview = LocalInspectionMode.current
@@ -385,7 +390,11 @@ fun ShoppingRecordScreen(viewModel: RecordRegisterViewModel, memoViewModel: Memo
             Button(
                 onClick = {
                     viewModel.setMemo(memoViewModel.memo.value)
-                    viewModel.submitRecord { /* 결과 처리 추후 nav로 이동 */ }
+                    viewModel.submitRecord { /* 내일 추천 모달 추가 */
+                        navController.navigate("home") {
+                            popUpTo("shoppingRecord") { inclusive = true } // 필요 시 백스택 정리
+                        }
+                    }
                 },
                 enabled = isFormValid,
                 colors = ButtonDefaults.buttonColors(
@@ -393,6 +402,7 @@ fun ShoppingRecordScreen(viewModel: RecordRegisterViewModel, memoViewModel: Memo
                     contentColor = Color.White
                 ),
                 modifier = Modifier
+
                     .fillMaxWidth()
                     .height(48.dp)
             ) {
@@ -416,5 +426,5 @@ fun ShoppingRecordScreenPreview() {
     val fakeViewModel = RecordRegisterViewModel()
     val fakeMemoViewModel =
         MemoViewModel(Application())
-    ShoppingRecordScreen(viewModel = fakeViewModel, memoViewModel = fakeMemoViewModel)
+    ShoppingRecordScreen(viewModel = fakeViewModel, memoViewModel = fakeMemoViewModel,  navController = rememberNavController())
 }

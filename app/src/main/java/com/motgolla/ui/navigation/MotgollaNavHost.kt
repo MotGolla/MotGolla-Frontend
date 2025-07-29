@@ -81,7 +81,7 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
         composable("shoppingRecord") {
             val recordRegisterViewModel: RecordRegisterViewModel = viewModel()
             val memoViewModel: MemoViewModel = viewModel()
-            ShoppingRecordScreen(recordRegisterViewModel, memoViewModel)
+            ShoppingRecordScreen(recordRegisterViewModel, memoViewModel, navController = navController)
         }
 
         composable("record") {
@@ -92,7 +92,7 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
         composable("plus") {
             val recordRegisterViewModel: RecordRegisterViewModel = viewModel()
             val memoViewModel: MemoViewModel = viewModel()
-            ShoppingRecordScreen(recordRegisterViewModel, memoViewModel)
+            ShoppingRecordScreen(recordRegisterViewModel, memoViewModel, navController = navController)
         }
 
         composable("vote/titleInput") {
