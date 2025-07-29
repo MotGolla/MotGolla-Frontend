@@ -1,9 +1,13 @@
 package com.motgolla.domain.record.api.service
 
 import com.motgolla.domain.record.data.request.MemoSummaryRequest
+import com.motgolla.domain.record.data.request.RecordProductFilterRequest
 import com.motgolla.domain.record.data.response.BarcodeInfoResponse
 import com.motgolla.domain.record.data.request.RecordRequest
+import com.motgolla.domain.record.data.request.UpdateRecordStatusRequest
 import com.motgolla.domain.record.data.response.MemoSummaryResponse
+import com.motgolla.domain.record.data.response.RecordDatesResponse
+import com.motgolla.domain.record.data.response.RecordProductFilterListResponse
 import com.motgolla.domain.record.data.response.RecordResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -11,9 +15,11 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Multipart
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface RecordService {
 
@@ -41,4 +47,25 @@ interface RecordService {
     @POST("/api/record/memo-summary")
     fun summarizeMemo(@Body request: MemoSummaryRequest): Call<MemoSummaryResponse>
 
+
+    @GET("/api/record/products")
+    fun getProducts(
+        @Query("date") date: String,
+        @Query("category") category: String?,
+        @Query("cursor") cursor: Long?,
+        @Query("limit") limit: Int
+    ): Call<RecordProductFilterListResponse>
+
+
+    @PATCH("api/record/{recordId}/status")
+    fun updateRecordState(
+        @Path("recordId") recordId: Long,
+        @Body request: UpdateRecordStatusRequest
+    ): Call<Void>
+
+
+    @GET("/api/record/dates")
+    fun getRecordDates(
+        @Query("yearMonth") yearMonth: String
+    ): Call<RecordDatesResponse>
 }

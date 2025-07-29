@@ -90,13 +90,17 @@ fun LoginScreen(
                     KakaoLoginService.loginWithKakao(
                         context = context,
                         onSuccess = { nickname, profileUrl, oauthId, idToken ->
-                            Log.d("KakaoLogin", "카카오 로그인 성공: $nickname, $profileUrl, $oauthId, $idToken")
+                            Log.d(
+                                "KakaoLogin",
+                                "카카오 로그인 성공: $nickname, $profileUrl, $oauthId, $idToken"
+                            )
 
                             val loginRequest = LoginRequest(idToken = idToken!!, oauthId = oauthId)
                             CoroutineScope(Dispatchers.IO).launch {
                                 try {
                                     // 서버 로그인 요청
-                                    val response = RetrofitClient.getAuthService().login(loginRequest)
+                                    val response =
+                                        RetrofitClient.getAuthService().login(loginRequest)
                                     withContext(Dispatchers.Main) {
                                         // 가입된 회원인 경우 welcome 페이지로 이동
                                         if (response.isSuccessful) {
@@ -105,17 +109,20 @@ fun LoginScreen(
                                             val tokenResponse = response.body()
                                             if (tokenResponse != null) {
                                                 TokenStorage.save(context, tokenResponse)
-                                            }
-                                            else{
+                                            } else {
                                                 Log.e("SignUp", "token is null")
                                             }
                                             navController.navigate("welcome")
-                                        // 아닌 경우 회원 가입 페이지로 이동
+
+                                            // 아닌 경우 회원 가입 페이지로 이동
                                         } else if (response.code() == 401) {
                                             Log.d("Login", "회원 가입 필요: ${response.body()}")
                                             navController.navigate("signup/${idToken}/${oauthId}/${nickname}")
                                         } else {
-                                            Log.e("Login", "Unexpected response: ${response.code()}")
+                                            Log.e(
+                                                "Login",
+                                                "Unexpected response: ${response.code()}"
+                                            )
                                         }
                                     }
                                 } catch (e: Exception) {

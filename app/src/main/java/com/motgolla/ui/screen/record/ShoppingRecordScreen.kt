@@ -40,11 +40,11 @@ import com.motgolla.ui.component.record.MemoItem
 import com.motgolla.ui.component.record.RecordImageItem
 import com.motgolla.ui.component.record.rememberImagePicker
 import com.motgolla.viewmodel.record.MemoViewModel
-import com.motgolla.viewmodel.record.RecordViewModel
+import com.motgolla.viewmodel.record.RecordRegisterViewModel
 import java.io.File
 
 @Composable
-fun ShoppingRecordScreen(viewModel: RecordViewModel, memoViewModel: MemoViewModel) {
+fun ShoppingRecordScreen(viewModel: RecordRegisterViewModel, memoViewModel: MemoViewModel) {
     val context = LocalContext.current
     val inPreview = LocalInspectionMode.current
 
@@ -362,7 +362,7 @@ fun uriToFile(context: Context, uri: Uri): File {
 @Preview(showBackground = true)
 @Composable
 fun ShoppingRecordScreenPreview() {
-    val fakeViewModel = RecordViewModel()
+    val fakeViewModel = RecordRegisterViewModel()
     val fakeMemoViewModel =
         MemoViewModel(Application())
     ShoppingRecordScreen(viewModel = fakeViewModel, memoViewModel = fakeMemoViewModel)

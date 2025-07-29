@@ -125,4 +125,8 @@ dependencies {
     //슬라이드 이미지
     implementation("com.google.accompanist:accompanist-pager:0.30.1")
     implementation("com.google.accompanist:accompanist-pager-indicators:0.30.1")
+
+    implementation("com.kizitonwose.calendar:core:2.7.0")
+    implementation("com.kizitonwose.calendar:compose:2.7.0")
+
 }

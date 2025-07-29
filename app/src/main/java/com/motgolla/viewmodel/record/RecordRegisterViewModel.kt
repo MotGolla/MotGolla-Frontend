@@ -20,7 +20,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
-class RecordViewModel : ViewModel() {
+class RecordRegisterViewModel : ViewModel() {
 
     private val recordRepository = RecordRepository()
 

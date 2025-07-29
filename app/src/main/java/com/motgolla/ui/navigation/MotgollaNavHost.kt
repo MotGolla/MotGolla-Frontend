@@ -1,6 +1,7 @@
 package com.motgolla.ui.navigation
 
-import androidx.activity.viewModels
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -14,14 +15,15 @@ import com.motgolla.ui.screen.login.LoginScreen
 import com.motgolla.ui.screen.login.SignUpScreen
 import com.motgolla.ui.screen.login.WelcomeScreen
 import com.motgolla.ui.screen.my.MyScreen
-import com.motgolla.ui.screen.record.RecordScreen
+import com.motgolla.ui.screen.record.ShoppingRecordMainScreen
 import com.motgolla.ui.screen.record.ShoppingRecordScreen
 import com.motgolla.ui.screen.vote.VoteScreen
 import com.motgolla.viewmodel.record.MemoViewModel
-import com.motgolla.viewmodel.record.RecordViewModel
+import com.motgolla.viewmodel.record.RecordRegisterViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlin.getValue
+import com.motgolla.viewmodel.record.RecordViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
 
@@ -43,7 +45,11 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
             SplashScreen(navController)
         }
         composable("home") { HomeScreen() }
-        composable("record") { RecordScreen(navController = navController) }
+        composable("record") {
+            val recordViewModel: RecordViewModel = viewModel()
+            ShoppingRecordMainScreen(navController,recordViewModel)
+        }
+
         composable("vote") { VoteScreen() }
         composable("my") { MyScreen() }
         composable("login") {
@@ -51,9 +57,9 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
         }
         // ShoppingRecordScreen 등록
         composable("shoppingRecord") {
-            val recordViewModel: RecordViewModel = viewModel()
+            val recordRegisterViewModel: RecordRegisterViewModel = viewModel()
             val memoViewModel: MemoViewModel = viewModel()
-            ShoppingRecordScreen(viewModel = recordViewModel, memoViewModel = memoViewModel)
+            ShoppingRecordScreen(viewModel = recordRegisterViewModel, memoViewModel = memoViewModel)
         }
         composable("signup/{idToken}/{oauthId}/{nickname}") { backStackEntry ->
             val idToken = backStackEntry.arguments?.getString("idToken") ?: ""
