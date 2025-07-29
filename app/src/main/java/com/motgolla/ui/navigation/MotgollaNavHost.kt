@@ -60,7 +60,7 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
         composable("home") {
             HomeScreen(navController = navController)
         }
-        composable("vote") { VoteScreenWrapper() }
+        composable("vote") { VoteScreenWrapper(navController) }
         composable("my") { MyScreen(navController) }
         composable("login") { LoginScreen(navController) }
         composable("signup") { SignUpScreen(navController) }

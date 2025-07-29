@@ -7,10 +7,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavHostController
 import com.motgolla.viewmodel.vote.VoteViewModel
 
 @Composable
-fun VoteScreenWrapper() {
+fun VoteScreenWrapper(navController: NavHostController) {
     val context = LocalContext.current
     val viewModel = remember { VoteViewModel() }
     val voteCards by viewModel.voteCards
@@ -21,6 +22,7 @@ fun VoteScreenWrapper() {
     }
 
     VoteScreen(
+        navController = navController,
         selectedTab = selectedTab.value,
         voteCards = voteCards,
         onTabSelect = { tab ->

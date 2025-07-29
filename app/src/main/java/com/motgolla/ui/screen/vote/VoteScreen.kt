@@ -31,10 +31,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.NavHostController
 import com.motgolla.R
 
 @Composable
 fun VoteScreen(
+    navController: NavHostController,
     selectedTab: VoteTab,
     voteCards: List<VoteCard>,
     onTabSelect: (VoteTab) -> Unit,
@@ -110,6 +112,7 @@ fun VoteScreen(
                     VoteCardItem(
                         card = card,
                         onSelectCandidate = onSelectCandidate,
+                        onDetailClick = { recordId -> navController.navigate("record_detail/$recordId") },
                         onSubmitVote = onSubmitVote
                     )
                 }
