@@ -72,14 +72,14 @@ fun VoteProductSelectScreen(
                 enabled = canProceed,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(60.dp)
+                    .height(80.dp)
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (viewModel.selectedRecordIds.size >= 2) MaterialTheme.colorScheme.primary else Color.Gray
                 )
             ) {
-                Text("다음", color = Color.White)
+                Text("다음", color = Color.White, style = MaterialTheme.typography.bodyMedium)
             }
         }
     ) { innerPadding ->
@@ -89,7 +89,7 @@ fun VoteProductSelectScreen(
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             Text(
                 text = buildAnnotatedString {
@@ -100,7 +100,7 @@ fun VoteProductSelectScreen(
                         append("에 올릴 상품들을 선택해주세요!")
                     }
                 },
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.titleLarge
             )
 
             Spacer(modifier = Modifier.height(50.dp))
@@ -122,7 +122,8 @@ fun VoteProductSelectScreen(
 
             LazyColumn(
                 state = listState,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(products) { product ->
                     ProductCardItem(

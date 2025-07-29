@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.motgolla.ui.theme.Pretendard
 
@@ -53,41 +55,56 @@ fun ProductCardItem(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(12.dp)
         ) {
-            Image(
-                painter = rememberAsyncImagePainter(product.img_url ?: ""),
-                contentDescription = null,
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .size(80.dp)
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
-            )
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Column(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .width(IntrinsicSize.Max)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text("${product.brand_name} · ${product.brand_floor}", fontFamily = Pretendard)
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(product.product_name, fontFamily = Pretendard)
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(product.price, fontWeight = FontWeight.SemiBold, fontFamily = Pretendard)
-            }
-
-            if (isSelected) {
-                Icon(
-                    imageVector = Icons.Default.CheckCircle,
-                    contentDescription = "선택됨",
-                    tint = MaterialTheme.colorScheme.primary,
+                Image(
+                    painter = rememberAsyncImagePainter(product.img_url ?: ""),
+                    contentDescription = null,
                     modifier = Modifier
-                        .size(24.dp)
-                        .align(Alignment.CenterEnd)
+                        .size(80.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
                 )
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Column(
+                    modifier = Modifier.weight(1f)  // 텍스트가 가로 공간 차지
+                ) {
+                    Text(
+                        "${product.brand_name} · ${product.brand_floor}",
+                        fontSize = 13.sp,
+                        fontFamily = Pretendard,
+                        color = Color.Gray
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        product.product_name,
+                        fontSize = 14.sp,
+                        fontFamily = Pretendard,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        product.price,
+                        fontSize = 14.sp,
+                        fontFamily = Pretendard,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+
+                if (isSelected) {
+                    Icon(
+                        imageVector = Icons.Default.CheckCircle,
+                        contentDescription = "선택됨",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
         }
     }

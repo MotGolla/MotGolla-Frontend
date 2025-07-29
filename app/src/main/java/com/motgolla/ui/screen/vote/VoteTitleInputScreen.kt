@@ -42,7 +42,7 @@ fun VoteTitleInputScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(60.dp)
+                    .height(80.dp)
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
