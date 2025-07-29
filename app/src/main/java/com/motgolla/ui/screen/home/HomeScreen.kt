@@ -68,7 +68,7 @@ fun HomeScreen(
                     )
                 )
             )
-            .padding(top = 35.dp)
+            .padding(top = 10.dp)
     ) {
         TopBox(viewModel = viewModel)
         BottomBox(
