@@ -9,12 +9,19 @@ import androidx.core.app.ActivityCompat
 import androidx.compose.ui.platform.LocalContext
 
 @Composable
-fun RequestLocationPermission(onGranted: () -> Unit) {
+fun RequestLocationPermission(
+    onGranted: () -> Unit,
+    onDenied: () -> Unit = {}
+) {
     val context = LocalContext.current
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
-        if (isGranted) onGranted()
+        if (isGranted) {
+            onGranted()
+        } else {
+            onDenied()
+        }
     }
 
     LaunchedEffect(Unit) {

@@ -141,4 +141,6 @@ dependencies {
 
     implementation("com.kizitonwose.calendar:core:2.7.0")
     implementation("com.kizitonwose.calendar:compose:2.7.0")
+
+    implementation("com.google.accompanist:accompanist-permissions:0.34.0")
 }
