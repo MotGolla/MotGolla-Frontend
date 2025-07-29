@@ -237,4 +237,13 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    fun useDefaultLocationAndStore() {
+        val defaultName = "현대백화점 압구정본점"
+        _departmentName.value = defaultName
+        _isManualSelection.value = false
+        _lastKnownLocation.value = null
+        PreferenceUtil.saveDepartmentName(getApplication(), defaultName)
+
+        Log.d(TAG, "위치 권한 거부됨. 기본 백화점 설정: $defaultName")
+    }
 }

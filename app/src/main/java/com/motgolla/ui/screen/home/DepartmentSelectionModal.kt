@@ -1,22 +1,34 @@
 package com.motgolla.ui.screen.home
 
-import androidx.compose.foundation.*
+import android.Manifest
+import android.content.pm.PackageManager
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.GpsFixed
 import androidx.compose.runtime.*
-import androidx.compose.ui.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.content.ContextCompat
 import com.motgolla.domain.departmentstore.data.departmentStoresByRegion
 
 @Composable
@@ -27,6 +39,31 @@ fun DepartmentSelectionModal(
     onUseGPS: () -> Unit
 ) {
     if (!isVisible) return
+
+    val context = LocalContext.current
+    var permissionGranted by remember { mutableStateOf(false) }
+
+    // 위치 권한 요청 launcher
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { granted ->
+            permissionGranted = granted
+            if (granted) {
+                onUseGPS()
+                onDismiss()
+            } else {
+                Toast.makeText(context, "위치 권한이 필요합니다", Toast.LENGTH_SHORT).show()
+            }
+        }
+    )
+
+    // 초기 권한 체크
+    LaunchedEffect(Unit) {
+        permissionGranted = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+    }
 
     val borderColor = Color(0xFFAA80F9)
 
@@ -92,8 +129,12 @@ fun DepartmentSelectionModal(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .clickable {
-                                    onUseGPS()
-                                    onDismiss()
+                                    if (permissionGranted) {
+                                        onUseGPS()
+                                        onDismiss()
+                                    } else {
+                                        permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                                    }
                                 }
                                 .padding(8.dp)
                         ) {
@@ -114,7 +155,6 @@ fun DepartmentSelectionModal(
 
                     Spacer(Modifier.height(20.dp))
 
-                    // 구역별 백화점 리스트 출력
                     departmentStoresByRegion.forEach { (region, storesRows) ->
                         Text(
                             text = region,

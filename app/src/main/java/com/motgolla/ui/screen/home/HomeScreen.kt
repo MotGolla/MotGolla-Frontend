@@ -1,5 +1,6 @@
 package com.motgolla.ui.screen.home
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -23,6 +24,7 @@ import com.motgolla.viewmodel.LocationViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.motgolla.common.RetrofitClient
@@ -34,7 +36,7 @@ fun HomeScreen(
     navController: NavHostController,
     viewModel: LocationViewModel = viewModel()
 ) {
-
+    val context = LocalContext.current
     var initDone by remember { mutableStateOf(false) }
 
     val shoppingHistoryViewModel = remember {
@@ -51,10 +53,22 @@ fun HomeScreen(
     }
 
     if (initDone) {
-        RequestLocationPermission {
-            viewModel.startLocationUpdates()
-        }
+        RequestLocationPermission(
+            onGranted = {
+                viewModel.startLocationUpdates()
+            },
+            onDenied = {
+                viewModel.useDefaultLocationAndStore()
+                Toast.makeText(
+                    context,
+                    "위치 권한이 거부되어 \n기본 백화점 정보가 사용됩니다.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        )
     }
+
+
 
     Box(
         modifier = Modifier
