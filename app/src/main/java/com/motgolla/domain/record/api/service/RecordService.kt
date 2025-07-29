@@ -2,8 +2,12 @@ package com.motgolla.domain.record.api.service
 
 import com.motgolla.domain.recommend.data.ProductPreview
 import com.motgolla.domain.record.data.request.MemoSummaryRequest
+import com.motgolla.domain.record.data.response.BrandLocationResponse
+import com.motgolla.domain.record.data.request.UpdateRecordStatusRequest
 import com.motgolla.domain.record.data.response.BarcodeInfoResponse
 import com.motgolla.domain.record.data.response.MemoSummaryResponse
+import com.motgolla.domain.record.data.response.RecordDatesResponse
+import com.motgolla.domain.record.data.response.RecordProductFilterListResponse
 import com.motgolla.domain.record.data.response.RecordDetailResponse
 import com.motgolla.domain.record.data.response.RecordResponse
 import com.motgolla.domain.record.data.response.ShoppingHistoryResponse
@@ -13,6 +17,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Multipart
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
@@ -45,6 +50,27 @@ interface RecordService {
     fun summarizeMemo(@Body request: MemoSummaryRequest): Call<MemoSummaryResponse>
 
 
+    @GET("/api/record/products")
+    fun getProducts(
+        @Query("date") date: String,
+        @Query("category") category: String?,
+        @Query("cursor") cursor: Long?,
+        @Query("limit") limit: Int
+    ): Call<RecordProductFilterListResponse>
+
+
+    @PATCH("api/record/{recordId}/status")
+    fun updateRecordState(
+        @Path("recordId") recordId: Long,
+        @Body request: UpdateRecordStatusRequest
+    ): Call<Void>
+
+
+    @GET("/api/record/dates")
+    fun getRecordDates(
+        @Query("yearMonth") yearMonth: String
+    ): Call<RecordDatesResponse>
+
     @GET("/api/record/{recordId}")
     suspend fun getRecordById(@Path("recordId") recordId: Long): RecordDetailResponse
 
@@ -56,4 +82,10 @@ interface RecordService {
         @Query("date") date: String,
         @Query("limit") limit: Int
     ): ShoppingHistoryResponse
+
+    @GET("/api/department-store-brand/locations")
+    suspend fun getDepartmentStoreLocations(
+        @Query("departmentStoreId") departmentStoreId: Long,
+        @Query("brandName") brandName: String
+    ): List<BrandLocationResponse>
 }

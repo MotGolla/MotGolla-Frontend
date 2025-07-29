@@ -1,6 +1,7 @@
 package com.motgolla.ui.screen.my
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,6 +32,7 @@ import com.motgolla.common.RetrofitClient
 import com.motgolla.common.storage.TokenStorage
 import com.motgolla.domain.login.api.service.MemberService
 import com.motgolla.domain.notification.api.service.NotificationService
+import com.motgolla.ui.component.record.FloorSelector
 
 @Composable
 fun MyScreen(navController: NavController) {
