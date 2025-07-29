@@ -75,7 +75,7 @@ fun ShoppingRecordItem(item: ShoppingRecordInfoResponse, onCompleteClicked: (Lon
                 // painter = rememberAsyncImagePainter(model = item.imgUrl)
                 // https://image.msscdn.net/thumbnails/images/goods_img/20250429/5076776/5076776_17494260822630_big.png?w=1200
                 Image(
-                    painter = rememberAsyncImagePainter(model = "https://image.msscdn.net/thumbnails/images/goods_img/20250429/5076776/5076776_17494260822630_big.png?w=1200"),
+                    painter = rememberAsyncImagePainter(model = item.imgUrl),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
