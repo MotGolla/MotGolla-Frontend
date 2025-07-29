@@ -2,10 +2,9 @@ package com.motgolla.domain.record.api.service
 
 import com.motgolla.domain.recommend.data.ProductPreview
 import com.motgolla.domain.record.data.request.MemoSummaryRequest
-import com.motgolla.domain.record.data.request.RecordProductFilterRequest
-import com.motgolla.domain.record.data.response.BarcodeInfoResponse
-import com.motgolla.domain.record.data.request.RecordRequest
+import com.motgolla.domain.record.data.response.BrandLocationResponse
 import com.motgolla.domain.record.data.request.UpdateRecordStatusRequest
+import com.motgolla.domain.record.data.response.BarcodeInfoResponse
 import com.motgolla.domain.record.data.response.MemoSummaryResponse
 import com.motgolla.domain.record.data.response.RecordDatesResponse
 import com.motgolla.domain.record.data.response.RecordProductFilterListResponse
@@ -83,4 +82,10 @@ interface RecordService {
         @Query("date") date: String,
         @Query("limit") limit: Int
     ): ShoppingHistoryResponse
+
+    @GET("/api/department-store-brand/locations")
+    suspend fun getDepartmentStoreLocations(
+        @Query("departmentStoreId") departmentStoreId: Long,
+        @Query("brandName") brandName: String
+    ): List<BrandLocationResponse>
 }
