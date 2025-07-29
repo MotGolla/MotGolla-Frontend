@@ -21,6 +21,7 @@ fun ShoppingHistorySection(
         SectionHeader(
             title = "오늘의 쇼핑 기록",
             onClickMore = {
+                navController.navigate("record")
             }
         )
 
@@ -34,7 +35,6 @@ fun ShoppingHistorySection(
                 ShoppingHistoryBox(
                     product = product,
                     onClick = {
-                        //  상세 페이지로 이동 (recordId 기반)
                         navController.navigate("record_detail/${product.recordId}")
                     }
                 )
