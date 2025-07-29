@@ -24,6 +24,6 @@ fun DepartmentStoreWebView(url: String, onBack: () -> Unit) {
             }
         },
         modifier = Modifier
-            .fillMaxSize() // ⬅︎ 화면 전체 차지
+            .fillMaxSize()
     )
 }
