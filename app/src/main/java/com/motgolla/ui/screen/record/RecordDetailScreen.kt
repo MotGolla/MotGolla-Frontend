@@ -230,11 +230,11 @@ fun RecordDetailContent(
         item {
             Spacer(modifier = Modifier.height(12.dp))
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                InfoAlignedRow("브랜드", record.brandName)
-                InfoAlignedRow("모델명", record.productNumber)
-                InfoAlignedRow("사이즈", record.productSize)
-                InfoAlignedRow("백화점 지점", record.storeName)
-                InfoAlignedRow("매장 위치", record.brandLocationInfo)
+                InfoAlignedRow("브랜드", record.brandName ?: "")
+                InfoAlignedRow("모델명", record.productNumber ?: "")
+                InfoAlignedRow("사이즈", record.productSize ?: "")
+                InfoAlignedRow("백화점 지점", record.storeName ?: "")
+                InfoAlignedRow("매장 위치", record.brandLocationInfo ?: "")
             }
         }
 
@@ -253,7 +253,7 @@ fun RecordDetailContent(
                         .background(color = Color(0xFFF6F6F6), shape = RoundedCornerShape(8.dp))
                         .padding(12.dp)
                 ) {
-                    Text(text = record.productSummary, style = MaterialTheme.typography.bodyMedium)
+                    Text(text = record.productSummary ?: "", style = MaterialTheme.typography.bodyMedium)
                 }
             }
         }
