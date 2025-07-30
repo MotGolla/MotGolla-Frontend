@@ -1,5 +1,6 @@
 package com.motgolla.ui.screen.record
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -149,9 +150,7 @@ fun ShoppingRecordListScreen(
                 onCompleteClicked = { recordId ->
                     dialogRecordId = recordId
                 },
-                onItemClicked = { recordId ->
-                    navController.navigate("record_detail/$recordId")
-                }
+                navController = navController
             )
         }
 
@@ -176,7 +175,7 @@ fun ShoppingRecordLazyList(
     onLoadMore: () -> Unit,
     isPagingLoading: Boolean,
     onCompleteClicked: (Long) -> Unit,
-    onItemClicked: (Long) -> Unit
+    navController: NavHostController
 ) {
     val listState = rememberLazyListState()
 
@@ -197,11 +196,10 @@ fun ShoppingRecordLazyList(
             items = records,
             key = { it.recordId }
         ) { item ->
-            ShoppingRecordItem(
-                item = item,
-                onCompleteClicked = onCompleteClicked,
-                onItemClicked = onItemClicked
-            )
+            ShoppingRecordItem(item = item, onCompleteClicked = onCompleteClicked,onItemClicked = { recordId ->
+                Log.d("RecordItemClick", "Clicked recordId: $recordId")
+                navController.navigate("record_detail/$recordId")
+            })
             Divider(color = Color(0xFFEAEAEA), thickness = 1.dp)
         }
 

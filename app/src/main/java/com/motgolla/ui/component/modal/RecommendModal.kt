@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun RecommendModal(
     productId: Long,
+    departmentStoreId: Long,
     onDismissRequest: () -> Unit
 ) {
     val context = LocalContext.current
@@ -33,7 +34,7 @@ fun RecommendModal(
 
     LaunchedEffect(productId) {
         coroutineScope.launch {
-            productList = recommendService.getRecommendedProducts(productId)
+            productList = recommendService.getRecommendedProducts(productId, departmentStoreId)
         }
     }
 
@@ -70,5 +71,5 @@ fun RecommendModal(
 @Preview(showBackground = true)
 @Composable
 fun RecommendModalPreview() {
-    RecommendModal(1L, onDismissRequest = {})
+    RecommendModal(1L, 1L, onDismissRequest = {})
 }

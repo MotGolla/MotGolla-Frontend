@@ -8,6 +8,7 @@ import com.motgolla.domain.departmentstore.data.departmentStoresIDByName
 object PreferenceUtil {
     private const val PREFS_NAME = "app_prefs"
     private const val KEY_DEPARTMENT_NAME = "department_name"
+    private const val KEY_MANUAL_SELECTION = "manual_selection"
 
     private fun getPrefs(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -28,4 +29,13 @@ object PreferenceUtil {
         val name = getPrefs(context).getString(KEY_DEPARTMENT_NAME, null)
         return getPrefs(context).getLong(name, 0L)
     }
+
+    fun saveManualSelection(context: Context, isManual: Boolean) {
+        getPrefs(context).edit().putBoolean(KEY_MANUAL_SELECTION, isManual).apply()
+    }
+
+    fun getManualSelection(context: Context): Boolean {
+        return getPrefs(context).getBoolean(KEY_MANUAL_SELECTION, false)
+    }
+
 }

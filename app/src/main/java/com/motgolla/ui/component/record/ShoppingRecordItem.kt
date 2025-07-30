@@ -45,7 +45,8 @@ fun ShoppingRecordItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(12.dp),
+            .padding(12.dp)
+            .clickable { onItemClicked(item.recordId) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         // 좌측 컬럼: 상태 배지 + 이미지
