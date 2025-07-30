@@ -7,6 +7,7 @@ import com.motgolla.domain.vote.api.VoteRepository
 import com.motgolla.domain.vote.data.response.VoteDetailResponse
 import com.motgolla.ui.screen.vote.VoteCandidate
 import com.motgolla.ui.screen.vote.VoteCard
+import com.motgolla.ui.screen.vote.VoteTab
 import kotlinx.coroutines.launch
 
 class VoteViewModel(
@@ -51,6 +52,7 @@ class VoteViewModel(
 
     fun submitVote(
         voteGroupId: Long,
+        currentTabType: String = VoteTab.ALL.name,
         onSuccess: () -> Unit = {},
         onError: (Throwable) -> Unit = {}
     ) {
@@ -59,7 +61,7 @@ class VoteViewModel(
             try {
                 voteRepository.vote(voteGroupId, candidateId)
                 onSuccess()
-                loadVotes("ALL")
+                loadVotes(currentTabType)
             } catch (e: Exception) {
                 onError(e)
             }

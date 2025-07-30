@@ -89,7 +89,7 @@ fun VoteProductSelectScreen(
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
         ) {
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
             Text(
                 text = buildAnnotatedString {
