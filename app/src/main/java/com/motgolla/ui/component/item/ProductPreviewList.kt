@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,32 +20,50 @@ import com.motgolla.R
 import com.motgolla.domain.recommend.data.ProductPreview
 
 @Composable
-fun ProductPreviewList(productList: List<ProductPreview>, limit: Int){
-    if (productList.isEmpty()) {
-        // 비어 있을 때 이미지 표시
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.error),
-                contentDescription = "추천 상품 없음",
-                modifier = Modifier.size(160.dp)
-            )
-            Text(
-                text = "상품이 없어요...",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+fun ProductPreviewList(
+    productList: List<ProductPreview>,
+    limit: Int,
+    isLoading: Boolean = false
+) {
+    when {
+        isLoading -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator()
+            }
         }
-    } else {
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(productList.take(limit)) { product ->
-                ItemSmallBox(product = product)
+
+        productList.isEmpty() -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.error),
+                    contentDescription = "추천 상품 없음",
+                    modifier = Modifier.size(160.dp)
+                )
+                Text(
+                    text = "상품이 없어요...",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+
+        else -> {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.padding(horizontal = 16.dp)
+            ) {
+                items(productList.take(limit)) { product ->
+                    ItemSmallBox(product = product)
+                }
             }
         }
     }
