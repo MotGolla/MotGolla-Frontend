@@ -34,6 +34,7 @@ import com.motgolla.common.RetrofitClient
 import com.motgolla.common.storage.TokenStorage
 import com.motgolla.domain.login.api.service.MemberService
 import com.motgolla.domain.notification.api.service.NotificationService
+import com.motgolla.ui.component.modal.RecommendModal
 
 @Composable
 fun MyScreen(navController: NavController) {
@@ -184,6 +185,16 @@ fun MyScreen(navController: NavController) {
                 }
             )
         }
+    }
+
+    var showModal by remember { mutableStateOf(true) }
+
+    if (showModal) {
+        RecommendModal(
+            productId = 1L, // 상품 아이디
+            1L,
+            onDismissRequest = { showModal = false } // 모달을 끄고 켜기 위한 boolean 변수 하나 넘겨주세요
+        )
     }
 
     // Confirmation dialogs
