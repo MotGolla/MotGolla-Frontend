@@ -1,5 +1,6 @@
 package com.motgolla.ui.screen.record
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.motgolla.common.RetrofitClient
@@ -22,6 +23,7 @@ open class RecordDetailViewModel : ViewModel() {
     val uiState: StateFlow<RecordDetailUiState> = _uiState.asStateFlow()
 
     fun loadRecord(recordId: Long) {
+        Log.d("RecordDetailViewModel", "recordId: " + recordId)
         if (recordCache.containsKey(recordId)) {
             _uiState.value = RecordDetailUiState(record = recordCache[recordId])
             return

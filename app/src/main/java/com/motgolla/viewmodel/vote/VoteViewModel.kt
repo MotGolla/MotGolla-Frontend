@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.motgolla.domain.vote.api.VoteRepository
 import com.motgolla.domain.vote.data.response.VoteDetailResponse
-import com.motgolla.ui.screen.vote.VoteCard
 import com.motgolla.ui.screen.vote.VoteCandidate
+import com.motgolla.ui.screen.vote.VoteCard
 import kotlinx.coroutines.launch
 
 class VoteViewModel(
@@ -23,16 +23,11 @@ class VoteViewModel(
             try {
                 val response = voteRepository.getVotes(type)
                 if (response.isSuccessful) {
-                    val list = response.body()?.map { it.toVoteCard() } ?: emptyList()
-                    val updatedList = list.map { card ->
-                        val selectedId = selectedCandidateMap[card.id]
-                        card.copy(
-                            candidates = card.candidates.map {
-                                it.copy(isSelected = it.id == selectedId)
-                            }
-                        )
-                    }
-                    voteCards.value = updatedList
+                    val list = response.body()?.map {
+                        val selectedId = selectedCandidateMap[it.voteGroupId]
+                        it.toVoteCard(selectedId) // ✅ 전달
+                    } ?: emptyList()
+                    voteCards.value = list
                 }
             } catch (e: Exception) {
                 // 네트워크 에러 처리
@@ -71,7 +66,7 @@ class VoteViewModel(
         }
     }
 
-    private fun VoteDetailResponse.toVoteCard(): VoteCard {
+    private fun VoteDetailResponse.toVoteCard(selectedId: Long?): VoteCard {
         return VoteCard(
             id = voteGroupId,
             nickname = nickname,
@@ -79,12 +74,13 @@ class VoteViewModel(
             timeAgo = timeAgo,
             question = title,
             hasVoted = votedByMe,
-            candidates = candidates.map {
+            candidates = candidates.map { candidate ->
                 VoteCandidate(
-                    id = it.candidateId,
-                    imageUrl = it.imageUrl ?: "",
-                    voteRatio = it.percentage,
-                    isSelected = false
+                    id = candidate.candidateId,
+                    recordId = candidate.recordId,
+                    imageUrl = candidate.imageUrl,
+                    voteRatio = candidate.percentage,
+                    isSelected = candidate.candidateId == selectedId
                 )
             }
         )

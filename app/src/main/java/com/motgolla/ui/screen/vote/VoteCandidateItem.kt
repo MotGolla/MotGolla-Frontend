@@ -76,7 +76,7 @@ fun VoteCandidateItem(
                 .align(Alignment.TopEnd)
                 .padding(4.dp)
                 .size(16.dp)
-                .clickable { onDetailClick(candidate.id) },
+                .clickable { onDetailClick(candidate.recordId) },
             tint = Color.DarkGray
         )
 
@@ -104,7 +104,7 @@ fun VoteCandidateItem(
                         .align(Alignment.TopEnd)
                         .padding(4.dp)
                         .size(16.dp)
-                        .clickable { onDetailClick(candidate.id) },
+                        .clickable { onDetailClick(candidate.recordId) },
                     tint = Color.DarkGray
                 )
 
