@@ -55,24 +55,17 @@ fun ShoppingRecordScreen(
     memoViewModel: MemoViewModel, navController: NavController
 ) {
     val context = LocalContext.current
-
     val inPreview = LocalInspectionMode.current
 
-    //예시화면
-
-    // 컴포저블이 처음 실행될 때 SharedPreference에서 읽어오기
     LaunchedEffect(Unit) {
         val savedId = PreferenceUtil.getDepartmentId(context)
         if (savedId != null) {
             viewModel.setDepartmentStoreId(savedId)
         } else {
-            // ID가 없을 경우 예외 처리 또는 기본 동작 설정
             Log.w("DepartmentInit", "저장된 백화점 ID가 없습니다.")
         }
-
     }
 
-    // 카메라 권한
     var hasCameraPermission by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
@@ -102,7 +95,6 @@ fun ShoppingRecordScreen(
         return
     }
 
-    // 이미지 피커
     val pickImage = rememberImagePicker(
         onSingle = { uri ->
             uri?.let { viewModel.updateUiTagImageFile(uriToFile(context, it)) }
@@ -111,24 +103,36 @@ fun ShoppingRecordScreen(
             viewModel.addClothingImageFiles(uris.map { uriToFile(context, it) })
         }
     )
-    // 상태
+
     val uiTagImageFile = viewModel.uiTagImageFile
     val apiTagImageFile by viewModel.apiTagImageFile.collectAsState()
     val productImageFiles by viewModel.productImageFiles.collectAsState()
     val departmentStoreId by viewModel.departmentStoreId.collectAsState()
+    val departmentStoreBrandId by viewModel.departmentStoreBrandId.collectAsState()
     val brand by viewModel.brand.collectAsState()
     val model by viewModel.model.collectAsState()
     val modelNumber by viewModel.modelNumber.collectAsState()
     val modelSize by viewModel.modelSize.collectAsState()
     val memo by viewModel.memo.collectAsState()
+
+    var isSubmitting by mutableStateOf(false)
+
     val barcodeInfo by viewModel.barcodeInfo.collectAsState()
     val maxPhotos = 3
-
     val barcodeLoading by viewModel.barcodeLoading.collectAsState()
     val barcodeSuccessMessage by viewModel.barcodeSuccessMessage.collectAsState()
     val barcodeErrorMessage by viewModel.barcodeErrorMessage.collectAsState()
 
+    var showModal by remember { mutableStateOf(false) }
+    var shouldNavigateHome by remember { mutableStateOf(false) }
 
+    LaunchedEffect(shouldNavigateHome) {
+        if (shouldNavigateHome) {
+            navController.navigate("record") {
+                popUpTo("shoppingRecord") { inclusive = true }
+            }
+        }
+    }
 
     LazyColumn(
         Modifier
@@ -270,7 +274,11 @@ fun ShoppingRecordScreen(
                             contentDescription = "추가 아이콘",
                             modifier = Modifier.size(24.dp)
                         )
-                        Text("0/$maxPhotos", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                        Text(
+                            "0/$maxPhotos",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.Gray
+                        )
                     }
                 }
             } else {
@@ -384,32 +392,63 @@ fun ShoppingRecordScreen(
         // 모델번호 뒤에 MemoItem 호출
         item { MemoItem(memoViewModel) }
 
-        // 기록하기 버튼
         item {
-            val isFormValid =
-                brand.isNotBlank() && model.isNotBlank() && modelNumber.isNotBlank() && apiTagImageFile != null
+            val isFormValid = brand.isNotBlank() && model.isNotBlank()
+                    && modelNumber.isNotBlank() && apiTagImageFile != null
+                    && departmentStoreBrandId != 0L
             Button(
                 onClick = {
+                    isSubmitting = true
                     viewModel.setMemo(memoViewModel.memo.value)
-                    viewModel.submitRecord { /* 내일 추천 모달 추가 */
-                        navController.navigate("home") {
-                            popUpTo("shoppingRecord") { inclusive = true } // 필요 시 백스택 정리
+                    viewModel.submitRecord { result ->
+                        isSubmitting = false
+                        result.onSuccess {
+                            // 기록 등록 성공 시 모달 열기
+                            showModal = true
+                        }.onFailure {
+                            // 실패 시 처리 (예: Snackbar, Toast, 로그)
+                            Log.e("RecordSubmit", "등록 실패: ${it.message}")
+                            // 사용자에게 피드백 주기
                         }
                     }
                 },
-                enabled = isFormValid,
+                enabled = isFormValid&& !isSubmitting,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF7B2CBF),
                     contentColor = Color.White
                 ),
                 modifier = Modifier
-
                     .fillMaxWidth()
                     .height(48.dp)
             ) {
                 Text("기록하기", style = MaterialTheme.typography.titleMedium)
             }
         }
+        item {
+            if (isSubmitting) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 2.dp
+                    )
+                }
+            }
+        }
+    }
+    if (showModal) {
+        RecommendModal(
+            productId = barcodeInfo?.productId ?: 0L,
+            departmentStoreId = departmentStoreId,
+            onDismissRequest = {
+                showModal = false
+                shouldNavigateHome = true
+            }
+        )
     }
 }
 
@@ -427,5 +466,9 @@ fun ShoppingRecordScreenPreview() {
     val fakeViewModel = RecordRegisterViewModel()
     val fakeMemoViewModel =
         MemoViewModel(Application())
-    ShoppingRecordScreen(viewModel = fakeViewModel, memoViewModel = fakeMemoViewModel,  navController = rememberNavController())
+    ShoppingRecordScreen(
+        viewModel = fakeViewModel,
+        memoViewModel = fakeMemoViewModel,
+        navController = rememberNavController()
+    )
 }

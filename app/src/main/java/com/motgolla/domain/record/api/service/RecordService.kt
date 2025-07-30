@@ -1,5 +1,6 @@
 package com.motgolla.domain.record.api.service
 
+import com.google.android.gms.common.internal.safeparcel.SafeParcelable.Param
 import com.motgolla.domain.recommend.data.ProductPreview
 import com.motgolla.domain.record.data.request.MemoSummaryRequest
 import com.motgolla.domain.record.data.response.BrandLocationResponse
@@ -74,7 +75,9 @@ interface RecordService {
     suspend fun getRecordById(@Path("recordId") recordId: Long): RecordDetailResponse
 
     @GET("/api/product/{productId}/recommend")
-    suspend fun getRecommendedProducts(@Path("productId") productId: Long): List<ProductPreview>
+    suspend fun getRecommendedProducts(
+        @Path("productId") productId: Long,
+        @Query("departmentStoreId") departmentStoreId: Long): List<ProductPreview>
 
     @GET("/api/record/products")
     suspend fun getShoppingHistory(

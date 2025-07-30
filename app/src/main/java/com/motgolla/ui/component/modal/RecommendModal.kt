@@ -21,11 +21,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun RecommendModal(
     productId: Long,
+    departmentStoreId: Long,
     onDismissRequest: () -> Unit
 ) {
     val context = LocalContext.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var productList by remember { mutableStateOf<List<ProductPreview>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
     val nickname = TokenStorage.getValue(context, "nickname") ?: "사용자"
 
@@ -33,7 +35,9 @@ fun RecommendModal(
 
     LaunchedEffect(productId) {
         coroutineScope.launch {
-            productList = recommendService.getRecommendedProducts(productId)
+            isLoading = true
+            productList = recommendService.getRecommendedProducts(productId, departmentStoreId)
+            isLoading = false
         }
     }
 
@@ -62,7 +66,7 @@ fun RecommendModal(
                     .padding(bottom = 8.dp)
             )
 
-            ProductPreviewList(productList, 5)
+            ProductPreviewList(productList, 5, isLoading)
         }
     }
 }
@@ -70,5 +74,5 @@ fun RecommendModal(
 @Preview(showBackground = true)
 @Composable
 fun RecommendModalPreview() {
-    RecommendModal(1L, onDismissRequest = {})
+    RecommendModal(1L, 1L, onDismissRequest = {})
 }

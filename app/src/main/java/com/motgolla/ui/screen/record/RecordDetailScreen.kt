@@ -2,6 +2,7 @@ package com.motgolla.ui.screen.record
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -46,7 +47,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.DialogProperties
-import com.motgolla.ui.theme.MotgollaPrimary
+import com.motgolla.util.PreferenceUtil
 
 
 @Composable
@@ -56,18 +57,25 @@ fun RecordDetailScreen(
     viewModel: RecordDetailViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+    val savedIdState = remember { mutableStateOf<Long?>(PreferenceUtil.getDepartmentId(context)) }
 
     LaunchedEffect(recordId) {
         viewModel.loadRecord(recordId)
+        if (savedIdState.value == null) {
+            savedIdState.value = 1L
+        }
     }
 
     when {
         uiState.errorMessage != null -> ErrorScreen(uiState.errorMessage!!)
-        uiState.record != null -> RecordDetailContent(
+        uiState.record != null && savedIdState.value != null -> RecordDetailContent(
             record = uiState.record!!,
             navController = navController,
-            viewModel = viewModel
+            viewModel = viewModel,
+            departmentStoreId = savedIdState.value!!
         )
+
         else -> Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -81,7 +89,8 @@ fun RecordDetailScreen(
 fun RecordDetailContent(
     record: RecordDetailResponse,
     navController: NavController? = null,
-    viewModel: RecordDetailViewModel
+    viewModel: RecordDetailViewModel,
+    departmentStoreId: Long
 ) {
     val context = LocalContext.current
     val allImages = remember(record.imageUrls, record.tagImageUrl) {
@@ -235,7 +244,8 @@ fun RecordDetailContent(
                 Text(
                     text = "메모",
                     style = MaterialTheme.typography.titleSmall,
-                    color = Color.Gray)
+                    color = Color.Gray
+                )
                 Spacer(modifier = Modifier.height(12.dp))
                 Box(
                     modifier = Modifier
@@ -249,7 +259,7 @@ fun RecordDetailContent(
         }
 
         item {
-            RecommendRow(context, record.productId)
+            RecommendRow(context, record.productId, departmentStoreId)
         }
     }
 
@@ -390,13 +400,14 @@ fun RecordDetailContent(
     }
 
 
-
 }
 
 
 @Composable
 fun InfoAlignedRow(label: String, value: String) {
-    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(vertical = 4.dp)) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
@@ -457,7 +468,7 @@ fun CreatedAtBox(
 }
 
 @Composable
-fun RecommendRow(context: Context, productId: Long) {
+fun RecommendRow(context: Context, productId: Long, departmentStoreId: Long) {
     val nickname = TokenStorage.getValue(context, "nickname") ?: "사용자"
     var productList by remember { mutableStateOf<List<ProductPreview>>(emptyList()) }
     val recommendService = remember { RecommendService() }
@@ -465,7 +476,7 @@ fun RecommendRow(context: Context, productId: Long) {
 
     LaunchedEffect(productId) {
         coroutineScope.launch {
-            productList = recommendService.getRecommendedProducts(productId)
+            productList = recommendService.getRecommendedProducts(productId, departmentStoreId)
         }
     }
 
@@ -480,7 +491,7 @@ fun RecommendRow(context: Context, productId: Long) {
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
         )
-
+        Log.d("RecommendRow", "productList: $productList")
         ProductPreviewList(productList, 5)
     }
 }
@@ -515,6 +526,7 @@ fun RecordDetailScreenPreview() {
 
     RecordDetailContent(
         record = dummyRecord,
-        viewModel = dummyViewModel
+        viewModel = dummyViewModel,
+        departmentStoreId = 1L
     )
 }

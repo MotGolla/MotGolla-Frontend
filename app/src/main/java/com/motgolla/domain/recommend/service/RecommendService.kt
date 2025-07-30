@@ -4,9 +4,9 @@ import com.motgolla.common.RetrofitClient
 import com.motgolla.domain.recommend.data.ProductPreview
 
 class RecommendService {
-    suspend fun getRecommendedProducts(productId: Long): List<ProductPreview> {
+    suspend fun getRecommendedProducts(productId: Long, departmentStoreId: Long): List<ProductPreview> {
         return try {
-            RetrofitClient.getRecordService().getRecommendedProducts(productId)
+            RetrofitClient.getRecordService().getRecommendedProducts(productId, departmentStoreId)
         } catch (e: Exception) {
             e.printStackTrace()
             emptyList()
