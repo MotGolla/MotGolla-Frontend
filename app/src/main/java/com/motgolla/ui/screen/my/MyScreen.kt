@@ -47,19 +47,15 @@ fun MyScreen(navController: NavController) {
     var gender by remember { mutableStateOf("") }
     var createdAt by remember { mutableStateOf("2025-06-02") }
 
-    var checked by remember {
-        mutableStateOf(
-            when (TokenStorage.getValue(context, "notificationCheck")) {
-                "true" -> true
-                "false" -> false
-                else -> false
-            }
-        )
-    }
+    var checked by remember { mutableStateOf(false) }
 
-    // 코루틴으로 서버에서 값 불러오기
     LaunchedEffect(Unit) {
         try {
+            // FCM 토큰 체크
+            val fcmToken = TokenStorage.getFcmToken(context)
+            checked = !fcmToken.isNullOrEmpty()
+
+            // 서버에서 회원 정보 불러오기
             val response = RetrofitClient.getAuthService().getMemberInfo()
             if (response.isSuccessful) {
                 response.body()?.let { memberInfo ->
@@ -76,6 +72,7 @@ fun MyScreen(navController: NavController) {
             e.printStackTrace()
         }
     }
+
 
     var showLogoutDialog by remember { mutableStateOf(false) }
     var showResignDialog by remember { mutableStateOf(false) }
