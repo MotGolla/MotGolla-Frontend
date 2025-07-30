@@ -15,6 +15,9 @@ class TokenInterceptor(
     private val client: OkHttpClient
 ) : Interceptor {
     private val url = BuildConfig.BASE_URL
+    // 인터셉터 없는 클라이언트
+    private val plainClient = OkHttpClient.Builder().build()
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val original = chain.request()
         val tokenResponse = TokenStorage.getTokenResponse(context)
@@ -38,31 +41,35 @@ class TokenInterceptor(
                 .build()
 
             Log.d("TokenInterceptor", "재발급 요청: $reissueRequest")
-            client.newCall(reissueRequest).execute().use { reissueResponse ->
-                if (reissueResponse.isSuccessful) {
-                    Log.d("TokenInterceptor", "액세스 토큰 재발급 성공")
-                    val gson = com.google.gson.Gson()
-                    val newToken = gson.fromJson(
-                        reissueResponse.body?.charStream(),
-                        TokenResponse::class.java
-                    )
-                    val mergedToken = TokenResponse(
-                        accessToken = newToken.accessToken,
-                        refreshToken = tokenResponse.refreshToken
-                    )
-                    TokenStorage.save(context, mergedToken)
-                    val newRequest = original.newBuilder()
-                        .addHeader("Authorization", "Bearer ${newToken.accessToken}")
-                        .build()
-                    return chain.proceed(newRequest)
-                } else {
-                    if (response.code == 500) {
-                        Toast.makeText(context, "서버 에러!", Toast.LENGTH_SHORT).show()
+            try {
+                plainClient.newCall(reissueRequest).execute().use { reissueResponse ->
+                    if (reissueResponse.isSuccessful) {
+                        Log.d("TokenInterceptor", "액세스 토큰 재발급 성공")
+                        val gson = com.google.gson.Gson()
+                        val newToken = gson.fromJson(
+                            reissueResponse.body?.charStream(),
+                            TokenResponse::class.java
+                        )
+                        val mergedToken = TokenResponse(
+                            accessToken = newToken.accessToken,
+                            refreshToken = tokenResponse.refreshToken
+                        )
+                        TokenStorage.save(context, mergedToken)
+                        val newRequest = original.newBuilder()
+                            .addHeader("Authorization", "Bearer ${newToken.accessToken}")
+                            .build()
+                        return chain.proceed(newRequest)
+                    } else {
+                        if (response.code == 500) {
+                            Toast.makeText(context, "서버 에러!", Toast.LENGTH_SHORT).show()
+                        }
+                        Log.e("TokenInterceptor", "토큰 만료. 로그 아웃")
+                        TokenStorage.clear(context)
+                        TokenManager.tokenErrorFlow.tryEmit(Unit)
                     }
-                    Log.e("TokenInterceptor", "토큰 만료. 로그 아웃")
-                    TokenStorage.clear(context)
-                    TokenManager.tokenErrorFlow.tryEmit(Unit)
                 }
+            } catch (e: Exception) {
+                Log.e("TokenInterceptor", "재발급 네트워크 예외", e)
             }
         }
 

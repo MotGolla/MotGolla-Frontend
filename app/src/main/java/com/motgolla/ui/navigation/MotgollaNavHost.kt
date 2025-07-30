@@ -30,6 +30,17 @@ import com.motgolla.ui.screen.vote.VoteScreenWrapper
 import com.motgolla.ui.screen.vote.VoteTitleInputScreen
 import com.motgolla.viewmodel.vote.VoteCreateViewModel
 import com.motgolla.viewmodel.record.RecordViewModel
+import com.motgolla.ui.screen.login.NormalLoginScreen
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
+import com.motgolla.ui.screen.login.NormalSignUpScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -59,7 +70,9 @@ fun MotgollaNavHost(navController: NavHostController, modifier: Modifier = Modif
         composable("vote") { VoteScreenWrapper(navController) }
         composable("my") { MyScreen(navController) }
         composable("login") { LoginScreen(navController) }
+        composable("normalLogin") { NormalLoginScreen(navController) }
         composable("signup") { SignUpScreen(navController) }
+        composable("normalSignup") {NormalSignUpScreen(navController)}
         composable("welcome") { WelcomeScreen(navController) }
 
         composable(

@@ -10,17 +10,17 @@ import kotlinx.coroutines.launch
 import com.motgolla.common.storage.TokenStorage
 import com.motgolla.domain.login.data.TokenResponse
 import com.motgolla.common.RetrofitClient
-import com.motgolla.domain.login.data.SignUpRequest
+import com.motgolla.domain.login.data.SocialSignUpRequest
 
 object SignUpService {
     fun requestSignUp(
-        signUpRequest: SignUpRequest,
+        socialSignUpRequest: SocialSignUpRequest,
         onSuccess: (accessToken: String, refreshToken: String) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = RetrofitClient.getAuthService().signUp(signUpRequest)
+                val response = RetrofitClient.getAuthService().socialSignUp(socialSignUpRequest)
                 if (response.isSuccessful) {
                     Log.d("SignUp", "회원가입 성공: ${response.body()}")
                     val tokenResponse = response.body()
@@ -48,7 +48,7 @@ object SignUpService {
     ) {
         val birthday = "${year}-${month.pad2()}-${day.pad2()}"
 
-        val signUpRequest = SignUpRequest(
+        val socialSignUpRequest = SocialSignUpRequest(
             idToken = TokenStorage.getValue(context, "idToken") ?: "",
             oauthId = TokenStorage.getValue(context, "oauthId") ?: "",
             name = TokenStorage.getValue(context, "nickname") ?: "",
@@ -61,9 +61,9 @@ object SignUpService {
             birthday = birthday
         )
 
-        Log.d("SignUp", "회원 가입 요청: $signUpRequest")
+        Log.d("SignUp", "회원 가입 요청: $socialSignUpRequest")
         requestSignUp(
-            signUpRequest = signUpRequest,
+            socialSignUpRequest = socialSignUpRequest,
             onSuccess = { accessToken, refreshToken ->
                 Log.d("SignUp", "회원 가입 성공: $accessToken, $refreshToken")
                 TokenStorage.save(context, TokenResponse(accessToken, refreshToken))

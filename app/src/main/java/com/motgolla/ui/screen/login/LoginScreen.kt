@@ -25,6 +25,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import androidx.compose.ui.unit.dp
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Text
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.motgolla.R
 import com.motgolla.domain.login.api.service.KakaoLoginService
 import androidx.compose.ui.tooling.preview.Preview
@@ -101,7 +106,26 @@ fun LoginScreen(
                 }
         )
 
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(30.dp))
+
+        // 일반 로그인 버튼
+        Button(
+            onClick = { 
+                navController.navigate("normalLogin")
+            },
+            modifier = Modifier
+                .padding(horizontal = 15.dp)
+                .fillMaxWidth()
+                .height(60.dp),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray)
+        ) {
+            Text(
+                text = "일반 로그인",
+                color = Color.Black,
+                fontSize = 19.sp
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
