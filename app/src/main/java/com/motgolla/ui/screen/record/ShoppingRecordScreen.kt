@@ -39,6 +39,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.motgolla.R
+import com.motgolla.ui.component.modal.RecommendModal
 import com.motgolla.ui.component.record.FloorSelector
 import com.motgolla.ui.component.record.MemoItem
 import com.motgolla.ui.component.record.RecordImageItem
