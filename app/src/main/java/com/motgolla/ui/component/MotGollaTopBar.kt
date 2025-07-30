@@ -5,7 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -14,9 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 
 @Composable
@@ -26,19 +24,19 @@ fun MotGollaTopBar(
     onBackClick: () -> Unit = {}
 ) {
     Column {
-        Row(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
-                .padding(start = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
         ) {
             if (showBackButton) {
                 Icon(
-                    imageVector = Icons.Default.ArrowBack,
+                    imageVector = Icons.Default.ArrowBackIosNew,
                     contentDescription = "뒤로가기",
                     tint = Color.Black,
                     modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .padding(start = 12.dp)
                         .size(24.dp)
                         .clickable(onClick = onBackClick)
                 )
@@ -49,7 +47,8 @@ fun MotGollaTopBar(
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
-                color = Color.Black
+                color = Color.Black,
+                modifier = Modifier.align(Alignment.Center)
             )
         }
 
