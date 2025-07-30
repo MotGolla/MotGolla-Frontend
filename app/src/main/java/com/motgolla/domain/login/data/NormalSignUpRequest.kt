@@ -1,8 +1,8 @@
 package com.motgolla.domain.login.data
 
-data class SignUpRequest(
-    val idToken: String,
+data class NormalSignUpRequest(
     val oauthId: String,
+    val password: String,
     val name: String,
     val gender: String,
     val birthday: String,

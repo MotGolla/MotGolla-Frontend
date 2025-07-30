@@ -9,8 +9,7 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import com.motgolla.common.RetrofitClient
 import com.motgolla.common.storage.TokenStorage
-import com.motgolla.domain.login.data.LoginRequest
-import com.motgolla.domain.login.data.LoginFailedResponse
+import com.motgolla.domain.login.data.SocialLoginRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,10 +33,10 @@ object KakaoLoginService {
         TokenStorage.save(context, "nickname", nickname)
         TokenStorage.save(context, "profile", profileImageUrl ?: "")
 
-        val loginRequest = LoginRequest(idToken = idToken!!, oauthId = oauthId)
+        val socialLoginRequest = SocialLoginRequest(idToken = idToken!!, oauthId = oauthId)
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = RetrofitClient.getAuthService().login(loginRequest)
+                val response = RetrofitClient.getAuthService().socialLogin(socialLoginRequest)
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         Log.d("LoginScreen", "로그인 성공")
@@ -89,13 +88,13 @@ object KakaoLoginService {
                 .setTitle("재가입 안내")
                 .setMessage("6개월 이내 탈퇴 이력이 있습니다. 재가입하시겠습니까?")
                 .setPositiveButton("확인") { _, _ ->
-                    val retryRequest = LoginRequest(
+                    val retryRequest = SocialLoginRequest(
                         oauthId = oauthId,
                         idToken = idToken,
                         reSignUp = true
                     )
                     CoroutineScope(Dispatchers.IO).launch {
-                        val retryResponse = RetrofitClient.getAuthService().login(retryRequest)
+                        val retryResponse = RetrofitClient.getAuthService().socialLogin(retryRequest)
                         withContext(Dispatchers.Main) {
                             if (retryResponse.isSuccessful) {
                                 val token = retryResponse.body()
