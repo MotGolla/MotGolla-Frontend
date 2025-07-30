@@ -54,18 +54,22 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
 
     init {
         val savedName = PreferenceUtil.getDepartmentName(application)
-        if (!savedName.isNullOrEmpty()) {
-            _departmentName.value = savedName
-        } else {
-            _departmentName.value = "현대백화점 압구정본점"
-            PreferenceUtil.saveDepartmentName(application, "현대백화점 압구정본점")
+        _departmentName.value = savedName ?: "현대백화점 압구정본점"
+
+        _isManualSelection.value = PreferenceUtil.getManualSelection(application)
+
+        if (savedName == null) {
+            PreferenceUtil.saveDepartmentName(application, _departmentName.value)
+            PreferenceUtil.saveManualSelection(application, false)
         }
     }
+
 
     fun selectDepartmentManually(name: String) {
         _departmentName.value = name
         _isManualSelection.value = true
         PreferenceUtil.saveDepartmentName(getApplication(), name)
+        PreferenceUtil.saveManualSelection(getApplication(), true)
         resetPendingState()
         Log.d(TAG, "수동으로 백화점 선택됨: $name")
     }
@@ -227,7 +231,8 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
             if (location != null) {
                 Log.d(TAG, "GPS 위치 가져옴 (강제): ${location.latitude}, ${location.longitude}")
                 previousLocation = location
-                _isManualSelection.value = false // 자동 모드 전환
+                _isManualSelection.value = false
+                PreferenceUtil.saveManualSelection(getApplication(), false)
                 fetchNearestStoreFromServer(location, forceUpdate = true) // 즉시 서버 재조회
             } else {
                 Log.d(TAG, "위치 가져오기 실패 - 위치 null")
@@ -238,11 +243,18 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun useDefaultLocationAndStore() {
+        if (_isManualSelection.value) {
+            Log.d(TAG, "수동 선택 모드 - 기본 백화점 세팅 생략")
+            return
+        }
+
         val defaultName = "현대백화점 압구정본점"
         _departmentName.value = defaultName
         _isManualSelection.value = false
         _lastKnownLocation.value = null
+
         PreferenceUtil.saveDepartmentName(getApplication(), defaultName)
+        PreferenceUtil.saveManualSelection(getApplication(), false)
 
         Log.d(TAG, "위치 권한 거부됨. 기본 백화점 설정: $defaultName")
     }

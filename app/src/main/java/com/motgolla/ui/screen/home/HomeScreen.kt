@@ -59,11 +59,6 @@ fun HomeScreen(
             },
             onDenied = {
                 viewModel.useDefaultLocationAndStore()
-                Toast.makeText(
-                    context,
-                    "위치 권한이 거부되어 \n기본 백화점 정보가 사용됩니다.",
-                    Toast.LENGTH_LONG
-                ).show()
             }
         )
     }
