@@ -37,7 +37,11 @@ import com.motgolla.domain.record.data.response.ShoppingRecordInfoResponse
 
 
 @Composable
-fun ShoppingRecordItem(item: ShoppingRecordInfoResponse, onCompleteClicked: (Long) -> Unit) {
+fun ShoppingRecordItem(
+    item: ShoppingRecordInfoResponse,
+    onCompleteClicked: (Long) -> Unit,
+    onItemClicked: (Long) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -50,6 +54,7 @@ fun ShoppingRecordItem(item: ShoppingRecordInfoResponse, onCompleteClicked: (Lon
             modifier = Modifier
                 .padding(end = 12.dp)
                 .offset(y = (-10).dp)
+                .clickable { onItemClicked(item.recordId) }
         ) {
             // 상태 배지 (이미지 바깥 좌상단)
             Text(
@@ -86,7 +91,9 @@ fun ShoppingRecordItem(item: ShoppingRecordInfoResponse, onCompleteClicked: (Lon
         }
         // 우측 정보들
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .clickable { onItemClicked(item.recordId) }
         ) {
 
             Text(
@@ -179,6 +186,7 @@ fun ShoppingRecordItemPreview() {
             brandFloor = "3F",
             productPrice = "19,900원"
         ),
-        onCompleteClicked = {}
+        onCompleteClicked = {},
+        onItemClicked = {}
     )
 }

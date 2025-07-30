@@ -148,6 +148,9 @@ fun ShoppingRecordListScreen(
                 isPagingLoading = isPagingLoading,
                 onCompleteClicked = { recordId ->
                     dialogRecordId = recordId
+                },
+                onItemClicked = { recordId ->
+                    navController.navigate("record_detail/$recordId")
                 }
             )
         }
@@ -172,7 +175,8 @@ fun ShoppingRecordLazyList(
     records: List<ShoppingRecordInfoResponse>,
     onLoadMore: () -> Unit,
     isPagingLoading: Boolean,
-    onCompleteClicked: (Long) -> Unit
+    onCompleteClicked: (Long) -> Unit,
+    onItemClicked: (Long) -> Unit
 ) {
     val listState = rememberLazyListState()
 
@@ -193,7 +197,11 @@ fun ShoppingRecordLazyList(
             items = records,
             key = { it.recordId }
         ) { item ->
-            ShoppingRecordItem(item = item, onCompleteClicked = onCompleteClicked)
+            ShoppingRecordItem(
+                item = item,
+                onCompleteClicked = onCompleteClicked,
+                onItemClicked = onItemClicked
+            )
             Divider(color = Color(0xFFEAEAEA), thickness = 1.dp)
         }
 
