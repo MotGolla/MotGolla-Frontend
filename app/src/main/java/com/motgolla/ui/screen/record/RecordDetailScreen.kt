@@ -75,6 +75,7 @@ fun RecordDetailScreen(
             viewModel = viewModel,
             departmentStoreId = savedIdState.value!!
         )
+
         else -> Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -243,7 +244,8 @@ fun RecordDetailContent(
                 Text(
                     text = "메모",
                     style = MaterialTheme.typography.titleSmall,
-                    color = Color.Gray)
+                    color = Color.Gray
+                )
                 Spacer(modifier = Modifier.height(12.dp))
                 Box(
                     modifier = Modifier
@@ -398,13 +400,14 @@ fun RecordDetailContent(
     }
 
 
-
 }
 
 
 @Composable
 fun InfoAlignedRow(label: String, value: String) {
-    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(vertical = 4.dp)) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,

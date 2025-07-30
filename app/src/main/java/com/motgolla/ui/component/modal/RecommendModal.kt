@@ -27,6 +27,7 @@ fun RecommendModal(
     val context = LocalContext.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var productList by remember { mutableStateOf<List<ProductPreview>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
     val nickname = TokenStorage.getValue(context, "nickname") ?: "사용자"
 
@@ -34,7 +35,9 @@ fun RecommendModal(
 
     LaunchedEffect(productId) {
         coroutineScope.launch {
+            isLoading = true
             productList = recommendService.getRecommendedProducts(productId, departmentStoreId)
+            isLoading = false
         }
     }
 
@@ -63,7 +66,7 @@ fun RecommendModal(
                     .padding(bottom = 8.dp)
             )
 
-            ProductPreviewList(productList, 5)
+            ProductPreviewList(productList, 5, isLoading)
         }
     }
 }
