@@ -18,7 +18,7 @@ fun VoteScreenWrapper(navController: NavHostController) {
     val selectedTab = remember { mutableStateOf(VoteTab.ALL) }
 
     LaunchedEffect(Unit) {
-        viewModel.loadVotes("ALL")
+        viewModel.loadVotes(VoteTab.ALL.name)
     }
 
     VoteScreen(
@@ -33,11 +33,13 @@ fun VoteScreenWrapper(navController: NavHostController) {
             viewModel.selectCandidate(voteGroupId, candidateId)
         },
         onSubmitVote = { voteGroupId ->
+            val tabType = selectedTab.value.name
             if (!viewModel.selectedCandidateMap.containsKey(voteGroupId)) {
                 Toast.makeText(context, "투표할 상품을 선택해주세요.", Toast.LENGTH_SHORT).show()
             } else {
                 viewModel.submitVote(
                     voteGroupId = voteGroupId,
+                    currentTabType = tabType,
                     onSuccess = {
                         Toast.makeText(context, "투표가 완료되었습니다.", Toast.LENGTH_SHORT).show()
                     },

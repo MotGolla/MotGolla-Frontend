@@ -71,7 +71,7 @@ fun VoteTitleInputScreen(
                 style = MaterialTheme.typography.titleLarge
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
             TextField(
                 value = title.value,
