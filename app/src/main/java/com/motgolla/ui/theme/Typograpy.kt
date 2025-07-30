@@ -80,37 +80,37 @@ val Typography = Typography(
 
     // 본문 영역: Pretendard 사용
     bodyLarge = TextStyle(
-        fontFamily = Pretendard,
+        fontFamily = Paperlogy,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp
     ),
     bodyMedium = TextStyle(
-        fontFamily = Pretendard,
+        fontFamily = Paperlogy,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         lineHeight = 20.sp
     ),
     bodySmall = TextStyle(
-        fontFamily = Pretendard,
+        fontFamily = Paperlogy,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
         lineHeight = 16.sp
     ),
     labelLarge = TextStyle(
-        fontFamily = Pretendard,
+        fontFamily = Paperlogy,
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
         lineHeight = 20.sp
     ),
     labelMedium = TextStyle(
-        fontFamily = Pretendard,
+        fontFamily = Paperlogy,
         fontWeight = FontWeight.Medium,
         fontSize = 12.sp,
         lineHeight = 16.sp
     ),
     labelSmall = TextStyle(
-        fontFamily = Pretendard,
+        fontFamily = Paperlogy,
         fontWeight = FontWeight.Medium,
         fontSize = 11.sp,
         lineHeight = 16.sp

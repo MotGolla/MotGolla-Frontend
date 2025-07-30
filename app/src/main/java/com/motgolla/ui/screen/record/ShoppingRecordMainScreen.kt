@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -126,7 +127,7 @@ fun LoadingScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CircularProgressIndicator(
-            color = Color(0xFF7B2CBF), // 원하는 색상 지정
+            color = MaterialTheme.colorScheme.primary, // 원하는 색상 지정
             strokeWidth = 4.dp // 선 두께
         )
         Spacer(modifier = Modifier.height(16.dp))

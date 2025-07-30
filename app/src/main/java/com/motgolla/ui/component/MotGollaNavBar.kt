@@ -25,12 +25,14 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.geometry.Offset
+import com.motgolla.ui.theme.MotgollaPrimary
+
 @Composable
 fun MotgollaNavBar(navController: NavController) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination?.route
 
-    val selectedColor = Color(0xFF700aff)
+    val selectedColor = MotgollaPrimary
     val unselectedColor = Color.Gray
 
     val items = listOf(
@@ -90,7 +92,7 @@ fun MotgollaNavBar(navController: NavController) {
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = screen.title,
-                            fontSize = 10.sp,
+                            style = MaterialTheme.typography.labelSmall,
                             color = if (currentRoute == screen.route) selectedColor else unselectedColor
                         )
                     }
