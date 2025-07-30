@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,15 +29,17 @@ fun ItemSmallBox(product: ProductPreview) {
     Column(
         modifier = Modifier
             .width(140.dp)
-            .fillMaxWidth()
+            .width(160.dp)
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AsyncImage(
             model = imageUrl,
             contentDescription = null,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
-                .size(150.dp)
+                .fillMaxWidth()
+                .height(160.dp)
                 .clip(RoundedCornerShape(6.dp)) // 기존 12.dp → 6.dp로 살짝만 둥글게
         )
 

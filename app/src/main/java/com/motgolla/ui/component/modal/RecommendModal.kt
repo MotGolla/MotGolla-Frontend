@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.motgolla.common.storage.TokenStorage
 import com.motgolla.domain.recommend.data.ProductPreview
 import com.motgolla.domain.recommend.service.RecommendService
@@ -56,11 +57,11 @@ fun RecommendModal(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             Text(
                 text = "${nickname}님을 위한 추천 아이템",
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp),
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(bottom = 8.dp)
