@@ -88,7 +88,7 @@ fun HomeScreen(
         BottomBox(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.80f)
+                .fillMaxHeight(0.76f)
                 .align(Alignment.BottomCenter),
             shoppingHistoryViewModel = shoppingHistoryViewModel,
             navController = navController

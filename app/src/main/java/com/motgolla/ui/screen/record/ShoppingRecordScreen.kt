@@ -138,7 +138,7 @@ fun ShoppingRecordScreen(
     ) {
         // 택 사진
         item {
-            Text("택 사진", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+            Text("택 사진", style = MaterialTheme.typography.labelLarge)
             Spacer(Modifier.height(10.dp))
 
             Row(
@@ -192,7 +192,7 @@ fun ShoppingRecordScreen(
                             Text(
                                 "택에 바코드가 보이도록 사진을 찍어주세요.",
                                 color = Color.Gray,
-                                fontSize = 12.sp,
+                                style = MaterialTheme.typography.bodySmall,
                                 modifier = Modifier.padding(top = 8.dp)
                             )
                         }
@@ -246,7 +246,7 @@ fun ShoppingRecordScreen(
         }
         // 상품/착용샷 사진
         item {
-            Text("상품/착용샷 사진", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+            Text("상품/착용샷 사진", style = MaterialTheme.typography.labelLarge)
             Spacer(Modifier.height(10.dp))
 
             if (productImageFiles.isEmpty()) {
@@ -263,13 +263,13 @@ fun ShoppingRecordScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        Text("상품/착용샷", fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                        Text("상품/착용샷", style = MaterialTheme.typography.labelMedium)
                         Image(
                             painter = painterResource(R.drawable.record_plus_circle),
                             contentDescription = "추가 아이콘",
                             modifier = Modifier.size(24.dp)
                         )
-                        Text("0/$maxPhotos", fontSize = 10.sp, color = Color.Gray)
+                        Text("0/$maxPhotos", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
                     }
                 }
             } else {
@@ -306,7 +306,7 @@ fun ShoppingRecordScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.spacedBy(6.dp)
                             ) {
-                                Text("상품/착용샷", fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                                Text("상품/착용샷", style = MaterialTheme.typography.labelMedium)
                                 Image(
                                     painter = painterResource(R.drawable.record_plus_circle),
                                     contentDescription = "추가 아이콘",
@@ -406,7 +406,7 @@ fun ShoppingRecordScreen(
                     .fillMaxWidth()
                     .height(48.dp)
             ) {
-                Text("기록하기")
+                Text("기록하기", style = MaterialTheme.typography.titleMedium)
             }
         }
     }

@@ -107,9 +107,9 @@ fun MyScreen(navController: NavController) {
                 horizontalAlignment = Alignment.Start
 
             ) {
-                Text(text = nickname, color = Color.Black, fontSize = 25.sp, fontWeight = FontWeight.Bold)
+                Text(text = nickname, color = Color.Black, style = MaterialTheme.typography.headlineSmall)
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "${createdAt} 가입", color = Color.Black.copy(alpha = 0.7f), fontSize = 15.sp)
+                Text(text = "${createdAt} 가입", color = Color.Black.copy(alpha = 0.7f), style = MaterialTheme.typography.bodyMedium)
             }
         }
 
@@ -126,7 +126,7 @@ fun MyScreen(navController: NavController) {
             ) {
                 Icon(Icons.Default.Cake, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = birthday, fontSize = 16.sp)
+                Text(text = birthday, style = MaterialTheme.typography.bodyLarge)
                 Spacer(modifier = Modifier.weight(1f))
 
                 if(gender == "F")
@@ -174,7 +174,7 @@ fun MyScreen(navController: NavController) {
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "알림 설정", fontSize = 17.sp)
+            Text(text = "알림 설정", style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.weight(1f))
             Switch(
                 checked = checked,

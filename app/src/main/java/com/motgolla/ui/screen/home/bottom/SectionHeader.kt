@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,13 +22,12 @@ fun SectionHeader(title: String, onClickMore: () -> Unit) {
     ) {
         Text(
             text = title,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleMedium,
             color = Color.Black
         )
         Text(
             text = "더보기 >",
-            fontSize = 14.sp,
+            style = MaterialTheme.typography.labelMedium,
             color = Color.Gray,
             modifier = Modifier.clickable { onClickMore() }
         )

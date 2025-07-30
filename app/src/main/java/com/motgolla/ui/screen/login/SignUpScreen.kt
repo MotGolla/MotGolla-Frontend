@@ -25,6 +25,7 @@ import com.motgolla.common.storage.TokenStorage
 import com.motgolla.domain.login.api.service.SignUpService
 import com.motgolla.domain.login.data.SignUpRequest
 import com.motgolla.domain.login.data.TokenResponse
+import com.motgolla.ui.theme.MotgollaPrimary
 import kotlinx.coroutines.launch
 
 fun Int.pad2(): String = toString().padStart(2, '0')
@@ -60,7 +61,6 @@ fun SignUpScreen(
                     text = "당신에 대해 \n" +
                             "더 알고 싶어요! \uD83D\uDE0A",
                     style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.Medium,
                     color = Color(0xFF666666),
                     modifier = Modifier.padding(bottom = 30.dp)
                 )
@@ -155,13 +155,13 @@ fun SignUpScreen(
                     .height(50.dp),
 
                 shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFBFA2FF))
+                colors = ButtonDefaults.buttonColors(containerColor = MotgollaPrimary)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Text("시작 하기", color = Color.White, fontWeight = FontWeight.Medium, style = MaterialTheme.typography.titleLarge)
+                    Text("시작 하기", color = Color.White, style = MaterialTheme.typography.titleLarge)
                     Spacer(modifier = Modifier.width(8.dp))
                 }
             }

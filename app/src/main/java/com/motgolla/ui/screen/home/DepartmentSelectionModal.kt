@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.GpsFixed
 import androidx.compose.runtime.*
@@ -30,6 +30,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
 import com.motgolla.domain.departmentstore.data.departmentStoresByRegion
+import com.motgolla.ui.theme.MotgollaPrimary
 
 @Composable
 fun DepartmentSelectionModal(
@@ -65,7 +66,7 @@ fun DepartmentSelectionModal(
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    val borderColor = Color(0xFFAA80F9)
+    val borderColor = MotgollaPrimary
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -121,8 +122,7 @@ fun DepartmentSelectionModal(
                     ) {
                         Text(
                             "백화점을 선택해주세요",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.headlineSmall,
                             color = Color.Black
                         )
                         Row(
@@ -148,7 +148,7 @@ fun DepartmentSelectionModal(
                             Text(
                                 "현재 위치 백화점",
                                 color = Color(0xFF1976D2),
-                                fontSize = 14.sp
+                                style = MaterialTheme.typography.labelMedium
                             )
                         }
                     }
@@ -158,8 +158,7 @@ fun DepartmentSelectionModal(
                     departmentStoresByRegion.forEach { (region, storesRows) ->
                         Text(
                             text = region,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleMedium,
                             color = Color.Black,
                             modifier = Modifier.padding(vertical = 8.dp)
                         )
@@ -186,7 +185,7 @@ fun DepartmentSelectionModal(
                                     ) {
                                         Text(
                                             text = storeName,
-                                            fontSize = 14.sp,
+                                            style = MaterialTheme.typography.labelMedium,
                                             color = Color.Black,
                                             maxLines = 1,
                                             overflow = TextOverflow.Ellipsis
