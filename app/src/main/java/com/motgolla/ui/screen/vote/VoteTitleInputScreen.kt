@@ -47,7 +47,7 @@ fun VoteTitleInputScreen(
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
-                Text("투표 등록하기", color = Color.White)
+                Text("투표 등록하기", color = Color.White, style = MaterialTheme.typography.titleMedium)
             }
         }
     ) { innerPadding ->

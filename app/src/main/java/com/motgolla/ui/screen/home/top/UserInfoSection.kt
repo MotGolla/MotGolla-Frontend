@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -74,14 +75,13 @@ fun UserInfoSection() {
             Text(
                 text = "${nickname}님",
                 color = Color.White,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.SemiBold
+                style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(3.dp))
             Text(
                 text = "쇼핑을 시작해보세요!",
                 color = Color.White,
-                fontSize = 16.sp
+                style = MaterialTheme.typography.bodyLarge
             )
         }
     }

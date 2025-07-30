@@ -81,8 +81,7 @@ fun ImageViewerScreen(
                 .align(Alignment.BottomCenter)
                 .padding(16.dp),
             color = MaterialTheme.colorScheme.onSurface,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }

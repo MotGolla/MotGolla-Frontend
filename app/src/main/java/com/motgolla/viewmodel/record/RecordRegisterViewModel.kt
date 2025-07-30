@@ -68,6 +68,7 @@ class RecordRegisterViewModel : ViewModel() {
     private val _scannedBarcode = MutableStateFlow("")
     val scannedBarcode: StateFlow<String> = _scannedBarcode
 
+    // 바코드 정보
     private val _barcodeInfo = MutableStateFlow<BarcodeInfoResponse?>(null)
     val barcodeInfo: StateFlow<BarcodeInfoResponse?> = _barcodeInfo
 

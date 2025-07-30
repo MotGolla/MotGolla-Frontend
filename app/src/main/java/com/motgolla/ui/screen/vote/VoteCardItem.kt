@@ -60,7 +60,7 @@ fun VoteCardItem(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column {
-                Text(card.nickname, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                Text(card.nickname, style = MaterialTheme.typography.labelLarge)
                 Text(card.timeAgo, fontSize = 12.sp, color = Color.Gray)
             }
         }
@@ -76,7 +76,7 @@ fun VoteCardItem(
                     append("${card.question}")
                 }
             },
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleMedium
         )
 
         Spacer(modifier = Modifier.height(8.dp))

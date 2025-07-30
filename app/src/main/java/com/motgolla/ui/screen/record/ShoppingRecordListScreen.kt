@@ -1,5 +1,6 @@
 package com.motgolla.ui.screen.record
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,6 +12,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -86,7 +88,7 @@ fun ShoppingRecordListScreen(
                             text = buildAnnotatedString {
                                 withStyle(
                                     style = SpanStyle(
-                                        color = Color(0xFF7B2CBF),
+                                        color = MaterialTheme.colorScheme.primary,
                                         fontWeight = FontWeight.SemiBold
                                     )
                                 ) {
@@ -147,7 +149,8 @@ fun ShoppingRecordListScreen(
                 isPagingLoading = isPagingLoading,
                 onCompleteClicked = { recordId ->
                     dialogRecordId = recordId
-                }
+                },
+                navController = navController
             )
         }
 
@@ -171,7 +174,8 @@ fun ShoppingRecordLazyList(
     records: List<ShoppingRecordInfoResponse>,
     onLoadMore: () -> Unit,
     isPagingLoading: Boolean,
-    onCompleteClicked: (Long) -> Unit
+    onCompleteClicked: (Long) -> Unit,
+    navController: NavHostController
 ) {
     val listState = rememberLazyListState()
 
@@ -192,7 +196,10 @@ fun ShoppingRecordLazyList(
             items = records,
             key = { it.recordId }
         ) { item ->
-            ShoppingRecordItem(item = item, onCompleteClicked = onCompleteClicked)
+            ShoppingRecordItem(item = item, onCompleteClicked = onCompleteClicked,onItemClicked = { recordId ->
+                Log.d("RecordItemClick", "Clicked recordId: $recordId")
+                navController.navigate("record_detail/$recordId")
+            })
             Divider(color = Color(0xFFEAEAEA), thickness = 1.dp)
         }
 
