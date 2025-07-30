@@ -60,7 +60,7 @@ fun ShoppingRecordEmptyScreen(navController: NavHostController) {
         // 클릭 가능한 강조 텍스트
         androidx.compose.material3.Text(
             buildAnnotatedString {
-                withStyle(style = SpanStyle(color = Color(0xFF7B2CBF))) {
+                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
                     append("쇼핑 기록")
                 }
                 append(" 하러 가기 >")

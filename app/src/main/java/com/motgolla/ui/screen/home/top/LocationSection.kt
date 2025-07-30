@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,7 +39,7 @@ fun LocationSection(viewModel: LocationViewModel) {
                 Text(
                     text = "백화점 위치가 맞나요? 위치를 갱신해주세요!",
                     color = Color.Yellow,
-                    fontSize = 14.sp,
+                    style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.align(Alignment.CenterStart)
                 )
             }
@@ -51,8 +52,7 @@ fun LocationSection(viewModel: LocationViewModel) {
             Text(
                 text = departmentName,
                 color = Color.White,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.headlineSmall
             )
             Spacer(modifier = Modifier.width(8.dp))
             Icon(

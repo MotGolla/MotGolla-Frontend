@@ -71,8 +71,7 @@ fun VoteScreen(
                     Text(
                         text = tab.label,
                         color = if (isSelected) Color.White else MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 14.sp
+                        style = MaterialTheme.typography.labelLarge
                     )
                 }
             }

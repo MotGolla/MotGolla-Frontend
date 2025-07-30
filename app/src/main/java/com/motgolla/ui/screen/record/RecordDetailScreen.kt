@@ -46,6 +46,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.DialogProperties
+import com.motgolla.ui.theme.MotgollaPrimary
 
 
 @Composable
@@ -156,7 +157,7 @@ fun RecordDetailContent(
                             .size(12.dp)
                             .padding(3.dp)
                             .background(
-                                if (index == activeIndex) Color(0xFF7E57C2) else Color.Gray,
+                                if (index == activeIndex) MaterialTheme.colorScheme.primary else Color.Gray,
                                 CircleShape
                             )
                     )
@@ -208,10 +209,10 @@ fun RecordDetailContent(
         item {
             Spacer(modifier = Modifier.height(12.dp))
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                Text(text = record.productName, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Text(text = record.productName, style = MaterialTheme.typography.titleLarge)
                 Text(
                     text = "%,d원".format(record.productPrice),
-                    fontSize = 18.sp,
+                    style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
             }
@@ -231,7 +232,10 @@ fun RecordDetailContent(
         item {
             Spacer(modifier = Modifier.height(16.dp))
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                Text(text = "메모", fontWeight = FontWeight.Bold, color = Color.Gray)
+                Text(
+                    text = "메모",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = Color.Gray)
                 Spacer(modifier = Modifier.height(12.dp))
                 Box(
                     modifier = Modifier
@@ -239,7 +243,7 @@ fun RecordDetailContent(
                         .background(color = Color(0xFFF6F6F6), shape = RoundedCornerShape(8.dp))
                         .padding(12.dp)
                 ) {
-                    Text(text = record.productSummary, fontSize = 14.sp)
+                    Text(text = record.productSummary, style = MaterialTheme.typography.bodyMedium)
                 }
             }
         }
@@ -331,8 +335,7 @@ fun RecordDetailContent(
                 ) {
                     Text(
                         text = "구매 상태 변경",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
+                        style = MaterialTheme.typography.titleMedium,
                         color = Color.Black
                     )
 
@@ -396,7 +399,7 @@ fun InfoAlignedRow(label: String, value: String) {
     Row(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
         Text(
             text = label,
-            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.bodyMedium,
             color = Color.Gray,
             modifier = Modifier.width(96.dp)  // 고정 너비로 정렬 맞춤
         )
