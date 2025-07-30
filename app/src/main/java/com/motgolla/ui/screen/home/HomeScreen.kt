@@ -59,11 +59,6 @@ fun HomeScreen(
             },
             onDenied = {
                 viewModel.useDefaultLocationAndStore()
-                Toast.makeText(
-                    context,
-                    "위치 권한이 거부되어 \n기본 백화점 정보가 사용됩니다.",
-                    Toast.LENGTH_LONG
-                ).show()
             }
         )
     }
@@ -88,7 +83,7 @@ fun HomeScreen(
         BottomBox(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.80f)
+                .fillMaxHeight(0.76f)
                 .align(Alignment.BottomCenter),
             shoppingHistoryViewModel = shoppingHistoryViewModel,
             navController = navController

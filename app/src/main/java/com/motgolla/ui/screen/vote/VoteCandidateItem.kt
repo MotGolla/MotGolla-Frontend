@@ -65,7 +65,7 @@ fun VoteCandidateItem(
                     .background(Color.LightGray.copy(alpha = 0.2f), RoundedCornerShape(8.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                Text("No Image", color = Color.Gray, fontSize = 12.sp)
+                Text("No Image", color = Color.Gray, style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray))
             }
         }
 
@@ -132,8 +132,7 @@ fun VoteCandidateItem(
                     Text(
                         text = "$ratio%",
                         color = Color.White,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.labelLarge,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }

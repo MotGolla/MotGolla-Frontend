@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +29,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
 import com.google.accompanist.pager.*
 import com.motgolla.R
+import com.motgolla.ui.theme.MotgollaPrimary
 import kotlinx.coroutines.delay
 
 @Composable
@@ -103,7 +105,7 @@ fun DepartmentStoreSection(
         HorizontalPagerIndicator(
             pagerState = pagerState,
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            activeColor = Color(0xFF3B40CC),
+            activeColor = MotgollaPrimary,
             inactiveColor = Color.Gray
         )
     }
@@ -137,7 +139,7 @@ fun DepartmentStoreSection(
                             horizontalArrangement = Arrangement.End
                         ) {
                             TextButton(onClick = { showWebView = false }) {
-                                Text("닫기")
+                                Text("닫기", style = MaterialTheme.typography.labelMedium)
                             }
                         }
 

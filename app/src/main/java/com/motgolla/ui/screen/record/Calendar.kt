@@ -62,7 +62,8 @@ fun CustomCalendar(
                     ) {
                         Text(
                             text = date.dayOfMonth.toString(),
-                            color = if (isMarked) Color.White else Color.DarkGray
+                            color = if (isMarked) Color.White else Color.DarkGray,
+                            style = MaterialTheme.typography.bodySmall
                         )
                     }
                 }
