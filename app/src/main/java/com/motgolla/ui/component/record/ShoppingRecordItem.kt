@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -59,7 +60,7 @@ fun ShoppingRecordItem(
             // 상태 배지 (이미지 바깥 좌상단)
             Text(
                 text = if ("COMPLETED".equals(item.state)) "구매완료" else "구매대기",
-                color = if ("COMPLETED".equals(item.state)) Color.Gray else Color(0xFF7B2CBF),
+                color = if ("COMPLETED".equals(item.state)) Color.Gray else MaterialTheme.colorScheme.primary,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier

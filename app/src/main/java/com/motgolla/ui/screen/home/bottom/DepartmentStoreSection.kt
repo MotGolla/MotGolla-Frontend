@@ -139,7 +139,7 @@ fun DepartmentStoreSection(
                             horizontalArrangement = Arrangement.End
                         ) {
                             TextButton(onClick = { showWebView = false }) {
-                                Text("닫기", style = MaterialTheme.typography.labelMedium)
+                                Text("닫기", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
                             }
                         }
 

@@ -425,7 +425,7 @@ fun StatusBox(
     modifier: Modifier = Modifier
 ) {
     val (bgColor, textColor, textLabel) = when (status) {
-        "COMPLETED" -> Triple(Color(0xFF7E57C2), Color.White, "구매 완료")
+        "COMPLETED" -> Triple(MaterialTheme.colorScheme.primary, Color.White, "구매 완료")
         "AVAILABLE" -> Triple(Color(0xFF000000), Color.White, "구매 보류")
         else -> Triple(Color.LightGray, Color.DarkGray, status) // 날짜 등도 표시 가능
     }
