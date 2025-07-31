@@ -21,6 +21,11 @@ val Paperlogy = FontFamily(
     Font(R.font.paperlogy_extra_bold, FontWeight.ExtraBold),
 )
 
+val KakaoSans = FontFamily(
+    Font(R.font.kakao_sans_regular, FontWeight.Normal),
+            Font(R.font.kakao_sans_bold, FontWeight.Bold),
+)
+
 val Typography = Typography(
     displayLarge = TextStyle(
         fontFamily = Paperlogy,

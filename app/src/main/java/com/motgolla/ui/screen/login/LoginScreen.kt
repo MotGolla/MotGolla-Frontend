@@ -34,6 +34,7 @@ import com.motgolla.R
 import com.motgolla.domain.login.api.service.KakaoLoginService
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.motgolla.ui.theme.KakaoSans
 
 @Composable
 fun LoginScreen(
@@ -122,8 +123,10 @@ fun LoginScreen(
         ) {
             Text(
                 text = "일반 로그인",
-                color = Color.Black,
-                fontSize = 19.sp
+                color = Color.DarkGray,
+                fontSize = 19.sp,
+                fontFamily = KakaoSans,
+                fontWeight = FontWeight.Bold
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
