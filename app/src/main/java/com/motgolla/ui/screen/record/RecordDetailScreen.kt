@@ -77,8 +77,28 @@ fun RecordDetailScreen(
                 try {
                     productList = recommendService.getRecommendedProducts(record.productId, deptId)
                     Log.d("RecordDetailScreen", "추천 상품: $productList")
+
+                    // fallback: departmentStoreId가 1일 때만 재호출
+                    if (productList.isEmpty() && deptId != 1L) {
+                        Log.w("RecordDetailScreen", "추천 상품이 비어 있어 기본 백화점 ID(1)로 재시도")
+                        try {
+                            productList = recommendService.getRecommendedProducts(record.productId, 1L)
+                            Log.d("RecordDetailScreen", "기본 ID로 받은 추천: $productList")
+                        } catch (e: Exception) {
+                            Log.e("RecordDetailScreen", "기본 ID로 추천 실패", e)
+                        }
+                    }
                 } catch (e: Exception) {
                     Log.e("RecordDetailScreen", "추천 실패", e)
+                    // fallback: 예외가 발생했고, deptId가 1이 아니면 1로 재시도
+                    if (deptId != 1L) {
+                        try {
+                            productList = recommendService.getRecommendedProducts(record.productId, 1L)
+                            Log.d("RecordDetailScreen", "기본 ID로 받은 추천(예외 fallback): $productList")
+                        } catch (e: Exception) {
+                            Log.e("RecordDetailScreen", "기본 ID로 추천 실패(예외 fallback)", e)
+                        }
+                    }
                 }
             }
         }
