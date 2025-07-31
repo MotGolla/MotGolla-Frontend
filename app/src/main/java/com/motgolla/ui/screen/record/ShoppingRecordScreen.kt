@@ -414,7 +414,7 @@ fun ShoppingRecordScreen(
                 },
                 enabled = isFormValid&& !isSubmitting,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF7B2CBF),
+                    containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = Color.White
                 ),
                 modifier = Modifier

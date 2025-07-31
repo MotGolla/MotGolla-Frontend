@@ -109,7 +109,7 @@ fun ShoppingRecordListScreen(
                             text = buildAnnotatedString {
                                 withStyle(
                                     style = SpanStyle(
-                                        color = Color(0xFF7B2CBF),
+                                        color = MaterialTheme.colorScheme.primary,
                                         fontWeight = FontWeight.SemiBold
                                     )
                                 ) {
@@ -212,7 +212,7 @@ fun ShoppingRecordLazyList(
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(
-                        color = Color(0xFF7B2CBF),
+                        color = MaterialTheme.colorScheme.primary,
                         strokeWidth = 4.dp
                     )
                 }

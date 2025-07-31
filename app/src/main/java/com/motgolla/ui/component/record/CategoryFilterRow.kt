@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,7 +42,7 @@ fun CategoryFilterRow(
                 modifier = Modifier
                     .height(30.dp)
                     .background(
-                        color = if (isSelected) Color(0xFF834FF1) else Color(0xFFF1F1F1),
+                        color = if (isSelected) MaterialTheme.colorScheme.primary else Color(0xFFF1F1F1),
                         shape = RoundedCornerShape(14.dp)
                     )
                     .clickable { onCategorySelected(category) }
