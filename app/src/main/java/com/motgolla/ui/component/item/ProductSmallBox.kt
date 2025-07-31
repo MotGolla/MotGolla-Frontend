@@ -20,11 +20,6 @@ import com.motgolla.domain.recommend.data.ProductPreview
 fun ItemSmallBox(product: ProductPreview) {
     val imageUrl = product.imageUrl?.takeIf { it.isNotBlank() }
         ?: "android.resource://com.motgolla/drawable/sample"
-    val floorLabel = if (product.floor < 0) {
-        "B${-product.floor}"
-    } else {
-        "${product.floor}F"
-    }
 
     Column(
         modifier = Modifier
@@ -71,7 +66,7 @@ fun ItemSmallBox(product: ProductPreview) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = floorLabel,
+                text = product.floor,
                 fontSize = 13.sp
             )
             Text(
@@ -85,5 +80,5 @@ fun ItemSmallBox(product: ProductPreview) {
 @Composable
 @Preview(showBackground = true)
 fun ItemSmallBoxPreview() {
-    ItemSmallBox(ProductPreview(1, "미쏘", "에센셜 브이넥 가디건", -2, 19900, ""))
+    ItemSmallBox(ProductPreview(1, "미쏘", "에센셜 브이넥 가디건", "2F", 19900, ""))
 }
