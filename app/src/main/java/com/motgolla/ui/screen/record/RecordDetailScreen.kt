@@ -42,9 +42,7 @@ import com.motgolla.domain.recommend.service.RecommendService
 import com.motgolla.ui.component.item.ProductPreviewList
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.DialogProperties
 import com.motgolla.util.PreferenceUtil
@@ -58,12 +56,31 @@ fun RecordDetailScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-    val savedIdState = remember { mutableStateOf<Long?>(PreferenceUtil.getDepartmentId(context)) }
+    val savedIdState = remember { mutableStateOf<Long?>(null) }
+
+    val recommendService = remember { RecommendService() }
+    var productList by remember { mutableStateOf<List<ProductPreview>>(emptyList()) }
 
     LaunchedEffect(recordId) {
+        val savedId = PreferenceUtil.getDepartmentId(context)
+        Log.d("RecordDetailScreen", "불러온 백화점 ID: $savedId")
+        savedIdState.value = savedId ?: 1L
+
         viewModel.loadRecord(recordId)
-        if (savedIdState.value == null) {
-            savedIdState.value = 1L
+    }
+
+    // Fetch recommended products when record and departmentStoreId are available
+    LaunchedEffect(uiState.record, savedIdState.value) {
+        savedIdState.value?.let { deptId ->
+            val record = uiState.record
+            if (record != null) {
+                try {
+                    productList = recommendService.getRecommendedProducts(record.productId, deptId)
+                    Log.d("RecordDetailScreen", "추천 상품: $productList")
+                } catch (e: Exception) {
+                    Log.e("RecordDetailScreen", "추천 실패", e)
+                }
+            }
         }
     }
 
@@ -73,9 +90,9 @@ fun RecordDetailScreen(
             record = uiState.record!!,
             navController = navController,
             viewModel = viewModel,
-            departmentStoreId = savedIdState.value!!
+            departmentStoreId = savedIdState.value!!,
+            productList = productList
         )
-
         else -> Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -90,7 +107,8 @@ fun RecordDetailContent(
     record: RecordDetailResponse,
     navController: NavController? = null,
     viewModel: RecordDetailViewModel,
-    departmentStoreId: Long
+    departmentStoreId: Long,
+    productList: List<ProductPreview>
 ) {
     val context = LocalContext.current
     val allImages = remember(record.imageUrls, record.tagImageUrl) {
@@ -259,7 +277,8 @@ fun RecordDetailContent(
         }
 
         item {
-            RecommendRow(context, record.productId, departmentStoreId)
+            Log.d("RecordDetailScreen", "departmentStoreId: $departmentStoreId")
+            RecommendRow(context, record.productId, departmentStoreId, productList)
         }
     }
 
@@ -468,17 +487,8 @@ fun CreatedAtBox(
 }
 
 @Composable
-fun RecommendRow(context: Context, productId: Long, departmentStoreId: Long) {
+fun RecommendRow(context: Context, productId: Long, departmentStoreId: Long, productList: List<ProductPreview>) {
     val nickname = TokenStorage.getValue(context, "nickname") ?: "사용자"
-    var productList by remember { mutableStateOf<List<ProductPreview>>(emptyList()) }
-    val recommendService = remember { RecommendService() }
-    val coroutineScope = rememberCoroutineScope()
-
-    LaunchedEffect(productId) {
-        coroutineScope.launch {
-            productList = recommendService.getRecommendedProducts(productId, departmentStoreId)
-        }
-    }
 
     Column(
         modifier = Modifier
@@ -527,6 +537,7 @@ fun RecordDetailScreenPreview() {
     RecordDetailContent(
         record = dummyRecord,
         viewModel = dummyViewModel,
-        departmentStoreId = 1L
+        departmentStoreId = 1L,
+        productList = emptyList()
     )
 }
