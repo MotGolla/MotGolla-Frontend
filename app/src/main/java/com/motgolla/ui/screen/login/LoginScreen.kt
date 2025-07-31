@@ -117,7 +117,8 @@ fun LoginScreen(
                 .padding(horizontal = 15.dp)
                 .fillMaxWidth()
                 .height(60.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray)
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
+            elevation = ButtonDefaults.elevation(0.dp)
         ) {
             Text(
                 text = "일반 로그인",
