@@ -115,9 +115,9 @@ fun MotgollaNavBar(navController: NavController) {
                 .background(
                     brush = Brush.linearGradient(
                         colorStops = arrayOf(
-                            0.0f to Color(0xFF8D0AFF),
-                            0.4f to Color(0xFF700AFF),
-                            1.0f to Color(0xFF4A12FF)
+                            0.0f to Color(0xFF8d0aff),
+                            0.5f to Color(0xFF4d2af4),
+                            1.0f to Color(0xFF4d2af4)
                         ),
                         start = Offset(0f, 0f),
                         end = Offset(200f, 200f)
