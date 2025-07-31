@@ -1,5 +1,6 @@
 package com.motgolla.ui.screen.home
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -29,6 +30,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.motgolla.common.RetrofitClient
 import com.motgolla.domain.record.api.repository.ShoppingHistoryRepository
+import com.motgolla.util.PreferenceUtil
 import com.motgolla.viewmodel.record.ShoppingHistoryViewModel
 
 @Composable
@@ -62,8 +64,6 @@ fun HomeScreen(
             }
         )
     }
-
-
 
     Box(
         modifier = Modifier

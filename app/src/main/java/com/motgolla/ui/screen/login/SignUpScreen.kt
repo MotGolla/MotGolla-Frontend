@@ -155,7 +155,7 @@ fun SignUpScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Text("시작 하기", color = Color.White, style = MaterialTheme.typography.titleLarge)
+                    Text("시작하기", color = Color.White, style = MaterialTheme.typography.titleLarge)
                     Spacer(modifier = Modifier.width(8.dp))
                 }
             }
