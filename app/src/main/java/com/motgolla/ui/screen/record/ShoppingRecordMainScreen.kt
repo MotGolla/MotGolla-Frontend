@@ -103,6 +103,8 @@ fun ShoppingRecordMainScreen(
 
         if (isInitialLoading) {
             LoadingScreen() // Cover all
+        } else if (shoppingList.isEmpty()) {
+            ShoppingRecordEmptyScreen(navController = navController)
         } else {
             ShoppingRecordListScreen(
                 navController = navController,
@@ -112,12 +114,16 @@ fun ShoppingRecordMainScreen(
                 selectedDate = selectedDate.format(dateFormatter),
                 isPagingLoading = isPagingLoading,
                 onLoadMore = {
-                    recordViewModel.fetchMoreShoppingRecords(selectedCategory, selectedDate.format(dateFormatter))
+                    recordViewModel.fetchMoreShoppingRecords(
+                        selectedCategory,
+                        selectedDate.format(dateFormatter)
+                    )
                 }
             )
         }
     }
 }
+
 @Composable
 fun LoadingScreen() {
     Column(
