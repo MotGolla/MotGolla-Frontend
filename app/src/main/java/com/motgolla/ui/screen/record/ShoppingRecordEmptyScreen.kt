@@ -33,18 +33,18 @@ fun ShoppingRecordEmptyScreen(navController: NavHostController) {
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.Center
     ) {
 
         Image(
             painter = painterResource(R.drawable.record_empty),
             contentDescription = "추가 아이콘",
-            modifier = Modifier.size(300.dp)
+            modifier = Modifier.size(200.dp)
         )
 
         Text(
-            text = "쇼핑 기록이 없습니다.",
-            style = MaterialTheme.typography.titleLarge
+            text = "해당 카테고리에 기록이 없습니다.",
+            style = MaterialTheme.typography.titleMedium
         )
 
         Spacer(modifier = Modifier.height(8.dp))

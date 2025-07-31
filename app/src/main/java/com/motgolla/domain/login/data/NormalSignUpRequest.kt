@@ -6,5 +6,5 @@ data class NormalSignUpRequest(
     val name: String,
     val gender: String,
     val birthday: String,
-    val profile: String
+    val profile: String?
 )

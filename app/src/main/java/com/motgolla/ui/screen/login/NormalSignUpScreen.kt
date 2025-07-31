@@ -19,7 +19,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.navigation.NavController
-import com.motgolla.domain.login.api.service.SignUpService
 import com.motgolla.ui.theme.MotgollaPrimary
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -33,8 +32,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.widget.Toast
-
-import com.motgolla.R
 
 @Composable
 fun NormalSignUpScreen(
@@ -243,7 +240,7 @@ private fun performNormalSignUp(
                 name = userId,
                 gender = gender,
                 birthday = birthday,
-                profile = context.resources.getResourceEntryName(R.drawable.heendy)
+                profile = null
             )
             val response = RetrofitClient.getAuthService().signUp(request)
             withContext(Dispatchers.Main) {
