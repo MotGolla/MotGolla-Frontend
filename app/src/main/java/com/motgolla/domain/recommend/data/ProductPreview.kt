@@ -4,7 +4,7 @@ data class ProductPreview(
     val id: Long,
     val name: String,
     val brand: String,
-    val floor: Int,
+    val floor: String,
     val price: Int,
     val imageUrl: String
 )
