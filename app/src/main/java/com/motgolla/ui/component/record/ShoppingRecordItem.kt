@@ -58,7 +58,7 @@ fun ShoppingRecordItem(
         ) {
             // 상태 배지 (이미지 바깥 좌상단)
             Text(
-                text = if ("COMPLETED".equals(item.state)) "구매완료" else "구매대기",
+                text = if ("COMPLETED".equals(item.state)) "구매완료" else "구매보류",
                 color = if ("COMPLETED".equals(item.state)) Color.Gray else Color(0xFF7B2CBF),
                 fontSize = 10.sp,
                 fontWeight = FontWeight.SemiBold,
