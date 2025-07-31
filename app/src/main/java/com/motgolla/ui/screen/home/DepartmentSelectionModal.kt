@@ -175,7 +175,7 @@ fun DepartmentSelectionModal(
                                         modifier = Modifier
                                             .weight(1f)
                                             .clip(RoundedCornerShape(12.dp))
-                                            .border(2.dp, borderColor, RoundedCornerShape(12.dp))
+                                            .border(1.dp, borderColor, RoundedCornerShape(12.dp))
                                             .clickable {
                                                 onManualDepartmentSelected(storeName)
                                                 onDismiss()
